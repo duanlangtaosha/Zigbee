@@ -35,7 +35,7 @@ void home (void)
 	lcd12864_write_string("");
 	while (1) {
 		unsigned char ds1302_buf[7] = {0};
-		unsigned char keyval = keyscan();
+		unsigned char keyval = keyscan(5);
 		unsigned char temp = rd_temperature_i();
 //		unsigned char temp = 0;
 		
@@ -93,7 +93,7 @@ void menu (void)
 	
 	while (1) {
 
-		unsigned char keyval = keyscan();	
+		unsigned char keyval = keyscan(5);	
 		if (EN_KEY1 == keyval) {	/* 菜单下选择 */
 					
 			choose_page++;
@@ -171,13 +171,10 @@ void elec_app (void)
 	lcd12864_write_string("E4:OFF");
 	while (1) {
 		float temp = 10.0;
-		unsigned char keyval = keyscan();
+		unsigned char keyval = keyscan(2);
 		
 		/* 获取当前从机家用电器的状态 */
 		if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
-			
-			//****************************************************************************
-//			uart_send_byte(elc_sta);
 			if(elc_sta & 0x01) {
 				lcd12864_set_window(1, 0);
 				lcd12864_write_string("E1:ON ");
@@ -293,7 +290,7 @@ void setting (void)
 {
 	lcd12864_write_cmd(0x01);
 	while (1) {
-		unsigned char keyval = keyscan();
+		unsigned char keyval = keyscan(5);
 		lcd12864_set_window(0, 0);
 		lcd12864_write_string("设置");
 		
@@ -311,7 +308,7 @@ void other (void )
 	lcd12864_write_cmd(0x01);
 	while (1) {
 		
-		unsigned char keyval = keyscan();
+		unsigned char keyval = keyscan(5);
 		if (EN_KEY3 == keyval) {
 			choose_page = 1;
 			break;

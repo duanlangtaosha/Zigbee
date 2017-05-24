@@ -37,7 +37,7 @@
 *         EN_KEY2 ： 按键2按下
 *					EN_KEY3 ： 按键3按下
 */
-unsigned char keyscan (void)
+unsigned char keyscan (unsigned char shake_time)
 {	
 	static unsigned char s_keypress = 0, s_keyok = 0, s_keyup_press = 0, s_keyup = 1;
 	unsigned char pin_arry = 0;
@@ -57,7 +57,7 @@ unsigned char keyscan (void)
 	 else {
 	 	s_keypress = 0;
 	 }
-	 if(SHAKE_TIME == s_keypress)	{  /* 按下消抖 */
+	 if(shake_time == s_keypress)	{  /* 按下消抖 */
 		keycode = pin_arry;	 /* 取此时的键值 */
 		s_keypress = 0;
 		
@@ -82,7 +82,7 @@ unsigned char keyscan (void)
 	 else if((1 == s_keyok) && ((pin_arry & 0x0f) != 0x0f)) {
 	 	s_keyup_press = 0;
 	 }
-	 if((SHAKE_TIME == s_keyup_press)) {		/* 抬起消抖完成 */
+	 if((shake_time == s_keyup_press)) {		/* 抬起消抖完成 */
 	 	s_keyup_press = 0;  		
 		if((s_keyok == 1) && ((pin_arry & 0x0f) == 0x0f)) {
 		 

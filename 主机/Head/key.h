@@ -38,5 +38,5 @@ typedef enum
 *         EN_KEY2 ： 按键2按下
 *					EN_KEY3 ： 按键3按下
 */
-unsigned char keyscan (void);
+unsigned char keyscan (unsigned char shake_time);
 #endif
