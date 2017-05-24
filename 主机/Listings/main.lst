@@ -1,0 +1,562 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND
+                    - PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "stc12c5a60s2.h"
+   2          #include "intrins.h"
+   3          #include "uart.h"
+   4          #include "uart2.h"
+   5          #include "lcd12864.h"
+   6          #include "ds18b20.h"
+   7          #include "ds1302.h"
+   8          #include "key.h"
+   9          
+  10          
+  11          unsigned char choose_page = 0;
+  12          
+  13          /*主页*/
+  14          void home (void) 
+  15          {
+  16   1        
+  17   1        lcd12864_write_cmd(0x01);
+  18   1      
+  19   1        lcd12864_set_window(0, 0);            
+  20   1        lcd12864_write_string("主机温度:");
+  21   1        lcd12864_set_window(0, 7);            
+  22   1        lcd12864_write_string("℃");
+  23   1        lcd12864_set_window(1, 0);
+  24   1        lcd12864_write_string("从机温度:");
+  25   1        lcd12864_set_window(1, 7);            
+  26   1        lcd12864_write_string("℃");
+  27   1        lcd12864_set_window(2, 0);
+  28   1        lcd12864_write_string("日期:");
+  29   1        lcd12864_set_window(2, 3);  
+  30   1        lcd12864_write_string("");
+  31   1        lcd12864_set_window(3, 0);
+  32   1        lcd12864_write_string("时间:");
+  33   1        lcd12864_set_window(3, 3);
+  34   1        lcd12864_write_string("");
+  35   1        while (1) {
+  36   2          unsigned char ds1302_buf[7] = {0};
+  37   2          unsigned char keyval = keyscan();
+  38   2          unsigned char temp = rd_temperature_i();
+  39   2          
+  40   2          float device_temp = 0.0;
+  41   2          unsigned char control = 0;
+  42   2          if (EN_KEY0 == keyval) {
+  43   3          
+  44   3            choose_page = 1; /* 进入主菜单*/
+  45   3            break;
+  46   3          }
+  47   2            lcd12864_set_window(0, 5);
+  48   2            lcd12864_write_data((temp / 10) | 0x30 );
+  49   2            lcd12864_write_data((temp % 10) | 0x30 );
+  50   2          
+  51   2          
+  52   2            if (uartf_reciev_frame(&device_temp, &control)) {
+  53   3              temp = (unsigned char)device_temp;
+  54   3              lcd12864_set_window(1, 5);
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 2   
+
+  55   3              lcd12864_write_data((temp / 10) | 0x30 );
+  56   3              lcd12864_write_data((temp % 10) | 0x30 );
+  57   3              
+  58   3              //********************************************************************************************
+  59   3              uart_send_byte(control);
+  60   3            }
+  61   2            
+  62   2            get_ds1302_time(ds1302_buf);
+  63   2            lcd12864_set_window(3, 3);
+  64   2            lcd12864_write_data((ds1302_buf[2] / 10) | 0x30 );
+  65   2            lcd12864_write_data((ds1302_buf[2] % 10) | 0x30 );
+  66   2            lcd12864_write_string(":");
+  67   2            lcd12864_write_data((ds1302_buf[1] / 10) | 0x30 );
+  68   2            lcd12864_write_data((ds1302_buf[1] % 10) | 0x30 );
+  69   2            lcd12864_write_string(":");
+  70   2            lcd12864_write_data((ds1302_buf[0] / 10) | 0x30 );
+  71   2            lcd12864_write_data((ds1302_buf[0] % 10) | 0x30 );
+  72   2            
+  73   2        }
+  74   1      }
+  75          
+  76          /*主菜单*/
+  77          void menu (void)
+  78          {
+  79   1        lcd12864_write_cmd(0x01);
+  80   1        choose_page++;
+  81   1        lcd12864_set_window(0, 0);
+  82   1        lcd12864_write_string("≡≡主菜单≡≡");
+  83   1        lcd12864_set_window(1, 0);
+  84   1        lcd12864_write_string("1.家电");
+  85   1        lcd12864_set_window(2, 0);
+  86   1        lcd12864_write_string("2.设置");
+  87   1        lcd12864_set_window(3, 0);
+  88   1        lcd12864_write_string("3.其他");
+  89   1        
+  90   1        while (1) {
+  91   2      
+  92   2          unsigned char keyval = keyscan(); 
+  93   2          if (EN_KEY1 == keyval) {  /* 菜单下选择 */
+  94   3                
+  95   3            choose_page++;
+  96   3            if (choose_page == 5) {
+  97   4              choose_page = 2;
+  98   4            }
+  99   3            
+ 100   3          } else if (EN_KEY2 == keyval) { /* 菜单上选择 */
+ 101   3            choose_page--;
+ 102   3            if (choose_page == 1) {
+ 103   4              choose_page = 4;
+ 104   4            }
+ 105   3          } else if (EN_KEY3 == keyval) {
+ 106   3            choose_page = 0;
+ 107   3            break;
+ 108   3          } else if (EN_KEY0 == keyval) {
+ 109   3              break;
+ 110   3          }
+ 111   2          
+ 112   2          switch (choose_page) {
+ 113   3            case 2:
+ 114   3              lcd12864_set_window(3, 3);
+ 115   3              lcd12864_write_data(32);
+ 116   3            
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 3   
+
+ 117   3              lcd12864_set_window(2, 3);
+ 118   3              lcd12864_write_data(32);
+ 119   3            
+ 120   3              lcd12864_set_window(1, 3);
+ 121   3              lcd12864_write_data(17);
+ 122   3            break;
+ 123   3            
+ 124   3            case 3:
+ 125   3              lcd12864_set_window(1, 3);
+ 126   3              lcd12864_write_data(32);
+ 127   3            
+ 128   3              lcd12864_set_window(3, 3);
+ 129   3              lcd12864_write_data(32);
+ 130   3            
+ 131   3              lcd12864_set_window(2, 3);
+ 132   3              lcd12864_write_data(17);
+ 133   3              break;
+ 134   3            case 4:
+ 135   3              lcd12864_set_window(1, 3);
+ 136   3              lcd12864_write_data(32);  
+ 137   3            
+ 138   3              lcd12864_set_window(2, 3);
+ 139   3              lcd12864_write_data(32);
+ 140   3            
+ 141   3              lcd12864_set_window(3, 3);
+ 142   3              lcd12864_write_data(17);
+ 143   3              break;
+ 144   3          }
+ 145   2          
+ 146   2        }
+ 147   1      }
+ 148          
+ 149          
+ 150          void elec_app (void)
+ 151          {
+ 152   1        unsigned char elc_num = 0;
+ 153   1        
+ 154   1      //  float temp = 0.0;
+ 155   1        unsigned char elc_sta = 0;
+ 156   1        lcd12864_write_cmd(0x01);
+ 157   1      
+ 158   1        lcd12864_set_window(0, 1);
+ 159   1        lcd12864_write_string("≡≡家电≡≡");
+ 160   1        lcd12864_set_window(1, 0);
+ 161   1        lcd12864_write_string("E1:OFF");
+ 162   1        lcd12864_set_window(2, 0);
+ 163   1        lcd12864_write_string("E2:OFF");
+ 164   1        lcd12864_set_window(1, 4);
+ 165   1        lcd12864_write_string("E3:OFF");
+ 166   1        lcd12864_set_window(2, 4);
+ 167   1        lcd12864_write_string("E4:OFF");
+ 168   1        while (1) {
+ 169   2          float temp = 10.0;
+ 170   2          unsigned char keyval = keyscan();
+ 171   2          
+ 172   2          /* 获取当前从机家用电器的状态 */
+ 173   2          if (uartf_reciev_frame(&temp, &elc_sta)) {
+ 174   3            
+ 175   3            //****************************************************************************
+ 176   3      //      uart_send_byte(elc_sta);
+ 177   3            if(elc_sta & 0x01) {
+ 178   4              lcd12864_set_window(1, 0);
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 4   
+
+ 179   4              lcd12864_write_string("E1:ON ");
+ 180   4            } else {
+ 181   4              lcd12864_set_window(1, 0);
+ 182   4              lcd12864_write_string("E1:OFF");
+ 183   4            }
+ 184   3            
+ 185   3            if(elc_sta & 0x02) {
+ 186   4              lcd12864_set_window(2, 0);
+ 187   4              lcd12864_write_string("E2:ON ");
+ 188   4            } else {
+ 189   4              lcd12864_set_window(2, 0);
+ 190   4              lcd12864_write_string("E2:OFF");
+ 191   4            }
+ 192   3            
+ 193   3            if(elc_sta & 0x04) {
+ 194   4              lcd12864_set_window(1, 4);
+ 195   4              lcd12864_write_string("E3:ON ");
+ 196   4            } else {
+ 197   4              lcd12864_set_window(1, 4);
+ 198   4              lcd12864_write_string("E3:OFF");
+ 199   4            }
+ 200   3      
+ 201   3            if(elc_sta & 0x08) {
+ 202   4              lcd12864_set_window(2, 4);
+ 203   4              lcd12864_write_string("E4:ON ");
+ 204   4            } else {
+ 205   4              lcd12864_set_window(2, 4);
+ 206   4              lcd12864_write_string("E4:OFF");
+ 207   4            }
+ 208   3          } else {
+ 209   3            
+ 210   3            /* 不加上这句校验和就会永远的出错 */
+ 211   3            uart_send_string("eorr\r\n");
+ 212   3          }
+ 213   2          
+ 214   2          
+ 215   2          /* 返回上一页 */
+ 216   2          if (EN_KEY3 == keyval) {
+ 217   3            choose_page = 1;
+ 218   3            break;
+ 219   3          } else if (EN_KEY1 == keyval) {
+ 220   3            elc_num++;
+ 221   3            if(elc_num == 5) {
+ 222   4              elc_num = 1;
+ 223   4            }
+ 224   3              switch (elc_num) {
+ 225   4      
+ 226   4              case 1:
+ 227   4                lcd12864_set_window(2, 7);
+ 228   4                lcd12864_write_data(32);  
+ 229   4              
+ 230   4                lcd12864_set_window(1, 3);
+ 231   4                lcd12864_write_data(17);
+ 232   4                
+ 233   4                break;
+ 234   4              case 2:
+ 235   4                
+ 236   4                lcd12864_set_window(1, 3);
+ 237   4                lcd12864_write_data(32);
+ 238   4              
+ 239   4                lcd12864_set_window(2, 3);
+ 240   4                lcd12864_write_data(17);
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 5   
+
+ 241   4                break;
+ 242   4              case 3:
+ 243   4                lcd12864_set_window(2, 3);
+ 244   4                lcd12864_write_data(32);
+ 245   4              
+ 246   4                lcd12864_set_window(1, 7);
+ 247   4                lcd12864_write_data(17);
+ 248   4                break;
+ 249   4              case 4:
+ 250   4                lcd12864_set_window(1, 7);
+ 251   4                lcd12864_write_data(32);
+ 252   4              
+ 253   4                lcd12864_set_window(2, 7);
+ 254   4                lcd12864_write_data(17);
+ 255   4                break;
+ 256   4              default:
+ 257   4                break;
+ 258   4            }
+ 259   3          } else if (EN_KEY0 == keyval) {
+ 260   3              switch (elc_num) {
+ 261   4              case 1:
+ 262   4                if (elc_sta & 0x01) {
+ 263   5                  elc_sta &= ~0x01;
+ 264   5                } else {
+ 265   5                  elc_sta |= 0x01;
+ 266   5                }
+ 267   4                uart_send_frame(0.0, elc_sta);
+ 268   4                    
+ 269   4                break;
+ 270   4              case 2:
+ 271   4                
+ 272   4      
+ 273   4                break;
+ 274   4              case 3:
+ 275   4      
+ 276   4                break;
+ 277   4              case 4:
+ 278   4      
+ 279   4                break;
+ 280   4              default:
+ 281   4                break;
+ 282   4            }
+ 283   3          }
+ 284   2        }
+ 285   1      
+ 286   1      }
+ 287          
+ 288          void setting (void)
+ 289          {
+ 290   1        lcd12864_write_cmd(0x01);
+ 291   1        while (1) {
+ 292   2          unsigned char keyval = keyscan();
+ 293   2          lcd12864_set_window(0, 0);
+ 294   2          lcd12864_write_string("设置");
+ 295   2          
+ 296   2          
+ 297   2              
+ 298   2          if (EN_KEY3 == keyval) {
+ 299   3            choose_page = 1;
+ 300   3            break;
+ 301   3          }
+ 302   2        }
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 6   
+
+ 303   1      }
+ 304          
+ 305          void other (void )
+ 306          {
+ 307   1        lcd12864_write_cmd(0x01);
+ 308   1        while (1) {
+ 309   2          
+ 310   2          unsigned char keyval = keyscan();
+ 311   2          if (EN_KEY3 == keyval) {
+ 312   3            choose_page = 1;
+ 313   3            break;
+ 314   3          }
+ 315   2          lcd12864_set_window(0, 0);
+ 316   2          lcd12864_write_string("其他");
+ 317   2        
+ 318   2        }
+ 319   1      
+ 320   1      }
+ 321          
+ 322          
+ 323          
+ 324          
+ 325          void main (void)
+ 326          {
+ 327   1      
+ 328   1        uart_init();
+ 329   1        uart2_init();
+ 330   1        lcd12864_init ();
+ 331   1        init_ds18b20();
+ 332   1        init_ds1302();
+ 333   1        
+ 334   1        while (1) {
+ 335   2          
+ 336   2          unsigned char *p = "abcd";
+ 337   2          unsigned char buuu[5]={0x11 ,0x22, 0x33,0x44,0x55};
+ 338   2          float a = 18.5,c = 0.0;
+ 339   2          unsigned char b = 0x01, d = 0;
+ 340   2      
+ 341   2      
+ 342   2      //    if(uartf_reciev_frame(&c, &d))
+ 343   2      //    {
+ 344   2      //    
+ 345   2      //    uart_send_byte(c/10 + 0x30);
+ 346   2      //    uart_send_byte((unsigned char)c%10 + 0x30);
+ 347   2      //    uart_send_byte((unsigned char)(c*10)%10 +0x30);
+ 348   2      //    uart_send_byte('\r');
+ 349   2      //    uart_send_byte('\n');
+ 350   2      //    uart_send_byte(d + 0x30);
+ 351   2      //    }
+ 352   2      //    uart2_send_string("abcdefg");
+ 353   2      
+ 354   2          
+ 355   2          switch (choose_page) {
+ 356   3          
+ 357   3          case 0:
+ 358   3            home () ;
+ 359   3            break;
+ 360   3          case 1:
+ 361   3            menu();
+ 362   3            break;
+ 363   3          case 2:
+ 364   3            elec_app();
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 7   
+
+ 365   3            break;
+ 366   3            
+ 367   3          case 3:
+ 368   3            setting();
+ 369   3            break;
+ 370   3          case 4:
+ 371   3            other();
+ 372   3            break;
+ 373   3            default:
+ 374   3              break;
+ 375   3          
+ 376   3          }
+ 377   2      
+ 378   2          
+ 379   2        }
+ 380   1      
+ 381   1      }
+ 382          
+ 383          
+ 384          
+ 385          
+ 386          ///*------------------------------------------------------------------*/
+ 387          ///* --- STC MCU Limited ---------------------------------------------*/
+ 388          ///* --- STC12C5Axx Series MCU UART (8-bit/9-bit)Demo ----------------*/
+ 389          ///* --- Mobile: (86)13922805190 -------------------------------------*/
+ 390          ///* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+ 391          ///* --- Tel: 86-0513-55012928,55012929,55012966----------------------*/
+ 392          ///* --- Web: www.STCMCU.com -----------------------------------------*/
+ 393          ///* --- Web: www.GXWMCU.com -----------------------------------------*/
+ 394          ///* If you want to use the program or the program referenced in the  */
+ 395          ///* article, please specify in which data and procedures from STC    */
+ 396          ///*------------------------------------------------------------------*/
+ 397          
+ 398          //#include "reg51.h"
+ 399          //#include "intrins.h"
+ 400          
+ 401          //typedef unsigned char BYTE;
+ 402          //typedef unsigned int WORD;
+ 403          
+ 404          //#define FOSC 11059200L      //System frequency
+ 405          //#define BAUD 9600           //UART baudrate
+ 406          
+ 407          ///*Define UART parity mode*/
+ 408          //#define NONE_PARITY     0   //None parity
+ 409          //#define ODD_PARITY      1   //Odd parity
+ 410          //#define EVEN_PARITY     2   //Even parity
+ 411          //#define MARK_PARITY     3   //Mark parity
+ 412          //#define SPACE_PARITY    4   //Space parity
+ 413          
+ 414          //#define PARITYBIT EVEN_PARITY   //Testing even parity
+ 415          
+ 416          //sbit bit9 = P2^2;           //P2.2 show UART data bit9
+ 417          //bit busy;
+ 418          
+ 419          //void SendData(BYTE dat);
+ 420          //void SendString(char *s);
+ 421          //void Delay100ms()   //@11.0592MHz
+ 422          //{
+ 423          //  unsigned char i, j, k;
+ 424          
+ 425          //  _nop_();
+ 426          //  _nop_();
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 8   
+
+ 427          //  i = 5;
+ 428          //  j = 52;
+ 429          //  k = 195;
+ 430          //  do
+ 431          //  {
+ 432          //    do
+ 433          //    {
+ 434          //      while (--k);
+ 435          //    } while (--j);
+ 436          //  } while (--i);
+ 437          //}
+ 438          
+ 439          //void main()
+ 440          //{
+ 441          //#if (PARITYBIT == NONE_PARITY)
+ 442          //    SCON = 0x50;            //8-bit variable UART
+ 443          //#elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+ 444          //    SCON = 0xda;            //9-bit variable UART, parity bit initial to 1
+ 445          //#elif (PARITYBIT == SPACE_PARITY)
+ 446          //    SCON = 0xd2;            //9-bit variable UART, parity bit initial to 0
+ 447          //#endif
+ 448          
+ 449          //    TMOD = 0x20;            //Set Timer1 as 8-bit auto reload mode
+ 450          //    TH1 = TL1 = -(FOSC/12/32/BAUD); //Set auto-reload vaule
+ 451          //    TR1 = 1;                //Timer1 start run
+ 452          //    ES = 1;                 //Enable UART interrupt
+ 453          //    EA = 1;                 //Open master interrupt switch
+ 454          
+ 455          ////    SendString("STC12C5A60S2\r\nUart Test !\r\n");
+ 456          //    while(1){
+ 457          //    SendString("STC12C5A60S2\r\nUart Test !\r\n");
+ 458          //      Delay100ms();
+ 459          //    }
+ 460          //}
+ 461          
+ 462          ///*----------------------------
+ 463          //UART interrupt service routine
+ 464          //----------------------------*/
+ 465          //void Uart_Isr() interrupt 4 using 1
+ 466          //{
+ 467          //    if (RI)
+ 468          //    {
+ 469          //        RI = 0;             //Clear receive interrupt flag
+ 470          //        P0 = SBUF;          //P0 show UART data
+ 471          //        bit9 = RB8;         //P2.2 show parity bit
+ 472          //    }
+ 473          //    if (TI)
+ 474          //    {
+ 475          //        TI = 0;             //Clear transmit interrupt flag
+ 476          //        busy = 0;           //Clear transmit busy flag
+ 477          //    }
+ 478          //}
+ 479          
+ 480          ///*----------------------------
+ 481          //Send a byte data to UART
+ 482          //Input: dat (data to be sent)
+ 483          //Output:None
+ 484          //----------------------------*/
+ 485          //void SendData(BYTE dat)
+ 486          //{
+ 487          //    while (busy);           //Wait for the completion of the previous data is sent
+ 488          //    ACC = dat;              //Calculate the even parity bit P (PSW.0)
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 17:38:17 PAGE 9   
+
+ 489          //    if (P)                  //Set the parity bit according to P
+ 490          //    {
+ 491          //#if (PARITYBIT == ODD_PARITY)
+ 492          //        TB8 = 0;            //Set parity bit to 0
+ 493          //#elif (PARITYBIT == EVEN_PARITY)
+ 494          //        TB8 = 1;            //Set parity bit to 1
+ 495          //#endif
+ 496          //    }
+ 497          //    else
+ 498          //    {
+ 499          //#if (PARITYBIT == ODD_PARITY)
+ 500          //        TB8 = 1;            //Set parity bit to 1
+ 501          //#elif (PARITYBIT == EVEN_PARITY)
+ 502          //        TB8 = 0;            //Set parity bit to 0
+ 503          //#endif
+ 504          //    }
+ 505          //    busy = 1;
+ 506          //    SBUF = ACC;             //Send data to UART buffer
+ 507          //}
+ 508          
+ 509          ///*----------------------------
+ 510          //Send a string to UART
+ 511          //Input: s (address of string)
+ 512          //Output:None
+ 513          //----------------------------*/
+ 514          //void SendString(char *s)
+ 515          //{
+ 516          //    while (*s)              //Check the end of the string
+ 517          //    {
+ 518          //        SendData(*s++);     //Send current char and increment string ptr
+ 519          //    }
+ 520          //}
+ 521          
+ 522          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1264    ----
+   CONSTANT SIZE    =    177    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      42
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
