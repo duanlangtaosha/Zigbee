@@ -36,8 +36,8 @@ void home (void)
 	while (1) {
 		unsigned char ds1302_buf[7] = {0};
 		unsigned char keyval = keyscan();
-//		unsigned char temp = rd_temperature_i();
-		unsigned char temp = 0;
+		unsigned char temp = rd_temperature_i();
+//		unsigned char temp = 0;
 		
 		float device_temp = 0.0;
 		unsigned char control = 0;
@@ -51,7 +51,7 @@ void home (void)
 			lcd12864_write_data((temp % 10) | 0x30 );
 		
 		
-			if (uartf_reciev_frame(&device_temp, &control)) {
+			if (1 == uartf_reciev_frame(&device_temp, &control)) {
 				temp = (unsigned char)device_temp;
 				lcd12864_set_window(1, 5);
 				lcd12864_write_data((temp / 10) | 0x30 );
@@ -174,7 +174,7 @@ void elec_app (void)
 		unsigned char keyval = keyscan();
 		
 		/* 获取当前从机家用电器的状态 */
-		if (uartf_reciev_frame(&temp, &elc_sta)) {
+		if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
 			
 			//****************************************************************************
 //			uart_send_byte(elc_sta);
@@ -212,7 +212,7 @@ void elec_app (void)
 		} else {
 			
 			/* 不加上这句校验和就会永远的出错 */
-			uart_send_string("eorr\r\n");
+//			uart_send_string("eorr\r\n");
 		}
 		
 		

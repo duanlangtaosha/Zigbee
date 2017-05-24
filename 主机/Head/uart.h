@@ -113,8 +113,9 @@ void uart_send_frame ( float temp, uint8_t control_sta);
 *
 * \retval 0 : 错误
 *         1 : 正确
+*					-1：校验出错
 */
-uint8_t uartf_reciev_frame(float *temp, uint8_t *control_sta);
+int8_t uartf_reciev_frame(float *temp, uint8_t *control_sta);
 
 
 void uart_send_string (uint8_t *s);

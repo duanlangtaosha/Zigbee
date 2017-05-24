@@ -231,44 +231,28 @@ void uart_send_frame ( float temp, uint8_t control_sta)
 *
 * \retval 0 : 错误
 *         1 : 正确
+*					-1：校验出错
 */
-uint8_t uartf_reciev_frame(float *temp, uint8_t *control_sta)
+int8_t uartf_reciev_frame(float *temp, uint8_t *control_sta)
 {
-//	uint8_t r_frame[5] = {0};
+
 	uint8_t res = 0;
-	
-	
-//	if (uart_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
-//	
-//		if (r_frame[0] == 0xAA) {
-//			if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
 
-//				*temp = r_frame[1] + r_frame[2]/10.0;
-//				
-//				*control_sta = r_frame[3];
-//				
-//				return 1;
-//			} else {
-//				return 0;	/* 校验错误 */
-//			}
-//			
-//		} else {
-//			return 0;
-//		}
-// }
-
-if (g_uart_sta & 0x80) {
-	
-	res = __g_uart_buf[0] + __g_uart_buf[1] + __g_uart_buf[2] + __g_uart_buf[3];
-	
-	if (res == __g_uart_buf[4]) {
-		*temp = __g_uart_buf[1] + __g_uart_buf[2]/10.0;
-		*control_sta = __g_uart_buf[3];
-		g_uart_sta = 0;
-		return 1;
+	if (g_uart_sta & 0x80) {
+		
+		res = __g_uart_buf[0] + __g_uart_buf[1] + __g_uart_buf[2] + __g_uart_buf[3];
+		
+		if (res == __g_uart_buf[4]) {
+			*temp = __g_uart_buf[1] + __g_uart_buf[2]/10.0;
+			*control_sta = __g_uart_buf[3];
+			g_uart_sta = 0;
+			return 1;
+		} else {
+			g_uart_sta = 0; /* 接收到5个字节后，就可以接收下面的了 */
+			return -1;	/* 校验出错 */
+		}
 	}
-}
-	return 0;
+		return 0;
 }
 
 
