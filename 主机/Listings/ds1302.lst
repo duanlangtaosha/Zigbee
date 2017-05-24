@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 17:38:17 PAGE 1   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 20:59:17 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DS1302
@@ -62,7 +62,7 @@ line level    source
   52          * \brief SPI读单字节函数
   53          *
   54          * \param[in] dat : 要写入的数据
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 17:38:17 PAGE 2   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 20:59:17 PAGE 2   
 
   55          *
   56          * \return 无
@@ -126,7 +126,7 @@ line level    source
  114          *
  115          * \return 读出的数据
  116          *         
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 17:38:17 PAGE 3   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 20:59:17 PAGE 3   
 
  117          */
  118          unsigned char ds1302_read_data (unsigned char addr)
@@ -190,16 +190,16 @@ line level    source
  176          {
  177   1        unsigned char i = 0; 
  178   1        
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 17:38:17 PAGE 4   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 20:59:17 PAGE 4   
 
- 179   1        EA = 0;               /* 这个很重要 */
+ 179   1      //  EA = 0;               /* 这个很重要 */
  180   1          
  181   1        for (i = 0; i < 7; i++) {
  182   2        
  183   2          p_get_time[i] = ds1302_read_data(0x81 + i * 2);
  184   2          ds1302_read_data(0x81 + i * 2);    /* 执行一个空操作 */
  185   2        }
- 186   1        EA = 1;
+ 186   1      //  EA = 1;
  187   1      }
  188          
  189          /**
@@ -229,7 +229,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    261    ----
+   CODE SIZE        =    257    ----
    CONSTANT SIZE    =      7    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

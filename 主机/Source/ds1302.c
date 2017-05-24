@@ -176,14 +176,14 @@ void get_ds1302_time (unsigned char *p_get_time)
 {
 	unsigned char i = 0; 
 	
-	EA = 0;							  /* 这个很重要 */
+//	EA = 0;							  /* 这个很重要 */
 		
 	for (i = 0; i < 7; i++) {
 	
 		p_get_time[i] = ds1302_read_data(0x81 + i * 2);
 		ds1302_read_data(0x81 + i * 2);	   /* 执行一个空操作 */
 	}
-	EA = 1;
+//	EA = 1;
 }
 
 /**

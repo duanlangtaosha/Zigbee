@@ -16,10 +16,10 @@
 
 #include "uart.h"
 #include "intrins.h"
-unsigned char xdata __g_uart_buf[UART_BUF_SIZE] = {0};
-//unsigned char xdata __g_uart_buf[5] = {0};
+//unsigned char xdata __g_uart_buf[UART_BUF_SIZE] = {0};
+unsigned char  __g_uart_buf[5] = {0};
 uint8_t __g_uart_recieve_counter = 0;
-uint8_t uart_sta = 0;
+uint8_t g_uart_sta = 0;
 
 void uart_isr() interrupt 4	 //中断接收程序
 {
@@ -27,34 +27,33 @@ void uart_isr() interrupt 4	 //中断接收程序
 	unsigned char res = 0;
 	if(RI) {			   /* 判断是否接收完，接收完成后，由硬件置RI位 */
 		RI = 0;
-	
-		__g_uart_buf[__g_uart_recieve_counter++] = SBUF;
-		if (__g_uart_recieve_counter >= UART_BUF_SIZE) {
-			__g_uart_recieve_counter = 0;
-		}
+//		__g_uart_buf[__g_uart_recieve_counter++] = SBUF;
+//		if (__g_uart_recieve_counter >= UART_BUF_SIZE) {
+//			__g_uart_recieve_counter = 0;
+//		}
+			res = SBUF;
+			if(!(g_uart_sta & 0x80))
+			{
+				if(!(g_uart_sta & 0x40))
+				{
+					if(res == 0xAA) {
+						g_uart_sta |= 0x40; 
+						__g_uart_buf[0] = 0xAA;
+						g_uart_sta++;
+					} else {
+						g_uart_sta &= ~0x40;
+					}
+				} else {
+					__g_uart_buf[(g_uart_sta & 0x0F)] = res;
+					g_uart_sta ++;
+					if((g_uart_sta & 0x0F) == 5) {
+						g_uart_sta |= 0x80;
+					}
+				}
 		
-		
-
-//			res = SBUF;
-//			if(!(uart_sta & 0x80))
-//				{
-//				if(!(uart_sta & 0x40))
-//				{
-//					if(res == 0xAA)
-//						uart_sta |= 0x40;                                     
-//					else uart_sta &= ~0x40;
-//				}
-//				else
-//				{
-//					__g_uart_buf[(uart_sta&0x0F)] = res;
-//					uart_sta ++;
-//					if((uart_sta &0x0F) == 4) 
-//						uart_sta |= 0x80;
-//				}
-//		
-//	}
-}
 	}
+}
+}
 
 
 /**
@@ -136,21 +135,21 @@ void uart_send_string (uint8_t *s)
 * \retval 1 : 正确
 *         0 : 错误
 */
-uint8_t uart_recieve_buf (uint8_t *p_buf, uint8_t _len)
-{
-	uint8_t i = 0;
-	if (__g_uart_recieve_counter >= _len) {
-		
-		for( i = 0; i< _len; i++) {
-		 p_buf[i] = __g_uart_buf[i];
-		}
-		__g_uart_recieve_counter = 0;
-		
-		return 1;
-	} else {
-		return 0;
-	}
-}
+//uint8_t uart_recieve_buf (uint8_t *p_buf, uint8_t _len)
+//{
+//	uint8_t i = 0;
+//	if (__g_uart_recieve_counter >= _len) {
+//		
+//		for( i = 0; i< _len; i++) {
+//		 p_buf[i] = __g_uart_buf[i];
+//		}
+//		__g_uart_recieve_counter = 0;
+//		g_uart_sta = 0;
+//		return 1;
+//	} else {
+//		return 0;
+//	}
+//}
 
 /**
 * \brief 串口初始化
@@ -235,26 +234,40 @@ void uart_send_frame ( float temp, uint8_t control_sta)
 */
 uint8_t uartf_reciev_frame(float *temp, uint8_t *control_sta)
 {
-	uint8_t r_frame[5] = {0};
+//	uint8_t r_frame[5] = {0};
+	uint8_t res = 0;
 	
-	if (uart_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
 	
-		if (r_frame[0] == 0xAA) {
-			if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
+//	if (uart_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
+//	
+//		if (r_frame[0] == 0xAA) {
+//			if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
 
-				*temp = r_frame[1] + r_frame[2]/10.0;
-				
-				*control_sta = r_frame[3];
-				
-				return 1;
-			} else {
-				return 0;	/* 校验错误 */
-			}
-			
-		} else {
-			return 0;
-		}
- }
+//				*temp = r_frame[1] + r_frame[2]/10.0;
+//				
+//				*control_sta = r_frame[3];
+//				
+//				return 1;
+//			} else {
+//				return 0;	/* 校验错误 */
+//			}
+//			
+//		} else {
+//			return 0;
+//		}
+// }
+
+if (g_uart_sta & 0x80) {
+	
+	res = __g_uart_buf[0] + __g_uart_buf[1] + __g_uart_buf[2] + __g_uart_buf[3];
+	
+	if (res == __g_uart_buf[4]) {
+		*temp = __g_uart_buf[1] + __g_uart_buf[2]/10.0;
+		*control_sta = __g_uart_buf[3];
+		g_uart_sta = 0;
+		return 1;
+	}
+}
 	return 0;
 }
 
