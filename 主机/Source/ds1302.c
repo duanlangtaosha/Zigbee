@@ -3,7 +3,7 @@
 #include "ds1302.h"
 
 /** \brief 初始化时间		 秒     分	 时	  日	 月,星期	 年 */
-unsigned char code __g_initial_time[7] = {0x55, 0x33, 0x10, 0x27, 0x04, 3, 0x15};
+unsigned char code __g_initial_time[7] = {0x55, 0x33, 0x10, 0x26, 0x05, 5, 0x17};
 
 //unsigned char data timeNow[7];
 
@@ -162,6 +162,20 @@ void set_ds1302_initial_time (unsigned char code *p_init_time)
 	ds1302_write_data(0x8e, 0x80);	/* 写保护开	*/
 
 }
+
+void set_ds1302_time (unsigned char  *p_init_time)
+{
+	unsigned char i = 0;
+
+	ds1302_write_data(0x8e, 0x00);	/* 写保护关闭 */
+	for(i = 0; i < 7; i++) {
+	
+		ds1302_write_data(0x80 + i * 2, p_init_time[i]);
+	}
+	ds1302_write_data(0x8e, 0x80);	/* 写保护开	*/
+
+}
+
 
 /**
 * \brief 获取DS1302的时钟值

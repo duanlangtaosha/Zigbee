@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   KEY                                                               05/24/2017 14:23:47 PAGE 1   
+C51 COMPILER V9.56.0.0   KEY                                                               05/27/2017 02:16:03 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE KEY
@@ -62,7 +62,7 @@ line level    source
   52   1        pin_arry = (copy_pin3 << 3 ) | (copy_pin2 << 2 ) | (copy_pin1 << 1 ) | (copy_pin0 ); /* 合并成一组 */
   53   1      /***********************按下检测****************************/   
   54   1         if ((0x0f != pin_arry) && (0 == s_keyok) && (1 == s_keyup)) {  /* 确认按键抬起后，按下才能有效 */
-C51 COMPILER V9.56.0.0   KEY                                                               05/24/2017 14:23:47 PAGE 2   
+C51 COMPILER V9.56.0.0   KEY                                                               05/27/2017 02:16:03 PAGE 2   
 
   55   2          s_keypress++;   
   56   2         }

@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 1   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52   4              }
   53   3          
   54   3        }
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 2   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 2   
 
   55   2      }
   56   1      }
@@ -126,7 +126,7 @@ line level    source
  113   2          _nop_();
  114   2          _nop_();
  115   2          _nop_();
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 3   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 3   
 
  116   2        }
  117   1      }
@@ -190,7 +190,7 @@ line level    source
  175   1        #else     
                 
                 /* ((FCLK/12/32/BAUD/2))µÈÓÚ1.5 */  
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 4   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 4   
 
                 TH1  = TL1 =(-(FCLK / 12 / 32 / (BAUD / 2)));
                 #endif
@@ -254,7 +254,7 @@ line level    source
  237          {
  238   1      
  239   1        uint8_t res = 0;
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 5   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 5   
 
  240   1      
  241   1        if (g_uart_sta & 0x80) {
@@ -318,7 +318,7 @@ line level    source
  295          //char getchar(void)
  296          //{
  297          //  return uart_get_byte();
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 23:31:12 PAGE 6   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 01:33:14 PAGE 6   
 
  298          //}
 

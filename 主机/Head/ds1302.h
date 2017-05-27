@@ -47,4 +47,16 @@ unsigned char ds1302_read_data (unsigned char addr);
 *         
 */
 void get_ds1302_time (unsigned char *p_get_time);
+
+/**
+* \brief 设置DS1302的初始时间
+*
+* \param[in] p_init_time : 初始化时间数组
+*
+* \return 无
+*         
+*/
+void set_ds1302_initial_time (unsigned char code *p_init_time);
+
+void set_ds1302_time (unsigned char  *p_init_time);
 #endif

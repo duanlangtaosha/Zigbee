@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 14:23:47 PAGE 1   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 02:16:03 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52   1      }
   53          
   54          /**
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 14:23:47 PAGE 2   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 02:16:03 PAGE 2   
 
   55          * \brief 串口接收单字节
   56          *
@@ -126,7 +126,7 @@ line level    source
  114          * \param[in] len   : 缓存区的大小
  115          *
  116          * \retval 1 : 正确
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 14:23:47 PAGE 3   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 02:16:03 PAGE 3   
 
  117          *         0 : 错误
  118          */
@@ -190,7 +190,7 @@ line level    source
  176          *
  177          * \param[in] temp        : 温度量
  178          * \param[in] control_sta : 控制和状态量
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 14:23:47 PAGE 4   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 02:16:03 PAGE 4   
 
  179          *
  180          * \return 无
@@ -254,7 +254,7 @@ line level    source
  238   1        return 0;
  239   1      }
  240          /********************************************************************************************************
-C51 COMPILER V9.56.0.0   UART                                                              05/24/2017 14:23:47 PAGE 5   
+C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 02:16:03 PAGE 5   
 
  241          * Discription   : 实现printf和scanf函数重定向到串口1，即支持printf信息到UART1
  242          *           实现重定向，只需要添加2个函数:

@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 23:31:12 PAGE 1   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/27/2017 01:33:14 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DS1302
@@ -13,7 +13,7 @@ line level    source
    3          #include "ds1302.h"
    4          
    5          /** \brief 初始化时间    秒     分   时   日   月,星期   年 */
-   6          unsigned char code __g_initial_time[7] = {0x55, 0x33, 0x10, 0x27, 0x04, 3, 0x15};
+   6          unsigned char code __g_initial_time[7] = {0x55, 0x33, 0x10, 0x26, 0x05, 5, 0x17};
    7          
    8          //unsigned char data timeNow[7];
    9          
@@ -62,7 +62,7 @@ line level    source
   52          * \brief SPI读单字节函数
   53          *
   54          * \param[in] dat : 要写入的数据
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 23:31:12 PAGE 2   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/27/2017 01:33:14 PAGE 2   
 
   55          *
   56          * \return 无
@@ -126,7 +126,7 @@ line level    source
  114          *
  115          * \return 读出的数据
  116          *         
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 23:31:12 PAGE 3   
+C51 COMPILER V9.56.0.0   DS1302                                                            05/27/2017 01:33:14 PAGE 3   
 
  117          */
  118          unsigned char ds1302_read_data (unsigned char addr)
@@ -177,63 +177,77 @@ line level    source
  163   1      
  164   1      }
  165          
- 166          /**
- 167          * \brief 获取DS1302的时钟值
- 168          *
- 169          * \param p_get_time ：一个7字节数组，存储 D[0]秒 + D[1]分 + D2时+ D[3]日 + 
- 170          *                                         D[4]月 + D[5]星期 + D[6]年
- 171          *
- 172          * \return 无
- 173          *         
- 174          */
- 175          void get_ds1302_time (unsigned char *p_get_time)
- 176          {
- 177   1        unsigned char i = 0; 
- 178   1        
-C51 COMPILER V9.56.0.0   DS1302                                                            05/24/2017 23:31:12 PAGE 4   
+ 166          void set_ds1302_time (unsigned char  *p_init_time)
+ 167          {
+ 168   1        unsigned char i = 0;
+ 169   1      
+ 170   1        ds1302_write_data(0x8e, 0x00);  /* 写保护关闭 */
+ 171   1        for(i = 0; i < 7; i++) {
+ 172   2        
+ 173   2          ds1302_write_data(0x80 + i * 2, p_init_time[i]);
+ 174   2        }
+ 175   1        ds1302_write_data(0x8e, 0x80);  /* 写保护开 */
+ 176   1      
+ 177   1      }
+ 178          
+C51 COMPILER V9.56.0.0   DS1302                                                            05/27/2017 01:33:14 PAGE 4   
 
- 179   1      //  EA = 0;               /* 这个很重要 */
- 180   1          
- 181   1        for (i = 0; i < 7; i++) {
- 182   2        
- 183   2          p_get_time[i] = ds1302_read_data(0x81 + i * 2);
- 184   2          ds1302_read_data(0x81 + i * 2);    /* 执行一个空操作 */
- 185   2        }
- 186   1      //  EA = 1;
- 187   1      }
- 188          
- 189          /**
- 190          * \brief 初始化DS1302
- 191          *
- 192          * \param 无
- 193          *
- 194          * \return 无
- 195          *         
- 196          */
- 197          void init_ds1302(void)
- 198          {
- 199   1        unsigned char temp = 0;
- 200   1        DS1302_CE   = 0;
- 201   1        DS1302_SCLK = 0;
- 202   1        ds1302_write_data(0x8e, 0x00);
- 203   1        ds1302_write_data(0x90, 0xa6);
- 204   1      //  ds1302_write_data(0x80,0x00);  //开时钟 这个加上则秒每次开电都是从0开始
- 205   1        ds1302_write_data(0x8e, 0x80);
- 206   1        
- 207   1        temp = ds1302_read_data(81);
- 208   1      //  if(temp & 0x80) {
- 209   1          set_ds1302_initial_time(__g_initial_time);
- 210   1      //  }
- 211   1        
- 212   1      }
+ 179          
+ 180          /**
+ 181          * \brief 获取DS1302的时钟值
+ 182          *
+ 183          * \param p_get_time ：一个7字节数组，存储 D[0]秒 + D[1]分 + D2时+ D[3]日 + 
+ 184          *                                         D[4]月 + D[5]星期 + D[6]年
+ 185          *
+ 186          * \return 无
+ 187          *         
+ 188          */
+ 189          void get_ds1302_time (unsigned char *p_get_time)
+ 190          {
+ 191   1        unsigned char i = 0; 
+ 192   1        
+ 193   1      //  EA = 0;               /* 这个很重要 */
+ 194   1          
+ 195   1        for (i = 0; i < 7; i++) {
+ 196   2        
+ 197   2          p_get_time[i] = ds1302_read_data(0x81 + i * 2);
+ 198   2          ds1302_read_data(0x81 + i * 2);    /* 执行一个空操作 */
+ 199   2        }
+ 200   1      //  EA = 1;
+ 201   1      }
+ 202          
+ 203          /**
+ 204          * \brief 初始化DS1302
+ 205          *
+ 206          * \param 无
+ 207          *
+ 208          * \return 无
+ 209          *         
+ 210          */
+ 211          void init_ds1302(void)
+ 212          {
+ 213   1        unsigned char temp = 0;
+ 214   1        DS1302_CE   = 0;
+ 215   1        DS1302_SCLK = 0;
+ 216   1        ds1302_write_data(0x8e, 0x00);
+ 217   1        ds1302_write_data(0x90, 0xa6);
+ 218   1      //  ds1302_write_data(0x80,0x00);  //开时钟 这个加上则秒每次开电都是从0开始
+ 219   1        ds1302_write_data(0x8e, 0x80);
+ 220   1        
+ 221   1        temp = ds1302_read_data(81);
+ 222   1      //  if(temp & 0x80) {
+ 223   1          set_ds1302_initial_time(__g_initial_time);
+ 224   1      //  }
+ 225   1        
+ 226   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    257    ----
+   CODE SIZE        =    301    ----
    CONSTANT SIZE    =      7    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       5
+   DATA SIZE        =   ----       8
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
