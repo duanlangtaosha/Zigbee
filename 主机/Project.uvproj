@@ -403,6 +403,11 @@
               <FileType>1</FileType>
               <FilePath>.\Source\uart2.c</FilePath>
             </File>
+            <File>
+              <FileName>esp8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\esp8266.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

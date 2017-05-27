@@ -16,7 +16,7 @@
 
 #include "uart.h"
 #include "intrins.h"
-//unsigned char xdata __g_uart_buf[UART_BUF_SIZE] = {0};
+
 unsigned char  __g_uart_buf[5] = {0};
 uint8_t __g_uart_recieve_counter = 0;
 uint8_t g_uart_sta = 0;
@@ -182,6 +182,9 @@ void uart_init (void)
 	PCON = 0x80;	
 	RI   = 0;
 	TI   = 0;
+	
+	IPH &= ~0x10;
+	IP &= ~0x10;
 	
 	ES = 1;
 	EA = 1;

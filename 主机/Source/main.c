@@ -6,12 +6,20 @@
 #include "ds18b20.h"
 #include "ds1302.h"
 #include "key.h"
-
+#include "esp8266.h"
 
 unsigned char choose_page = 0;
 
 /*主页*/
 extern uint8_t g_uart_sta;
+
+
+
+extern uint8_t g_wifi_ok ;
+extern uint8_t g_uart2_sta;
+extern uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE];
+
+
 void home (void) 
 {
 	
@@ -56,7 +64,7 @@ void home (void)
 				lcd12864_write_data((temp / 10) | 0x30 );
 				lcd12864_write_data((temp % 10) | 0x30 );
 			}
-			uart_send_byte(g_uart_sta);
+//			uart_send_byte(g_uart_sta);
 			get_ds1302_time(ds1302_buf);
 			
 			/* 日期设置 */
@@ -92,6 +100,28 @@ void home (void)
 			/* 秒 */
 			lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
 			lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			if (g_wifi_ok) {
+				
+				if (g_uart2_sta & 0x80) {
+				
+//					if (__g_uart2_buf[1] == 0x01) {
+
+						uart_send_frame(15.0, __g_uart2_buf[1]);
+//					}
+					g_uart2_sta = 0x00;
+				}
+				
+			}
+			
 			
 	}
 }
@@ -732,13 +762,20 @@ void date_time_setting (void)
 void main (void)
 {
 
+
 	P2M1 = 0x00;
 	P2M0 = 0xFF;
+	
 	uart_init();
 	uart2_init();
+	
 	lcd12864_init ();
+	
+	
 	init_ds18b20();
 	init_ds1302();
+	init_esp_8266_setting();
+	
 	
 	while (1) {
 		

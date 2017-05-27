@@ -15,18 +15,49 @@
 *********************************************************************************************************/
 
 #include "uart2.h"
-unsigned char xdata __g_uart2_buf[UART2_BUF_SIZE] = {0};
+uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE] = {0};
 uint8_t __g_uart2_recieve_counter = 0;
+uint8_t g_uart2_sta = 0;
+
+extern uint8_t g_wifi_ok ;
 void uart2_isr() interrupt 8 using 1	 //中断接收程序
 {
+	uint8_t res = 0;
 	if(S2CON & S2RI) {			   /* 判断是否接收完，接收完成后，由硬件置RI位 */
 		S2CON &= ~S2RI;
-		/* 这样是有问题的要重新开机一次 */
-		__g_uart2_buf[__g_uart2_recieve_counter++] = S2BUF;
+
+			res = S2BUF;
+
+		if (g_wifi_ok == 0) {
+			__g_uart2_buf[(g_uart2_sta)] = res;
+			g_uart2_sta ++;
+			 
+			 if (g_uart2_sta > UART2_BUF_SIZE) {
+				g_uart2_sta = 0;
+			 }
+		 } else {
+		 
+				if(!(g_uart2_sta & 0x80))
+				{
+					if(!(g_uart2_sta & 0x40))
+					{
+						if(res == 0xAA) {
+							g_uart2_sta = 0x40; 
+							__g_uart2_buf[0] = 0xAA;
+							g_uart2_sta++;
+						} else {
+							g_uart2_sta &= ~0x40;
+						}
+					} else {
+						__g_uart2_buf[(g_uart2_sta & 0x0F)] = res;
+						g_uart2_sta ++;
+						if((g_uart2_sta & 0x0F) == 2) {
+							g_uart2_sta |= 0x80;
+						}
+					}
 			
-		if (__g_uart2_recieve_counter >= UART2_BUF_SIZE) {
-			__g_uart2_recieve_counter = 0;
-		}
+			 } 
+		 }
 	}
 }
 
@@ -88,21 +119,21 @@ void uart2_send_buf (uint8_t *p_buf, uint8_t _len)
 * \retval 1 : 正确
 *         0 : 错误
 */
-uint8_t uart2_recieve_buf (uint8_t *p_buf, uint8_t _len)
-{
-	uint8_t i = 0;
-	if (__g_uart2_recieve_counter >= _len) {
-		
-		for( i = 0; i< _len; i++) {
-		 p_buf[i] = __g_uart2_buf[i];
-		}
-		__g_uart2_recieve_counter = 0;
-		
-		return 1;
-	} else {
-		return 0;
-	}
-}
+//uint8_t uart2_recieve_buf (uint8_t *p_buf, uint8_t _len)
+//{
+//	uint8_t i = 0;
+//	if (__g_uart2_recieve_counter >= _len) {
+//		
+//		for( i = 0; i< _len; i++) {
+//		 p_buf[i] = __g_uart2_buf[i];
+//		}
+//		__g_uart2_recieve_counter = 0;
+//		
+//		return 1;
+//	} else {
+//		return 0;
+//	}
+//}
 
 /**
 * \brief 串口初始化
@@ -113,9 +144,15 @@ uint8_t uart2_recieve_buf (uint8_t *p_buf, uint8_t _len)
 */
 void uart2_init (void)
 {
+		EA = 0;
     S2CON = 0x50;           //8-bit variable UART
     BRT = -(FOSC / 32 / BAUDS2);  //Set auto-reload vaule of baudrate generator
     AUXR |= 0x14;            //Baudrate generator work in 1T mode
+	
+		IPH2 |= 0x01;
+		IP2  |= 0x01;
+	
+	
     IE2 = 0x01;             //Enable UART2 interrupt
     EA = 1;    
 	
@@ -132,27 +169,27 @@ void uart2_init (void)
 *
 * \return 无
 */
-void uart2_send_frame ( float temp, uint8_t control_sta)
-{
-	uint8_t send_frame[5] = {0};
-	
-	/* 帧头 */
-	send_frame[0] = 0xAA;
-	
-	/* 温度的整数 */
-	send_frame[1] = (uint8_t)temp;
-	
-	/* 温度的小数 */
-	send_frame[2] = ((uint16_t)(temp * 10)) % 10;
-	
-	/* 控制或状态信息量 */
-	send_frame[3] = control_sta;
-	
-	/* 校验和 */
-	send_frame[4] = send_frame[0] + send_frame[1] + send_frame[2] + send_frame[3];
-	
-	uart2_send_buf(send_frame, 5);
-}
+//void uart2_send_frame ( float temp, uint8_t control_sta)
+//{
+//	uint8_t send_frame[5] = {0};
+//	
+//	/* 帧头 */
+//	send_frame[0] = 0xAA;
+//	
+//	/* 温度的整数 */
+//	send_frame[1] = (uint8_t)temp;
+//	
+//	/* 温度的小数 */
+//	send_frame[2] = ((uint16_t)(temp * 10)) % 10;
+//	
+//	/* 控制或状态信息量 */
+//	send_frame[3] = control_sta;
+//	
+//	/* 校验和 */
+//	send_frame[4] = send_frame[0] + send_frame[1] + send_frame[2] + send_frame[3];
+//	
+//	uart2_send_buf(send_frame, 5);
+//}
 
 void uart2_send_string(char *s)
 {
@@ -175,29 +212,29 @@ void uart2_send_string(char *s)
 * \retval 0 : 错误
 *         1 : 正确
 */
-uint8_t uart2f_reciev_frame(float *temp, uint8_t *control_sta)
-{
-	uint8_t r_frame[5] = {0};
-	
-	if (uart2_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
-	
-		if (r_frame[0] == 0xAA) {
-			if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
-				uart2_send_string("abc\r\n");
-				*temp = r_frame[1] + r_frame[2]/10.0;
-				
-				*control_sta = r_frame[3];
-				
-				return 1;
-			} else {
-				return 0;	/* 校验错误 */
-			}
-			
-		} else {
-			return 0;
-		}
- }
-	return 0;
-}
+//uint8_t uart2f_reciev_frame(float *temp, uint8_t *control_sta)
+//{
+//	uint8_t r_frame[5] = {0};
+//	
+//	if (uart2_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
+//	
+//		if (r_frame[0] == 0xAA) {
+//			if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
+//				uart2_send_string("abc\r\n");
+//				*temp = r_frame[1] + r_frame[2]/10.0;
+//				
+//				*control_sta = r_frame[3];
+//				
+//				return 1;
+//			} else {
+//				return 0;	/* 校验错误 */
+//			}
+//			
+//		} else {
+//			return 0;
+//		}
+// }
+//	return 0;
+//}
 
 

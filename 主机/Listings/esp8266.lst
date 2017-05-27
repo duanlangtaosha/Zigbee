@@ -1,0 +1,145 @@
+C51 COMPILER V9.56.0.0   ESP8266                                                           05/27/2017 23:06:28 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE ESP8266
+OBJECT MODULE PLACED IN .\Objects\esp8266.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\esp8266.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXT
+                    -END PRINT(.\Listings\esp8266.lst) TABS(2) OBJECT(.\Objects\esp8266.obj)
+
+line level    source
+
+   1          #include "uart2.h"
+   2          #include "intrins.h"
+   3          
+   4          extern uint8_t g_uart2_sta;
+   5          extern uint8_t xdata __g_uart2_buf[UART2_BUF_SIZE];
+   6          
+   7          
+   8          void Delay2000ms()    //@11.0592MHz
+   9          {
+  10   1        unsigned char i, j, k;
+  11   1      
+  12   1        _nop_();
+  13   1        _nop_();
+  14   1        i = 85;
+  15   1        j = 12;
+  16   1        k = 155;
+  17   1        do
+  18   1        {
+  19   2          do
+  20   2          {
+  21   3            while (--k);
+  22   3          } while (--j);
+  23   2        } while (--i);
+  24   1      }
+  25          
+  26          void delay_ms (uint8_t time) 
+  27          {
+  28   1          unsigned char i, j;
+  29   1        unsigned char t;
+  30   1        for (t = 0; t < time; t++) {
+  31   2            _nop_();
+  32   2            i = 11;
+  33   2            j = 190;
+  34   2            do
+  35   2            {
+  36   3              while (--j);
+  37   3            } while (--i);
+  38   2        }
+  39   1      
+  40   1      
+  41   1      }
+  42          
+  43          uint8_t* esp_8266_check_cmd(uint8_t *str)
+  44          {
+  45   1        
+  46   1        char *strx=0;
+  47   1      
+  48   1      //  uart2_send_string("2222\r\n");
+  49   1        strx = strstr(( char*)__g_uart2_buf,( char*)str);
+  50   1        return (u8*)strx;
+  51   1      }
+  52          
+  53          
+  54          uint8_t esp_8266_send_com ( uint8_t *com, uint8_t *ack, uint16_t waittime)
+C51 COMPILER V9.56.0.0   ESP8266                                                           05/27/2017 23:06:28 PAGE 2   
+
+  55          {
+  56   1        uart2_send_string(com);
+  57   1        uart2_send_string("\r\n");
+  58   1        
+  59   1        if (ack && waittime) {
+  60   2        
+  61   2          while (--waittime) {
+  62   3            delay_ms(1);
+  63   3            
+  64   3            if (esp_8266_check_cmd(ack)) {
+  65   4      //        uart2_send_string("33333\r\n");
+  66   4      //        uart2_send_string(ack);
+  67   4      //        uart2_send_string("\r\n");
+  68   4              g_uart2_sta = 0;
+  69   4              break;  //响应正确
+  70   4            }
+  71   3          }
+  72   2          
+  73   2          if (0 == waittime) {
+  74   3            return 1;
+  75   3          }
+  76   2          
+  77   2        }
+  78   1        return 0;
+  79   1      }
+  80          
+  81          //extern void Delay2000ms() ;
+  82          
+  83          uint8_t g_wifi_ok = 0;
+  84          void init_esp_8266_setting ( void)
+  85          {
+  86   1        uint8_t res = 0;
+  87   1        
+  88   1        ES = 0;
+  89   1        
+  90   1        /* 设置模式 */
+  91   1        esp_8266_send_com("AT+CWMODE=3", "OK", 1000);
+  92   1      //  Delay2000ms();
+  93   1        
+  94   1        /* 复位 */
+  95   1        esp_8266_send_com("AT+RST", "ready", 5000);
+  96   1        
+  97   1      //  Delay2000ms();
+  98   1      //  Delay2000ms();
+  99   1        esp_8266_send_com("AT+CWSAP=\"LWL\",\"12345678\",1,4", "OK", 1000);
+ 100   1      //  Delay2000ms();
+ 101   1      //  Delay2000ms();
+ 102   1        esp_8266_send_com("AT+CWJAP=\"MERCURY_A78A\",\"zlgmcu18\"", "OK", 1000);
+ 103   1      //  Delay2000ms();
+ 104   1      //  Delay2000ms();
+ 105   1        esp_8266_send_com("AT+CIPMUX=1", "OK", 1000);
+ 106   1      //  Delay2000ms();
+ 107   1      //  Delay2000ms();
+ 108   1        res = esp_8266_send_com("AT+CIPSERVER=1,8086", "OK", 1000);
+ 109   1      //  Delay2000ms();
+ 110   1      //  Delay2000ms();
+ 111   1        
+ 112   1        if (res == 0) {
+ 113   2          g_wifi_ok = 1;
+ 114   2          g_uart2_sta = 0;
+ 115   2        }
+ 116   1        ES = 1;
+C51 COMPILER V9.56.0.0   ESP8266                                                           05/27/2017 23:06:28 PAGE 3   
+
+ 117   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    293    ----
+   CONSTANT SIZE    =    128    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
