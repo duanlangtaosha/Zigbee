@@ -8,6 +8,7 @@
 #include "key.h"
 #include "esp8266.h"
 
+
 unsigned char choose_page = 0;
 
 /*主页*/
@@ -19,6 +20,7 @@ extern uint8_t g_wifi_ok ;
 extern uint8_t g_uart2_sta;
 extern uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE];
 
+uint8_t g_home = 1;
 
 void home (void) 
 {
@@ -41,7 +43,7 @@ void home (void)
 	lcd12864_write_string("时间:");
 	lcd12864_set_window(3, 3);
 	lcd12864_write_string("");
-	while (1) {
+	while (g_home) {
 		unsigned char ds1302_buf[7] = {0};	/* DS1302接收缓存区 */
 		unsigned char keyval = keyscan(5);
 		unsigned char temp = rd_temperature_i();	/* 读取温度 */
@@ -64,7 +66,7 @@ void home (void)
 				lcd12864_write_data((temp / 10) | 0x30 );
 				lcd12864_write_data((temp % 10) | 0x30 );
 			}
-//			uart_send_byte(g_uart_sta);
+
 			get_ds1302_time(ds1302_buf);
 			
 			/* 日期设置 */
@@ -109,18 +111,16 @@ void home (void)
 			
 			
 			
-			if (g_wifi_ok) {
-				
-				if (g_uart2_sta & 0x80) {
-				
-//					if (__g_uart2_buf[1] == 0x01) {
+//			if (g_wifi_ok) {
+//				
+//				if (g_uart2_sta & 0x80) {
+//				
 
-						uart_send_frame(15.0, __g_uart2_buf[1]);
-//					}
-					g_uart2_sta = 0x00;
-				}
-				
-			}
+//						uart_send_frame(15.0, __g_uart2_buf[1]);
+//					g_uart2_sta = 0x00;
+//				}
+//				
+//			}
 			
 			
 	}
@@ -228,6 +228,16 @@ void elec_app (void)
 		float temp = 10.0;
 		unsigned char keyval = keyscan(2);
 		
+			if (g_wifi_ok) {
+				
+				if (g_uart2_sta & 0x80) {
+				
+						uart_send_frame(15.0, __g_uart2_buf[1]);
+					g_uart2_sta = 0x00;
+				}
+				
+			}
+		
 		/* 获取当前从机家用电器的状态 */
 		if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
 			if(elc_sta & 0x01) {
@@ -270,6 +280,7 @@ void elec_app (void)
 		
 		/* 返回上一页 */
 		if (EN_KEY3 == keyval) {
+			g_home = 1;
 			choose_page = 1;
 			break;
 		} else if (EN_KEY1 == keyval) {
@@ -353,7 +364,6 @@ void elec_app (void)
 			}
 		}
 	}
-
 }
 
 void setting (void)
@@ -368,8 +378,6 @@ void setting (void)
 	lcd12864_write_string("2.温度");
 	while (1) {
 		unsigned char keyval = keyscan(5);
-//		lcd12864_set_window(0, 0);
-//		lcd12864_write_string("设置");
 		
 		if (EN_KEY0 == keyval) {
 			if (point_select == 0) {
@@ -379,7 +387,6 @@ void setting (void)
 			}
 			break;
 		}
-
 				
 		if (EN_KEY3 == keyval) {
 			choose_page = 1;
@@ -398,14 +405,17 @@ void other (void )
 			choose_page = 1;
 			break;
 		}
-		lcd12864_set_window(0, 0);
-		lcd12864_write_string("其他");
-	
+		lcd12864_set_window(0, 3);
+		lcd12864_write_string("STAIP");
+		lcd12864_set_window(1, 1);
+		lcd12864_write_string("192.168.1.200");
+		
+		lcd12864_set_window(2, 3);
+		lcd12864_write_string("APIP");
+		lcd12864_set_window(3, 1);
+		lcd12864_write_string("192.168.4.1");
 	}
-
 }
-
-
 
 void Timer0Init(void)		//1??@11.0592MHz
 {
@@ -427,8 +437,6 @@ void isr_timer0 (void) interrupt 1
 	TF0 = 0;
 	TL0 = 0xCD;		
 	TH0 = 0xD4;	
-//	TH0 = (65536 - 1000) >> 8;
-//	TL0 = (65536- 1000);
 	
 	count++;
 	if (500 == count) {
@@ -758,51 +766,92 @@ void date_time_setting (void)
 	}
 }
 
+void Delay2000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	_nop_();
+	i = 85;
+	j = 12;
+	k = 155;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+extern uint8_t xdata g_staip_buf[32];
+extern uint8_t xdata g_apip_buf[32];
+
+void Delay50000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	_nop_();
+	i = 255;
+	j = 255;
+	k = 255;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+
+
+void Delay5000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	_nop_();
+	i = 211;
+	j = 30;
+	k = 11;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
 
 void main (void)
 {
 
-
+	
 	P2M1 = 0x00;
 	P2M0 = 0xFF;
 	
 	uart_init();
-	uart2_init();
-	
+
 	lcd12864_init ();
-	
 	
 	init_ds18b20();
 	init_ds1302();
+	
+	uart2_init();
+	Delay2000ms();
 	init_esp_8266_setting();
-	
-	
+
 	while (1) {
 		
-		unsigned char *p = "abcd";
 		unsigned char buuu[5]={0x11 ,0x22, 0x33,0x44,0x55};
 		float a = 18.5,c = 0.0;
 		unsigned char b = 0x01, d = 0;
-
-
-//		if(uartf_reciev_frame(&c, &d))
-//		{
-//		
-//		uart_send_byte(c/10 + 0x30);
-//		uart_send_byte((unsigned char)c%10 + 0x30);
-//		uart_send_byte((unsigned char)(c*10)%10 +0x30);
-//		uart_send_byte('\r');
-//		uart_send_byte('\n');
-//		uart_send_byte(d + 0x30);
-//		}
-//		uart2_send_string("abcdefg");
-
 		
 		switch (choose_page) {
 		
 		case 0:
 			home () ;
-//		date_time_setting();
 			break;
 		case 1:
 			menu();
@@ -824,8 +873,6 @@ void main (void)
 				break;
 		
 		}
-
-		
 	}
 
 }

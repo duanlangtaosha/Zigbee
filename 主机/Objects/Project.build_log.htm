@@ -22,22 +22,34 @@ G:\Desktop\基于Zegbee智能家居程序\主机\Project.uvproj
 Project File Date:  05/27/2017
 
 <h2>Output:</h2>
-Build target 'Project'
+Rebuild target 'Project'
+assembling STARTUP.A51...
+compiling lcd12864.c...
+Source\lcd12864.c(456): warning C280: 'value': unreferenced local variable
+Source\lcd12864.c(481): warning C280: 'value': unreferenced local variable
 compiling main.c...
+compiling DS18B20.C...
+compiling ds1302.c...
+compiling key.c...
+compiling uart.c...
+compiling uart2.c...
+compiling esp8266.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_LCD12864_WRITE_UINT_STRING?LCD12864
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_LCD12864_WRITE_FLOAT_STRING?LCD12864
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DELAY50000MS?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DELAY5000MS?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_UART_SEND_STRING?UART
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_UART2_SEND_BUF?UART2
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?DELAY2000MS?ESP8266
-Program Size: data=93.2 xdata=10 code=6976
+Program Size: data=82.2 xdata=1004 code=8266
 creating hex file from ".\Objects\Project"...
-".\Objects\Project" - 0 Error(s), 5 Warning(s).
+".\Objects\Project" - 0 Error(s), 8 Warning(s).
 Build Time Elapsed:  00:00:01
 </pre>
 </body>

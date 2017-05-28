@@ -23,7 +23,7 @@ uint8_t g_uart_sta = 0;
 
 void uart_isr() interrupt 4	 //中断接收程序
 {
-	static unsigned char frame_head_suc = 0;
+//	static unsigned char frame_head_suc = 0;
 	unsigned char res = 0;
 	if(RI) {			   /* 判断是否接收完，接收完成后，由硬件置RI位 */
 		RI = 0;

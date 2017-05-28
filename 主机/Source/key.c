@@ -39,7 +39,7 @@
 */
 unsigned char keyscan (unsigned char shake_time)
 {	
-	static unsigned char s_keypress = 0, s_keyok = 0, s_keyup_press = 0, s_keyup = 1;
+	static xdata unsigned char s_keypress = 0, s_keyok = 0, s_keyup_press = 0, s_keyup = 1;
 	unsigned char pin_arry = 0;
 	unsigned char copy_pin0 = 0, copy_pin1 = 0, copy_pin2 = 0, copy_pin3 = 0;
 	unsigned char keycode = 0;	/* È¡¼üÖµ */

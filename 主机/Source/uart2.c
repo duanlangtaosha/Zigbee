@@ -20,6 +20,8 @@ uint8_t __g_uart2_recieve_counter = 0;
 uint8_t g_uart2_sta = 0;
 
 extern uint8_t g_wifi_ok ;
+extern uint8_t g_home ;
+extern unsigned char choose_page;
 void uart2_isr() interrupt 8 using 1	 //中断接收程序
 {
 	uint8_t res = 0;
@@ -29,12 +31,14 @@ void uart2_isr() interrupt 8 using 1	 //中断接收程序
 			res = S2BUF;
 
 		if (g_wifi_ok == 0) {
+			
+			 if (g_uart2_sta > UART2_BUF_SIZE-1) {
+				g_uart2_sta = 0;
+			 }
 			__g_uart2_buf[(g_uart2_sta)] = res;
 			g_uart2_sta ++;
 			 
-			 if (g_uart2_sta > UART2_BUF_SIZE) {
-				g_uart2_sta = 0;
-			 }
+
 		 } else {
 		 
 				if(!(g_uart2_sta & 0x80))
@@ -53,6 +57,9 @@ void uart2_isr() interrupt 8 using 1	 //中断接收程序
 						g_uart2_sta ++;
 						if((g_uart2_sta & 0x0F) == 2) {
 							g_uart2_sta |= 0x80;
+							
+							g_home = 0;
+							choose_page = 2;
 						}
 					}
 			

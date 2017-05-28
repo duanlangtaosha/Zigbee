@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -18,102 +18,102 @@ line level    source
    8          #include "key.h"
    9          #include "esp8266.h"
   10          
-  11          unsigned char choose_page = 0;
-  12          
-  13          /*主页*/
-  14          extern uint8_t g_uart_sta;
-  15          
+  11          
+  12          unsigned char choose_page = 0;
+  13          
+  14          /*主页*/
+  15          extern uint8_t g_uart_sta;
   16          
   17          
-  18          extern uint8_t g_wifi_ok ;
-  19          extern uint8_t g_uart2_sta;
-  20          extern uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE];
-  21          
+  18          
+  19          extern uint8_t g_wifi_ok ;
+  20          extern uint8_t g_uart2_sta;
+  21          extern uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE];
   22          
-  23          void home (void) 
-  24          {
-  25   1        
-  26   1        lcd12864_write_cmd(0x01);
-  27   1      
-  28   1        lcd12864_set_window(0, 0);            
-  29   1        lcd12864_write_string("主机温度:");
-  30   1        lcd12864_set_window(0, 7);            
-  31   1        lcd12864_write_string("℃");
-  32   1        lcd12864_set_window(1, 0);
-  33   1        lcd12864_write_string("从机温度:");
-  34   1        lcd12864_set_window(1, 7);            
-  35   1        lcd12864_write_string("℃");
-  36   1        lcd12864_set_window(2, 0);
-  37   1        lcd12864_write_string("日期:");
-  38   1        lcd12864_set_window(2, 3);  
-  39   1        lcd12864_write_string("");
-  40   1        lcd12864_set_window(3, 0);
-  41   1        lcd12864_write_string("时间:");
-  42   1        lcd12864_set_window(3, 3);
-  43   1        lcd12864_write_string("");
-  44   1        while (1) {
-  45   2          unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
-  46   2          unsigned char keyval = keyscan(5);
-  47   2          unsigned char temp = rd_temperature_i();  /* 读取温度 */
-  48   2          
-  49   2          float device_temp = 0.0;
-  50   2          unsigned char control = 0;
-  51   2          if (EN_KEY0 == keyval) {
-  52   3          
-  53   3            choose_page = 1; /* 进入主菜单*/
-  54   3            break;
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 2   
+  23          uint8_t g_home = 1;
+  24          
+  25          void home (void) 
+  26          {
+  27   1        
+  28   1        lcd12864_write_cmd(0x01);
+  29   1      
+  30   1        lcd12864_set_window(0, 0);            
+  31   1        lcd12864_write_string("主机温度:");
+  32   1        lcd12864_set_window(0, 7);            
+  33   1        lcd12864_write_string("℃");
+  34   1        lcd12864_set_window(1, 0);
+  35   1        lcd12864_write_string("从机温度:");
+  36   1        lcd12864_set_window(1, 7);            
+  37   1        lcd12864_write_string("℃");
+  38   1        lcd12864_set_window(2, 0);
+  39   1        lcd12864_write_string("日期:");
+  40   1        lcd12864_set_window(2, 3);  
+  41   1        lcd12864_write_string("");
+  42   1        lcd12864_set_window(3, 0);
+  43   1        lcd12864_write_string("时间:");
+  44   1        lcd12864_set_window(3, 3);
+  45   1        lcd12864_write_string("");
+  46   1        while (g_home) {
+  47   2          unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
+  48   2          unsigned char keyval = keyscan(5);
+  49   2          unsigned char temp = rd_temperature_i();  /* 读取温度 */
+  50   2          
+  51   2          float device_temp = 0.0;
+  52   2          unsigned char control = 0;
+  53   2          if (EN_KEY0 == keyval) {
+  54   3          
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 2   
 
-  55   3          }
-  56   2            lcd12864_set_window(0, 5);
-  57   2            lcd12864_write_data((temp / 10) | 0x30 );
-  58   2            lcd12864_write_data((temp % 10) | 0x30 );
-  59   2          
-  60   2          
-  61   2            if (1 == uartf_reciev_frame(&device_temp, &control)) {
-  62   3              temp = (unsigned char)device_temp;
-  63   3              lcd12864_set_window(1, 5);
-  64   3              lcd12864_write_data((temp / 10) | 0x30 );
-  65   3              lcd12864_write_data((temp % 10) | 0x30 );
-  66   3            }
-  67   2      //      uart_send_byte(g_uart_sta);
-  68   2            get_ds1302_time(ds1302_buf);
-  69   2            
-  70   2            /* 日期设置 */
-  71   2            lcd12864_set_window(2, 3);
-  72   2            
-  73   2            /* 年 */
-  74   2            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
-  75   2            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
-  76   2            lcd12864_write_string("-");
-  77   2            
-  78   2            /* 月 */
-  79   2            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
-  80   2            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
-  81   2            lcd12864_write_string("-");
-  82   2            
-  83   2            /* 日 */
-  84   2            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
-  85   2            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
-  86   2            
-  87   2            /* 时间的设置 */
-  88   2            lcd12864_set_window(3, 3);
-  89   2            
-  90   2            /* 时 */
-  91   2            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
-  92   2            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
-  93   2            lcd12864_write_string(":");
-  94   2            
-  95   2            /* 分 */
-  96   2            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
-  97   2            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
-  98   2            lcd12864_write_string(":");
-  99   2            
- 100   2            /* 秒 */
- 101   2            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
- 102   2            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
- 103   2            
- 104   2            
+  55   3            choose_page = 1; /* 进入主菜单*/
+  56   3            break;
+  57   3          }
+  58   2            lcd12864_set_window(0, 5);
+  59   2            lcd12864_write_data((temp / 10) | 0x30 );
+  60   2            lcd12864_write_data((temp % 10) | 0x30 );
+  61   2          
+  62   2          
+  63   2            if (1 == uartf_reciev_frame(&device_temp, &control)) {
+  64   3              temp = (unsigned char)device_temp;
+  65   3              lcd12864_set_window(1, 5);
+  66   3              lcd12864_write_data((temp / 10) | 0x30 );
+  67   3              lcd12864_write_data((temp % 10) | 0x30 );
+  68   3            }
+  69   2      
+  70   2            get_ds1302_time(ds1302_buf);
+  71   2            
+  72   2            /* 日期设置 */
+  73   2            lcd12864_set_window(2, 3);
+  74   2            
+  75   2            /* 年 */
+  76   2            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+  77   2            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+  78   2            lcd12864_write_string("-");
+  79   2            
+  80   2            /* 月 */
+  81   2            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+  82   2            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+  83   2            lcd12864_write_string("-");
+  84   2            
+  85   2            /* 日 */
+  86   2            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+  87   2            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+  88   2            
+  89   2            /* 时间的设置 */
+  90   2            lcd12864_set_window(3, 3);
+  91   2            
+  92   2            /* 时 */
+  93   2            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+  94   2            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+  95   2            lcd12864_write_string(":");
+  96   2            
+  97   2            /* 分 */
+  98   2            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+  99   2            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 100   2            lcd12864_write_string(":");
+ 101   2            
+ 102   2            /* 秒 */
+ 103   2            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 104   2            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
  105   2            
  106   2            
  107   2            
@@ -121,20 +121,20 @@ line level    source
  109   2            
  110   2            
  111   2            
- 112   2            if (g_wifi_ok) {
- 113   3              
- 114   3              if (g_uart2_sta & 0x80) {
- 115   4              
- 116   4      //          if (__g_uart2_buf[1] == 0x01) {
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 3   
+ 112   2            
+ 113   2            
+ 114   2      //      if (g_wifi_ok) {
+ 115   2      //        
+ 116   2      //        if (g_uart2_sta & 0x80) {
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 3   
 
- 117   4      
- 118   4                  uart_send_frame(15.0, __g_uart2_buf[1]);
- 119   4      //          }
- 120   4                g_uart2_sta = 0x00;
- 121   4              }
- 122   3              
- 123   3            }
+ 117   2      //        
+ 118   2      
+ 119   2      //            uart_send_frame(15.0, __g_uart2_buf[1]);
+ 120   2      //          g_uart2_sta = 0x00;
+ 121   2      //        }
+ 122   2      //        
+ 123   2      //      }
  124   2            
  125   2            
  126   2        }
@@ -190,7 +190,7 @@ line level    source
  176   3              lcd12864_set_window(2, 3);
  177   3              lcd12864_write_data(32);
  178   3            
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 4   
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 4   
 
  179   3              lcd12864_set_window(1, 3);
  180   3              lcd12864_write_data(17);
@@ -244,638 +244,687 @@ line level    source
  228   2          float temp = 10.0;
  229   2          unsigned char keyval = keyscan(2);
  230   2          
- 231   2          /* 获取当前从机家用电器的状态 */
- 232   2          if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
- 233   3            if(elc_sta & 0x01) {
- 234   4              lcd12864_set_window(1, 0);
- 235   4              lcd12864_write_string("E1:ON ");
- 236   4            } else {
- 237   4              lcd12864_set_window(1, 0);
- 238   4              lcd12864_write_string("E1:OFF");
- 239   4            }
- 240   3            
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 5   
+ 231   2            if (g_wifi_ok) {
+ 232   3              
+ 233   3              if (g_uart2_sta & 0x80) {
+ 234   4              
+ 235   4                  uart_send_frame(15.0, __g_uart2_buf[1]);
+ 236   4                g_uart2_sta = 0x00;
+ 237   4              }
+ 238   3              
+ 239   3            }
+ 240   2          
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 5   
 
- 241   3            if(elc_sta & 0x02) {
- 242   4              lcd12864_set_window(2, 0);
- 243   4              lcd12864_write_string("E2:ON ");
- 244   4            } else {
- 245   4              lcd12864_set_window(2, 0);
- 246   4              lcd12864_write_string("E2:OFF");
- 247   4            }
- 248   3            
- 249   3            if(elc_sta & 0x04) {
- 250   4              lcd12864_set_window(1, 4);
- 251   4              lcd12864_write_string("E3:ON ");
- 252   4            } else {
- 253   4              lcd12864_set_window(1, 4);
- 254   4              lcd12864_write_string("E3:OFF");
- 255   4            }
- 256   3      
- 257   3            if(elc_sta & 0x08) {
- 258   4              lcd12864_set_window(2, 4);
- 259   4              lcd12864_write_string("E4:ON ");
- 260   4            } else {
- 261   4              lcd12864_set_window(2, 4);
- 262   4              lcd12864_write_string("E4:OFF");
- 263   4            }
- 264   3          } else {
- 265   3            
- 266   3            /* 不加上这句校验和就会永远的出错 */
- 267   3      //      uart_send_string("eorr\r\n");
- 268   3          }
- 269   2          
- 270   2          
- 271   2          /* 返回上一页 */
- 272   2          if (EN_KEY3 == keyval) {
- 273   3            choose_page = 1;
- 274   3            break;
- 275   3          } else if (EN_KEY1 == keyval) {
- 276   3            elc_num++;
- 277   3            if(elc_num == 5) {
- 278   4              elc_num = 1;
- 279   4            }
- 280   3              switch (elc_num) {
- 281   4      
- 282   4              case 1:
- 283   4                lcd12864_set_window(2, 7);
- 284   4                lcd12864_write_data(32);  
- 285   4              
- 286   4                lcd12864_set_window(1, 3);
- 287   4                lcd12864_write_data(17);
- 288   4                
- 289   4                break;
- 290   4              case 2:
- 291   4                
- 292   4                lcd12864_set_window(1, 3);
- 293   4                lcd12864_write_data(32);
- 294   4              
- 295   4                lcd12864_set_window(2, 3);
- 296   4                lcd12864_write_data(17);
- 297   4                break;
- 298   4              case 3:
- 299   4                lcd12864_set_window(2, 3);
- 300   4                lcd12864_write_data(32);
- 301   4              
- 302   4                lcd12864_set_window(1, 7);
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 6   
+ 241   2          /* 获取当前从机家用电器的状态 */
+ 242   2          if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
+ 243   3            if(elc_sta & 0x01) {
+ 244   4              lcd12864_set_window(1, 0);
+ 245   4              lcd12864_write_string("E1:ON ");
+ 246   4            } else {
+ 247   4              lcd12864_set_window(1, 0);
+ 248   4              lcd12864_write_string("E1:OFF");
+ 249   4            }
+ 250   3            
+ 251   3            if(elc_sta & 0x02) {
+ 252   4              lcd12864_set_window(2, 0);
+ 253   4              lcd12864_write_string("E2:ON ");
+ 254   4            } else {
+ 255   4              lcd12864_set_window(2, 0);
+ 256   4              lcd12864_write_string("E2:OFF");
+ 257   4            }
+ 258   3            
+ 259   3            if(elc_sta & 0x04) {
+ 260   4              lcd12864_set_window(1, 4);
+ 261   4              lcd12864_write_string("E3:ON ");
+ 262   4            } else {
+ 263   4              lcd12864_set_window(1, 4);
+ 264   4              lcd12864_write_string("E3:OFF");
+ 265   4            }
+ 266   3      
+ 267   3            if(elc_sta & 0x08) {
+ 268   4              lcd12864_set_window(2, 4);
+ 269   4              lcd12864_write_string("E4:ON ");
+ 270   4            } else {
+ 271   4              lcd12864_set_window(2, 4);
+ 272   4              lcd12864_write_string("E4:OFF");
+ 273   4            }
+ 274   3          } else {
+ 275   3            
+ 276   3            /* 不加上这句校验和就会永远的出错 */
+ 277   3      //      uart_send_string("eorr\r\n");
+ 278   3          }
+ 279   2          
+ 280   2          
+ 281   2          /* 返回上一页 */
+ 282   2          if (EN_KEY3 == keyval) {
+ 283   3            g_home = 1;
+ 284   3            choose_page = 1;
+ 285   3            break;
+ 286   3          } else if (EN_KEY1 == keyval) {
+ 287   3            elc_num++;
+ 288   3            if(elc_num == 5) {
+ 289   4              elc_num = 1;
+ 290   4            }
+ 291   3              switch (elc_num) {
+ 292   4      
+ 293   4              case 1:
+ 294   4                lcd12864_set_window(2, 7);
+ 295   4                lcd12864_write_data(32);  
+ 296   4              
+ 297   4                lcd12864_set_window(1, 3);
+ 298   4                lcd12864_write_data(17);
+ 299   4                
+ 300   4                break;
+ 301   4              case 2:
+ 302   4                
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 6   
 
- 303   4                lcd12864_write_data(17);
- 304   4                break;
- 305   4              case 4:
- 306   4                lcd12864_set_window(1, 7);
- 307   4                lcd12864_write_data(32);
- 308   4              
- 309   4                lcd12864_set_window(2, 7);
- 310   4                lcd12864_write_data(17);
- 311   4                break;
- 312   4              default:
- 313   4                break;
- 314   4            }
- 315   3          } else if (EN_KEY0 == keyval) {
- 316   3              switch (elc_num) {
- 317   4              case 1:
- 318   4                if (elc_sta & 0x01) {
- 319   5                  elc_sta &= ~0x01;
- 320   5                } else {
- 321   5                  elc_sta |= 0x01;
- 322   5                }
- 323   4                uart_send_frame(0.0, elc_sta);
- 324   4                    
- 325   4                break;
- 326   4              case 2:
- 327   4                if (elc_sta & 0x02) {
- 328   5                  elc_sta &= ~0x02;
- 329   5                } else {
- 330   5                  elc_sta |= 0x02;
- 331   5                }
- 332   4                uart_send_frame(0.0, elc_sta);
- 333   4      
- 334   4                break;
- 335   4              case 3:
- 336   4                if (elc_sta & 0x04) {
- 337   5                  elc_sta &= ~0x04;
- 338   5                } else {
- 339   5                  elc_sta |= 0x04;
- 340   5                }
- 341   4                uart_send_frame(0.0, elc_sta);
- 342   4                break;
- 343   4              case 4:
- 344   4                if (elc_sta & 0x08) {
- 345   5                  elc_sta &= ~0x08;
- 346   5                } else {
- 347   5                  elc_sta |= 0x08;
- 348   5                }
- 349   4                uart_send_frame(0.0, elc_sta);
- 350   4                break;
- 351   4              default:
- 352   4                break;
- 353   4            }
- 354   3          }
- 355   2        }
- 356   1      
- 357   1      }
- 358          
- 359          void setting (void)
- 360          {
- 361   1        unsigned char point_select = 0;
- 362   1        lcd12864_write_cmd(0x01);
- 363   1        lcd12864_set_window(0, 1);
- 364   1        lcd12864_write_string("≡≡设置≡≡");
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 7   
+ 303   4                lcd12864_set_window(1, 3);
+ 304   4                lcd12864_write_data(32);
+ 305   4              
+ 306   4                lcd12864_set_window(2, 3);
+ 307   4                lcd12864_write_data(17);
+ 308   4                break;
+ 309   4              case 3:
+ 310   4                lcd12864_set_window(2, 3);
+ 311   4                lcd12864_write_data(32);
+ 312   4              
+ 313   4                lcd12864_set_window(1, 7);
+ 314   4                lcd12864_write_data(17);
+ 315   4                break;
+ 316   4              case 4:
+ 317   4                lcd12864_set_window(1, 7);
+ 318   4                lcd12864_write_data(32);
+ 319   4              
+ 320   4                lcd12864_set_window(2, 7);
+ 321   4                lcd12864_write_data(17);
+ 322   4                break;
+ 323   4              default:
+ 324   4                break;
+ 325   4            }
+ 326   3          } else if (EN_KEY0 == keyval) {
+ 327   3              switch (elc_num) {
+ 328   4              case 1:
+ 329   4                if (elc_sta & 0x01) {
+ 330   5                  elc_sta &= ~0x01;
+ 331   5                } else {
+ 332   5                  elc_sta |= 0x01;
+ 333   5                }
+ 334   4                uart_send_frame(0.0, elc_sta);
+ 335   4                    
+ 336   4                break;
+ 337   4              case 2:
+ 338   4                if (elc_sta & 0x02) {
+ 339   5                  elc_sta &= ~0x02;
+ 340   5                } else {
+ 341   5                  elc_sta |= 0x02;
+ 342   5                }
+ 343   4                uart_send_frame(0.0, elc_sta);
+ 344   4      
+ 345   4                break;
+ 346   4              case 3:
+ 347   4                if (elc_sta & 0x04) {
+ 348   5                  elc_sta &= ~0x04;
+ 349   5                } else {
+ 350   5                  elc_sta |= 0x04;
+ 351   5                }
+ 352   4                uart_send_frame(0.0, elc_sta);
+ 353   4                break;
+ 354   4              case 4:
+ 355   4                if (elc_sta & 0x08) {
+ 356   5                  elc_sta &= ~0x08;
+ 357   5                } else {
+ 358   5                  elc_sta |= 0x08;
+ 359   5                }
+ 360   4                uart_send_frame(0.0, elc_sta);
+ 361   4                break;
+ 362   4              default:
+ 363   4                break;
+ 364   4            }
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 7   
 
- 365   1        lcd12864_set_window(1, 0);
- 366   1        lcd12864_write_string("1.时间");
- 367   1        lcd12864_set_window(2, 0);
- 368   1        lcd12864_write_string("2.温度");
- 369   1        while (1) {
- 370   2          unsigned char keyval = keyscan(5);
- 371   2      //    lcd12864_set_window(0, 0);
- 372   2      //    lcd12864_write_string("设置");
- 373   2          
- 374   2          if (EN_KEY0 == keyval) {
- 375   3            if (point_select == 0) {
- 376   4              choose_page = 5;
- 377   4            } else {
- 378   4            
- 379   4            }
- 380   3            break;
- 381   3          }
- 382   2      
- 383   2              
- 384   2          if (EN_KEY3 == keyval) {
- 385   3            choose_page = 1;
- 386   3            break;
- 387   3          }
- 388   2        }
- 389   1      }
- 390          
- 391          void other (void )
- 392          {
- 393   1        lcd12864_write_cmd(0x01);
- 394   1        while (1) {
- 395   2          
- 396   2          unsigned char keyval = keyscan(5);
- 397   2          if (EN_KEY3 == keyval) {
- 398   3            choose_page = 1;
- 399   3            break;
- 400   3          }
- 401   2          lcd12864_set_window(0, 0);
- 402   2          lcd12864_write_string("其他");
- 403   2        
- 404   2        }
- 405   1      
- 406   1      }
- 407          
- 408          
- 409          
- 410          void Timer0Init(void)   //1??@11.0592MHz
- 411          {
- 412   1      //  AUXR |= 0x80;   
- 413   1        TMOD &= 0xF0;   
- 414   1        TL0 = 0xCD;   
- 415   1        TH0 = 0xD4;   
- 416   1        TF0 = 0;    
- 417   1        TR0 = 1;    
- 418   1        
- 419   1        EA = 1;
- 420   1        ET0 = 1;
- 421   1      }
- 422          
- 423          bit refresh = 0;
- 424          void isr_timer0 (void) interrupt 1
- 425          {
- 426   1        static unsigned int count = 0;
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 8   
+ 365   3          }
+ 366   2        }
+ 367   1      }
+ 368          
+ 369          void setting (void)
+ 370          {
+ 371   1        unsigned char point_select = 0;
+ 372   1        lcd12864_write_cmd(0x01);
+ 373   1        lcd12864_set_window(0, 1);
+ 374   1        lcd12864_write_string("≡≡设置≡≡");
+ 375   1        lcd12864_set_window(1, 0);
+ 376   1        lcd12864_write_string("1.时间");
+ 377   1        lcd12864_set_window(2, 0);
+ 378   1        lcd12864_write_string("2.温度");
+ 379   1        while (1) {
+ 380   2          unsigned char keyval = keyscan(5);
+ 381   2          
+ 382   2          if (EN_KEY0 == keyval) {
+ 383   3            if (point_select == 0) {
+ 384   4              choose_page = 5;
+ 385   4            } else {
+ 386   4            
+ 387   4            }
+ 388   3            break;
+ 389   3          }
+ 390   2              
+ 391   2          if (EN_KEY3 == keyval) {
+ 392   3            choose_page = 1;
+ 393   3            break;
+ 394   3          }
+ 395   2        }
+ 396   1      }
+ 397          
+ 398          void other (void )
+ 399          {
+ 400   1        lcd12864_write_cmd(0x01);
+ 401   1        while (1) {
+ 402   2          
+ 403   2          unsigned char keyval = keyscan(5);
+ 404   2          if (EN_KEY3 == keyval) {
+ 405   3            choose_page = 1;
+ 406   3            break;
+ 407   3          }
+ 408   2          lcd12864_set_window(0, 3);
+ 409   2          lcd12864_write_string("STAIP");
+ 410   2          lcd12864_set_window(1, 1);
+ 411   2          lcd12864_write_string("192.168.1.200");
+ 412   2          
+ 413   2          lcd12864_set_window(2, 3);
+ 414   2          lcd12864_write_string("APIP");
+ 415   2          lcd12864_set_window(3, 1);
+ 416   2          lcd12864_write_string("192.168.4.1");
+ 417   2        }
+ 418   1      }
+ 419          
+ 420          void Timer0Init(void)   //1??@11.0592MHz
+ 421          {
+ 422   1      //  AUXR |= 0x80;   
+ 423   1        TMOD &= 0xF0;   
+ 424   1        TL0 = 0xCD;   
+ 425   1        TH0 = 0xD4;   
+ 426   1        TF0 = 0;    
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 8   
 
- 427   1        TF0 = 0;
- 428   1        TL0 = 0xCD;   
- 429   1        TH0 = 0xD4; 
- 430   1      //  TH0 = (65536 - 1000) >> 8;
- 431   1      //  TL0 = (65536- 1000);
- 432   1        
- 433   1        count++;
- 434   1        if (500 == count) {
- 435   2          count = 0;
- 436   2          refresh = !refresh;
- 437   2        }
- 438   1      }
- 439          
- 440          
- 441          void date_time_setting (void) 
- 442          {
- 443   1        unsigned char point_select = 0;
- 444   1        unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
- 445   1        lcd12864_write_cmd(0x01);
- 446   1        
- 447   1        get_ds1302_time(ds1302_buf);
- 448   1        
- 449   1        lcd12864_set_window(0, 0);
- 450   1        lcd12864_write_string("≡时间日期设置≡");
- 451   1        
- 452   1        lcd12864_set_window(1, 0);
- 453   1        lcd12864_write_string("日期  ");
+ 427   1        TR0 = 1;    
+ 428   1        
+ 429   1        EA = 1;
+ 430   1        ET0 = 1;
+ 431   1      }
+ 432          
+ 433          bit refresh = 0;
+ 434          void isr_timer0 (void) interrupt 1
+ 435          {
+ 436   1        static unsigned int count = 0;
+ 437   1        TF0 = 0;
+ 438   1        TL0 = 0xCD;   
+ 439   1        TH0 = 0xD4; 
+ 440   1        
+ 441   1        count++;
+ 442   1        if (500 == count) {
+ 443   2          count = 0;
+ 444   2          refresh = !refresh;
+ 445   2        }
+ 446   1      }
+ 447          
+ 448          
+ 449          void date_time_setting (void) 
+ 450          {
+ 451   1        unsigned char point_select = 0;
+ 452   1        unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
+ 453   1        lcd12864_write_cmd(0x01);
  454   1        
- 455   1        lcd12864_set_window(2, 0);
- 456   1        lcd12864_write_string("时间  ");
- 457   1        
- 458   1        
- 459   1        /* 日期设置 */
- 460   1        lcd12864_set_window(1, 3);
- 461   1        
- 462   1        /* 年 */
- 463   1        lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
- 464   1        lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
- 465   1        lcd12864_write_string("-");
+ 455   1        get_ds1302_time(ds1302_buf);
+ 456   1        
+ 457   1        lcd12864_set_window(0, 0);
+ 458   1        lcd12864_write_string("≡时间日期设置≡");
+ 459   1        
+ 460   1        lcd12864_set_window(1, 0);
+ 461   1        lcd12864_write_string("日期  ");
+ 462   1        
+ 463   1        lcd12864_set_window(2, 0);
+ 464   1        lcd12864_write_string("时间  ");
+ 465   1        
  466   1        
- 467   1        /* 月 */
- 468   1        lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
- 469   1        lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
- 470   1        lcd12864_write_string("-");
- 471   1        
- 472   1        /* 日 */
- 473   1        lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
- 474   1        lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
- 475   1        
- 476   1        /* 时间的设置 */
- 477   1        lcd12864_set_window(2, 3);
- 478   1        
- 479   1        /* 时 */
- 480   1        lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
- 481   1        lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
- 482   1        lcd12864_write_string(":");
+ 467   1        /* 日期设置 */
+ 468   1        lcd12864_set_window(1, 3);
+ 469   1        
+ 470   1        /* 年 */
+ 471   1        lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 472   1        lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+ 473   1        lcd12864_write_string("-");
+ 474   1        
+ 475   1        /* 月 */
+ 476   1        lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+ 477   1        lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+ 478   1        lcd12864_write_string("-");
+ 479   1        
+ 480   1        /* 日 */
+ 481   1        lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 482   1        lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
  483   1        
- 484   1        /* 分 */
- 485   1        lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
- 486   1        lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
- 487   1        lcd12864_write_string(":");
- 488   1        
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 9   
+ 484   1        /* 时间的设置 */
+ 485   1        lcd12864_set_window(2, 3);
+ 486   1        
+ 487   1        /* 时 */
+ 488   1        lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 9   
 
- 489   1        /* 秒 */
- 490   1        lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
- 491   1        lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
- 492   1          
- 493   1        Timer0Init();
- 494   1        while (1) {
- 495   2          
- 496   2          unsigned char keyval = keyscan(5);
- 497   2          
- 498   2          switch (point_select) {
- 499   3          
- 500   3            case 0 :
- 501   3              if ( refresh == 1) {
- 502   4                lcd12864_set_window(1, 3);
- 503   4                lcd12864_write_data(32);
- 504   4              } else {
- 505   4                lcd12864_set_window(1, 3);
- 506   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
- 507   4              }
- 508   3              break;
- 509   3            case 1 :
- 510   3              if ( refresh == 1) {
- 511   4                lcd12864_set_window(1, 3);
- 512   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
- 513   4                lcd12864_write_data(32);
- 514   4              } else {
- 515   4                lcd12864_set_window(1, 3);
- 516   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
- 517   4                lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
- 518   4              }
- 519   3              break;
- 520   3            case 2 :
- 521   3              if ( refresh == 1) {
- 522   4                lcd12864_set_window(1, 4);
- 523   4                lcd12864_write_string("-");
- 524   4                lcd12864_write_data(32);
- 525   4              } else {
- 526   4                lcd12864_set_window(1, 4);
- 527   4                lcd12864_write_string("-");
- 528   4                lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
- 529   4              }
- 530   3              break;
- 531   3            case 3 :
- 532   3              if ( refresh == 1) {
- 533   4                lcd12864_set_window(1, 5);
- 534   4                lcd12864_write_data(32);
- 535   4              } else {
- 536   4                lcd12864_set_window(1, 5);
- 537   4                lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
- 538   4              }
- 539   3              break;
- 540   3            case 4 :
- 541   3              if ( refresh == 1) {
- 542   4                lcd12864_set_window(1, 6);
- 543   4                lcd12864_write_data(32);
- 544   4              } else {
- 545   4                lcd12864_set_window(1, 6);
- 546   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
- 547   4              }
- 548   3              break;
- 549   3            case 5 :
- 550   3              if ( refresh == 1) {
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 10  
+ 489   1        lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+ 490   1        lcd12864_write_string(":");
+ 491   1        
+ 492   1        /* 分 */
+ 493   1        lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 494   1        lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 495   1        lcd12864_write_string(":");
+ 496   1        
+ 497   1        /* 秒 */
+ 498   1        lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 499   1        lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+ 500   1          
+ 501   1        Timer0Init();
+ 502   1        while (1) {
+ 503   2          
+ 504   2          unsigned char keyval = keyscan(5);
+ 505   2          
+ 506   2          switch (point_select) {
+ 507   3          
+ 508   3            case 0 :
+ 509   3              if ( refresh == 1) {
+ 510   4                lcd12864_set_window(1, 3);
+ 511   4                lcd12864_write_data(32);
+ 512   4              } else {
+ 513   4                lcd12864_set_window(1, 3);
+ 514   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 515   4              }
+ 516   3              break;
+ 517   3            case 1 :
+ 518   3              if ( refresh == 1) {
+ 519   4                lcd12864_set_window(1, 3);
+ 520   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 521   4                lcd12864_write_data(32);
+ 522   4              } else {
+ 523   4                lcd12864_set_window(1, 3);
+ 524   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 525   4                lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+ 526   4              }
+ 527   3              break;
+ 528   3            case 2 :
+ 529   3              if ( refresh == 1) {
+ 530   4                lcd12864_set_window(1, 4);
+ 531   4                lcd12864_write_string("-");
+ 532   4                lcd12864_write_data(32);
+ 533   4              } else {
+ 534   4                lcd12864_set_window(1, 4);
+ 535   4                lcd12864_write_string("-");
+ 536   4                lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+ 537   4              }
+ 538   3              break;
+ 539   3            case 3 :
+ 540   3              if ( refresh == 1) {
+ 541   4                lcd12864_set_window(1, 5);
+ 542   4                lcd12864_write_data(32);
+ 543   4              } else {
+ 544   4                lcd12864_set_window(1, 5);
+ 545   4                lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+ 546   4              }
+ 547   3              break;
+ 548   3            case 4 :
+ 549   3              if ( refresh == 1) {
+ 550   4                lcd12864_set_window(1, 6);
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 10  
 
- 551   4                lcd12864_set_window(1, 6);
- 552   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
- 553   4                lcd12864_write_data(32);
- 554   4              } else {
- 555   4                lcd12864_set_window(1, 6);
- 556   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
- 557   4                lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
- 558   4              }
- 559   3              break;
- 560   3            case 6 :
- 561   3              if ( refresh == 1) {
- 562   4                lcd12864_set_window(2, 3);
- 563   4                lcd12864_write_data(32);
- 564   4              } else {
- 565   4                lcd12864_set_window(2, 3);
- 566   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
- 567   4              }
- 568   3              break;
- 569   3            case 7 :
- 570   3              if ( refresh == 1) {
- 571   4                lcd12864_set_window(2, 3);
- 572   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
- 573   4                lcd12864_write_data(32);
- 574   4              } else {
- 575   4                lcd12864_set_window(2, 3);
- 576   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
- 577   4                lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
- 578   4              }
- 579   3              break;
- 580   3            case 8 :
- 581   3              if ( refresh == 1) {
- 582   4                lcd12864_set_window(2, 4);
- 583   4                lcd12864_write_string(":");
- 584   4                lcd12864_write_data(32);
- 585   4              } else {
- 586   4                lcd12864_set_window(2, 4);
- 587   4                lcd12864_write_string(":");
- 588   4                lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
- 589   4              }
- 590   3              break;
- 591   3            case 9 :
- 592   3              if ( refresh == 1) {
- 593   4                lcd12864_set_window(2, 5);
- 594   4                lcd12864_write_data(32);
- 595   4              } else {
- 596   4                lcd12864_set_window(2, 5);
- 597   4                lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
- 598   4              }
- 599   3              break;
- 600   3            case 10:
- 601   3              if ( refresh == 1) {
- 602   4                lcd12864_set_window(2, 6);
- 603   4                lcd12864_write_data(32);
- 604   4              } else {
- 605   4                lcd12864_set_window(2, 6);
- 606   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
- 607   4              }
- 608   3              break;
- 609   3            case 11:
- 610   3              if ( refresh == 1) {
- 611   4                lcd12864_set_window(2, 6);
- 612   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 11  
+ 551   4                lcd12864_write_data(32);
+ 552   4              } else {
+ 553   4                lcd12864_set_window(1, 6);
+ 554   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 555   4              }
+ 556   3              break;
+ 557   3            case 5 :
+ 558   3              if ( refresh == 1) {
+ 559   4                lcd12864_set_window(1, 6);
+ 560   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 561   4                lcd12864_write_data(32);
+ 562   4              } else {
+ 563   4                lcd12864_set_window(1, 6);
+ 564   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 565   4                lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+ 566   4              }
+ 567   3              break;
+ 568   3            case 6 :
+ 569   3              if ( refresh == 1) {
+ 570   4                lcd12864_set_window(2, 3);
+ 571   4                lcd12864_write_data(32);
+ 572   4              } else {
+ 573   4                lcd12864_set_window(2, 3);
+ 574   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 575   4              }
+ 576   3              break;
+ 577   3            case 7 :
+ 578   3              if ( refresh == 1) {
+ 579   4                lcd12864_set_window(2, 3);
+ 580   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 581   4                lcd12864_write_data(32);
+ 582   4              } else {
+ 583   4                lcd12864_set_window(2, 3);
+ 584   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 585   4                lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+ 586   4              }
+ 587   3              break;
+ 588   3            case 8 :
+ 589   3              if ( refresh == 1) {
+ 590   4                lcd12864_set_window(2, 4);
+ 591   4                lcd12864_write_string(":");
+ 592   4                lcd12864_write_data(32);
+ 593   4              } else {
+ 594   4                lcd12864_set_window(2, 4);
+ 595   4                lcd12864_write_string(":");
+ 596   4                lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 597   4              }
+ 598   3              break;
+ 599   3            case 9 :
+ 600   3              if ( refresh == 1) {
+ 601   4                lcd12864_set_window(2, 5);
+ 602   4                lcd12864_write_data(32);
+ 603   4              } else {
+ 604   4                lcd12864_set_window(2, 5);
+ 605   4                lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 606   4              }
+ 607   3              break;
+ 608   3            case 10:
+ 609   3              if ( refresh == 1) {
+ 610   4                lcd12864_set_window(2, 6);
+ 611   4                lcd12864_write_data(32);
+ 612   4              } else {
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 11  
 
- 613   4                lcd12864_write_data(32);
- 614   4              } else {
- 615   4                lcd12864_set_window(2, 6);
- 616   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
- 617   4                lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
- 618   4              }
- 619   3              break;
- 620   3            default:
- 621   3              break;
- 622   3          }
- 623   2          
- 624   2      //    if ( refresh == 1) {
- 625   2      //      lcd12864_set_window(1, 3);
- 626   2      //      lcd12864_write_data(32);
- 627   2      //    } else {
- 628   2      //      lcd12864_set_window(1, 3);
- 629   2      //      lcd12864_write_data(0x32);
- 630   2      //    }
+ 613   4                lcd12864_set_window(2, 6);
+ 614   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 615   4              }
+ 616   3              break;
+ 617   3            case 11:
+ 618   3              if ( refresh == 1) {
+ 619   4                lcd12864_set_window(2, 6);
+ 620   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 621   4                lcd12864_write_data(32);
+ 622   4              } else {
+ 623   4                lcd12864_set_window(2, 6);
+ 624   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 625   4                lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+ 626   4              }
+ 627   3              break;
+ 628   3            default:
+ 629   3              break;
+ 630   3          }
  631   2          
- 632   2          if (EN_KEY2 == keyval) {
- 633   3            point_select++;
- 634   3            
- 635   3            if (point_select == 12) {
- 636   4              point_select = 0;
- 637   4            }
- 638   3            /* 日期设置 */
- 639   3            lcd12864_set_window(1, 3);
- 640   3            
- 641   3            /* 年 */
- 642   3            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
- 643   3            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
- 644   3            lcd12864_write_string("-");
- 645   3            
- 646   3            /* 月 */
- 647   3            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
- 648   3            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
- 649   3            lcd12864_write_string("-");
- 650   3            
- 651   3            /* 日 */
- 652   3            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
- 653   3            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
- 654   3            
- 655   3            /* 时间的设置 */
- 656   3            lcd12864_set_window(2, 3);
- 657   3            
- 658   3            /* 时 */
- 659   3            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
- 660   3            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
- 661   3            lcd12864_write_string(":");
+ 632   2      //    if ( refresh == 1) {
+ 633   2      //      lcd12864_set_window(1, 3);
+ 634   2      //      lcd12864_write_data(32);
+ 635   2      //    } else {
+ 636   2      //      lcd12864_set_window(1, 3);
+ 637   2      //      lcd12864_write_data(0x32);
+ 638   2      //    }
+ 639   2          
+ 640   2          if (EN_KEY2 == keyval) {
+ 641   3            point_select++;
+ 642   3            
+ 643   3            if (point_select == 12) {
+ 644   4              point_select = 0;
+ 645   4            }
+ 646   3            /* 日期设置 */
+ 647   3            lcd12864_set_window(1, 3);
+ 648   3            
+ 649   3            /* 年 */
+ 650   3            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 651   3            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+ 652   3            lcd12864_write_string("-");
+ 653   3            
+ 654   3            /* 月 */
+ 655   3            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+ 656   3            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+ 657   3            lcd12864_write_string("-");
+ 658   3            
+ 659   3            /* 日 */
+ 660   3            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 661   3            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
  662   3            
- 663   3            /* 分 */
- 664   3            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
- 665   3            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
- 666   3            lcd12864_write_string(":");
- 667   3            
- 668   3            /* 秒 */
- 669   3            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
- 670   3            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
- 671   3          }
- 672   2          if (EN_KEY0 == keyval) {
- 673   3            switch (point_select) {
- 674   4              case 0 :
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 12  
+ 663   3            /* 时间的设置 */
+ 664   3            lcd12864_set_window(2, 3);
+ 665   3            
+ 666   3            /* 时 */
+ 667   3            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 668   3            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+ 669   3            lcd12864_write_string(":");
+ 670   3            
+ 671   3            /* 分 */
+ 672   3            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 673   3            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 674   3            lcd12864_write_string(":");
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 12  
 
- 675   4                ds1302_buf[6] = (ds1302_buf[6] & 0x0F) | ((ds1302_buf[6] >> 4) + 1) << 4;
- 676   4                if((ds1302_buf[6] >> 4) > 9 ) {
- 677   5                ds1302_buf[6] = ds1302_buf[6] & 0x0F;
- 678   5                }
- 679   4                break;
- 680   4              case 1 :
- 681   4                ds1302_buf[6] = (ds1302_buf[6] & 0xF0) | ((ds1302_buf[6] & 0x0F) + 1) ;
- 682   4                if((ds1302_buf[6] & 0x0F) > 9 ) {
- 683   5                ds1302_buf[6] = ds1302_buf[6] & 0xF0;
- 684   5                }
- 685   4                break;
- 686   4              case 2 :
- 687   4                ds1302_buf[4] = (ds1302_buf[4] & 0x0F) | ((ds1302_buf[4] >> 4) + 1) << 4;
- 688   4                if((ds1302_buf[4] >> 4) > 9 ) {
- 689   5                ds1302_buf[4] = ds1302_buf[6] & 0x0F;
- 690   5                }
- 691   4                break;
- 692   4              case 3 :
- 693   4                ds1302_buf[4] = (ds1302_buf[4] & 0xF0) | ((ds1302_buf[4] & 0x0F) + 1) ;
- 694   4                if((ds1302_buf[4] & 0x0F) > 9 ) {
- 695   5                ds1302_buf[4] = ds1302_buf[4] & 0xF0;
- 696   5                }
- 697   4                break;                
- 698   4              case 4 :
- 699   4                ds1302_buf[3] = (ds1302_buf[3] & 0x0F) | ((ds1302_buf[3] >> 4) + 1) << 4;
- 700   4                if((ds1302_buf[3] >> 4) > 9 ) {
- 701   5                ds1302_buf[3] = ds1302_buf[3] & 0x0F;
- 702   5                }
- 703   4                break;    
- 704   4              case 5 :
- 705   4                ds1302_buf[3] = (ds1302_buf[3] & 0xF0) | ((ds1302_buf[3] & 0x0F) + 1) ;
- 706   4                if((ds1302_buf[3] & 0x0F) > 9 ) {
- 707   5                ds1302_buf[3] = ds1302_buf[3] & 0xF0;
- 708   5                }
- 709   4                break;
- 710   4              case 6 :
- 711   4                ds1302_buf[2] = (ds1302_buf[2] & 0x0F) | ((ds1302_buf[2] >> 4) + 1) << 4;
- 712   4                if((ds1302_buf[2] >> 4) > 2 ) {
- 713   5                ds1302_buf[2] = ds1302_buf[2] & 0x0F;
- 714   5                }
- 715   4                break;
- 716   4              case 7 :
- 717   4                ds1302_buf[2] = (ds1302_buf[2] & 0xF0) | ((ds1302_buf[2] & 0x0F) + 1) ;
- 718   4                if((ds1302_buf[2] & 0x0F) > 9 ) {
- 719   5                ds1302_buf[2] = ds1302_buf[2] & 0xF0;
- 720   5                }
- 721   4                break;
- 722   4              case 8 :
- 723   4                ds1302_buf[1] = (ds1302_buf[1] & 0x0F) | ((ds1302_buf[1] >> 4) + 1) << 4;
- 724   4                if((ds1302_buf[1] >> 4) > 5 ) {
- 725   5                ds1302_buf[1] = ds1302_buf[1] & 0x0F;
- 726   5                }
- 727   4                break;
- 728   4              case 9 :
- 729   4                ds1302_buf[1] = (ds1302_buf[1] & 0xF0) | ((ds1302_buf[1] & 0x0F) + 1) ;
- 730   4                if((ds1302_buf[1] & 0x0F) > 9 ) {
- 731   5                ds1302_buf[1] = ds1302_buf[1] & 0xF0;
- 732   5                }
- 733   4                break;
- 734   4              case 10 :
- 735   4                ds1302_buf[0] = (ds1302_buf[0] & 0x0F) | ((ds1302_buf[0] >> 4) + 1) << 4;
- 736   4                if((ds1302_buf[0] >> 4) > 5 ) {
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 13  
+ 675   3            
+ 676   3            /* 秒 */
+ 677   3            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 678   3            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+ 679   3          }
+ 680   2          if (EN_KEY0 == keyval) {
+ 681   3            switch (point_select) {
+ 682   4              case 0 :
+ 683   4                ds1302_buf[6] = (ds1302_buf[6] & 0x0F) | ((ds1302_buf[6] >> 4) + 1) << 4;
+ 684   4                if((ds1302_buf[6] >> 4) > 9 ) {
+ 685   5                ds1302_buf[6] = ds1302_buf[6] & 0x0F;
+ 686   5                }
+ 687   4                break;
+ 688   4              case 1 :
+ 689   4                ds1302_buf[6] = (ds1302_buf[6] & 0xF0) | ((ds1302_buf[6] & 0x0F) + 1) ;
+ 690   4                if((ds1302_buf[6] & 0x0F) > 9 ) {
+ 691   5                ds1302_buf[6] = ds1302_buf[6] & 0xF0;
+ 692   5                }
+ 693   4                break;
+ 694   4              case 2 :
+ 695   4                ds1302_buf[4] = (ds1302_buf[4] & 0x0F) | ((ds1302_buf[4] >> 4) + 1) << 4;
+ 696   4                if((ds1302_buf[4] >> 4) > 9 ) {
+ 697   5                ds1302_buf[4] = ds1302_buf[6] & 0x0F;
+ 698   5                }
+ 699   4                break;
+ 700   4              case 3 :
+ 701   4                ds1302_buf[4] = (ds1302_buf[4] & 0xF0) | ((ds1302_buf[4] & 0x0F) + 1) ;
+ 702   4                if((ds1302_buf[4] & 0x0F) > 9 ) {
+ 703   5                ds1302_buf[4] = ds1302_buf[4] & 0xF0;
+ 704   5                }
+ 705   4                break;                
+ 706   4              case 4 :
+ 707   4                ds1302_buf[3] = (ds1302_buf[3] & 0x0F) | ((ds1302_buf[3] >> 4) + 1) << 4;
+ 708   4                if((ds1302_buf[3] >> 4) > 9 ) {
+ 709   5                ds1302_buf[3] = ds1302_buf[3] & 0x0F;
+ 710   5                }
+ 711   4                break;    
+ 712   4              case 5 :
+ 713   4                ds1302_buf[3] = (ds1302_buf[3] & 0xF0) | ((ds1302_buf[3] & 0x0F) + 1) ;
+ 714   4                if((ds1302_buf[3] & 0x0F) > 9 ) {
+ 715   5                ds1302_buf[3] = ds1302_buf[3] & 0xF0;
+ 716   5                }
+ 717   4                break;
+ 718   4              case 6 :
+ 719   4                ds1302_buf[2] = (ds1302_buf[2] & 0x0F) | ((ds1302_buf[2] >> 4) + 1) << 4;
+ 720   4                if((ds1302_buf[2] >> 4) > 2 ) {
+ 721   5                ds1302_buf[2] = ds1302_buf[2] & 0x0F;
+ 722   5                }
+ 723   4                break;
+ 724   4              case 7 :
+ 725   4                ds1302_buf[2] = (ds1302_buf[2] & 0xF0) | ((ds1302_buf[2] & 0x0F) + 1) ;
+ 726   4                if((ds1302_buf[2] & 0x0F) > 9 ) {
+ 727   5                ds1302_buf[2] = ds1302_buf[2] & 0xF0;
+ 728   5                }
+ 729   4                break;
+ 730   4              case 8 :
+ 731   4                ds1302_buf[1] = (ds1302_buf[1] & 0x0F) | ((ds1302_buf[1] >> 4) + 1) << 4;
+ 732   4                if((ds1302_buf[1] >> 4) > 5 ) {
+ 733   5                ds1302_buf[1] = ds1302_buf[1] & 0x0F;
+ 734   5                }
+ 735   4                break;
+ 736   4              case 9 :
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 13  
 
- 737   5                ds1302_buf[0] = ds1302_buf[0] & 0x0F;
- 738   5                }
- 739   4                break;
- 740   4              case 11 :
- 741   4                ds1302_buf[0] = (ds1302_buf[0] & 0xF0) | ((ds1302_buf[0] & 0x0F) + 1) ;
- 742   4                if((ds1302_buf[0] & 0x0F) > 9 ) {
- 743   5                ds1302_buf[0] = ds1302_buf[0] & 0xF0;
- 744   5                }
- 745   4                break;
- 746   4              default:
+ 737   4                ds1302_buf[1] = (ds1302_buf[1] & 0xF0) | ((ds1302_buf[1] & 0x0F) + 1) ;
+ 738   4                if((ds1302_buf[1] & 0x0F) > 9 ) {
+ 739   5                ds1302_buf[1] = ds1302_buf[1] & 0xF0;
+ 740   5                }
+ 741   4                break;
+ 742   4              case 10 :
+ 743   4                ds1302_buf[0] = (ds1302_buf[0] & 0x0F) | ((ds1302_buf[0] >> 4) + 1) << 4;
+ 744   4                if((ds1302_buf[0] >> 4) > 5 ) {
+ 745   5                ds1302_buf[0] = ds1302_buf[0] & 0x0F;
+ 746   5                }
  747   4                break;
- 748   4            }
- 749   3          }
- 750   2          if (EN_KEY3 == keyval) {
- 751   3            choose_page = 1;
- 752   3            set_ds1302_time(&ds1302_buf);
- 753   3            
- 754   3            TR0 = 0;
- 755   3            ET0 = 0;
- 756   3            break;
+ 748   4              case 11 :
+ 749   4                ds1302_buf[0] = (ds1302_buf[0] & 0xF0) | ((ds1302_buf[0] & 0x0F) + 1) ;
+ 750   4                if((ds1302_buf[0] & 0x0F) > 9 ) {
+ 751   5                ds1302_buf[0] = ds1302_buf[0] & 0xF0;
+ 752   5                }
+ 753   4                break;
+ 754   4              default:
+ 755   4                break;
+ 756   4            }
  757   3          }
- 758   2        }
- 759   1      }
- 760          
- 761          
- 762          void main (void)
- 763          {
- 764   1      
- 765   1      
- 766   1        P2M1 = 0x00;
- 767   1        P2M0 = 0xFF;
- 768   1        
- 769   1        uart_init();
- 770   1        uart2_init();
- 771   1        
- 772   1        lcd12864_init ();
- 773   1        
- 774   1        
- 775   1        init_ds18b20();
- 776   1        init_ds1302();
- 777   1        init_esp_8266_setting();
- 778   1        
- 779   1        
- 780   1        while (1) {
- 781   2          
- 782   2          unsigned char *p = "abcd";
- 783   2          unsigned char buuu[5]={0x11 ,0x22, 0x33,0x44,0x55};
- 784   2          float a = 18.5,c = 0.0;
- 785   2          unsigned char b = 0x01, d = 0;
- 786   2      
- 787   2      
- 788   2      //    if(uartf_reciev_frame(&c, &d))
- 789   2      //    {
- 790   2      //    
- 791   2      //    uart_send_byte(c/10 + 0x30);
- 792   2      //    uart_send_byte((unsigned char)c%10 + 0x30);
- 793   2      //    uart_send_byte((unsigned char)(c*10)%10 +0x30);
- 794   2      //    uart_send_byte('\r');
- 795   2      //    uart_send_byte('\n');
- 796   2      //    uart_send_byte(d + 0x30);
- 797   2      //    }
- 798   2      //    uart2_send_string("abcdefg");
-C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2017 23:16:45 PAGE 14  
+ 758   2          if (EN_KEY3 == keyval) {
+ 759   3            choose_page = 1;
+ 760   3            set_ds1302_time(&ds1302_buf);
+ 761   3            
+ 762   3            TR0 = 0;
+ 763   3            ET0 = 0;
+ 764   3            break;
+ 765   3          }
+ 766   2        }
+ 767   1      }
+ 768          
+ 769          void Delay2000ms()    //@11.0592MHz
+ 770          {
+ 771   1        unsigned char i, j, k;
+ 772   1      
+ 773   1        _nop_();
+ 774   1        _nop_();
+ 775   1        i = 85;
+ 776   1        j = 12;
+ 777   1        k = 155;
+ 778   1        do
+ 779   1        {
+ 780   2          do
+ 781   2          {
+ 782   3            while (--k);
+ 783   3          } while (--j);
+ 784   2        } while (--i);
+ 785   1      }
+ 786          extern uint8_t xdata g_staip_buf[32];
+ 787          extern uint8_t xdata g_apip_buf[32];
+ 788          
+ 789          void Delay50000ms()   //@11.0592MHz
+ 790          {
+ 791   1        unsigned char i, j, k;
+ 792   1      
+ 793   1        _nop_();
+ 794   1        _nop_();
+ 795   1        i = 255;
+ 796   1        j = 255;
+ 797   1        k = 255;
+ 798   1        do
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 14  
 
- 799   2      
- 800   2          
- 801   2          switch (choose_page) {
- 802   3          
- 803   3          case 0:
- 804   3            home () ;
- 805   3      //    date_time_setting();
- 806   3            break;
- 807   3          case 1:
- 808   3            menu();
- 809   3            break;
- 810   3          case 2:
- 811   3            elec_app();
- 812   3            break;
- 813   3            
- 814   3          case 3:
- 815   3            setting();
- 816   3            break;
- 817   3          case 4:
- 818   3            other();
- 819   3            break;
- 820   3          case 5:
- 821   3            date_time_setting();
- 822   3            break;
- 823   3            default:
- 824   3              break;
- 825   3          
- 826   3          }
- 827   2      
- 828   2          
- 829   2        }
- 830   1      
- 831   1      }
- 832          
- 833          
- 834          
+ 799   1        {
+ 800   2          do
+ 801   2          {
+ 802   3            while (--k);
+ 803   3          } while (--j);
+ 804   2        } while (--i);
+ 805   1      }
+ 806          
+ 807          
+ 808          
+ 809          void Delay5000ms()    //@11.0592MHz
+ 810          {
+ 811   1        unsigned char i, j, k;
+ 812   1      
+ 813   1        _nop_();
+ 814   1        _nop_();
+ 815   1        i = 211;
+ 816   1        j = 30;
+ 817   1        k = 11;
+ 818   1        do
+ 819   1        {
+ 820   2          do
+ 821   2          {
+ 822   3            while (--k);
+ 823   3          } while (--j);
+ 824   2        } while (--i);
+ 825   1      }
+ 826          
+ 827          void main (void)
+ 828          {
+ 829   1      
+ 830   1        
+ 831   1        P2M1 = 0x00;
+ 832   1        P2M0 = 0xFF;
+ 833   1        
+ 834   1        uart_init();
+ 835   1      
+ 836   1        lcd12864_init ();
+ 837   1        
+ 838   1        init_ds18b20();
+ 839   1        init_ds1302();
+ 840   1        
+ 841   1        uart2_init();
+ 842   1        Delay2000ms();
+ 843   1        init_esp_8266_setting();
+ 844   1      
+ 845   1        while (1) {
+ 846   2          
+ 847   2          unsigned char buuu[5]={0x11 ,0x22, 0x33,0x44,0x55};
+ 848   2          float a = 18.5,c = 0.0;
+ 849   2          unsigned char b = 0x01, d = 0;
+ 850   2          
+ 851   2          switch (choose_page) {
+ 852   3          
+ 853   3          case 0:
+ 854   3            home () ;
+ 855   3            break;
+ 856   3          case 1:
+ 857   3            menu();
+ 858   3            break;
+ 859   3          case 2:
+ 860   3            elec_app();
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 15:55:37 PAGE 15  
+
+ 861   3            break;
+ 862   3            
+ 863   3          case 3:
+ 864   3            setting();
+ 865   3            break;
+ 866   3          case 4:
+ 867   3            other();
+ 868   3            break;
+ 869   3          case 5:
+ 870   3            date_time_setting();
+ 871   3            break;
+ 872   3            default:
+ 873   3              break;
+ 874   3          
+ 875   3          }
+ 876   2        }
+ 877   1      
+ 878   1      }
+ 879          
+ 880          
+ 881          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   2861    ----
-   CONSTANT SIZE    =    232    ----
+   CODE SIZE        =   2954    ----
+   CONSTANT SIZE    =    259    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      4      52
+   DATA SIZE        =      5      49
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.

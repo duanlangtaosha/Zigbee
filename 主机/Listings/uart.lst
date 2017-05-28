@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 1   
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE UART
@@ -33,7 +33,7 @@ line level    source
   23          
   24          void uart_isr() interrupt 4  //中断接收程序
   25          {
-  26   1        static unsigned char frame_head_suc = 0;
+  26   1      //  static unsigned char frame_head_suc = 0;
   27   1        unsigned char res = 0;
   28   1        if(RI) {         /* 判断是否接收完，接收完成后，由硬件置RI位 */
   29   2          RI = 0;
@@ -62,11 +62,10 @@ line level    source
   52   4              }
   53   3          
   54   3        }
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 2   
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 2   
 
   55   2      }
   56   1      }
-*** WARNING C280 IN LINE 26 OF Source\uart.c: 'frame_head_suc': unreferenced local variable
   57          
   58          
   59          /**
@@ -126,9 +125,9 @@ line level    source
  113   2          _nop_();
  114   2          _nop_();
  115   2          _nop_();
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 3   
-
  116   2        }
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 3   
+
  117   1      }
  118          
  119          
@@ -190,9 +189,9 @@ line level    source
  175   1        #else     
                 
                 /* ((FCLK/12/32/BAUD/2))等于1.5 */  
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 4   
-
                 TH1  = TL1 =(-(FCLK / 12 / 32 / (BAUD / 2)));
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 4   
+
                 #endif
  180   1        
  181   1        /* SMOD置1,双倍速率 */
@@ -254,9 +253,9 @@ line level    source
  237          *         -1：校验出错
  238          */
  239          int8_t uartf_reciev_frame(float *temp, uint8_t *control_sta)
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 5   
-
  240          {
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 5   
+
  241   1      
  242   1        uint8_t res = 0;
  243   1      
@@ -318,9 +317,9 @@ line level    source
  296          //********************************************************************************************************
              -*
  297          //*/
-C51 COMPILER V9.56.0.0   UART                                                              05/27/2017 23:06:27 PAGE 6   
-
  298          //char getchar(void)
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 15:55:37 PAGE 6   
+
  299          //{
  300          //  return uart_get_byte();
  301          //}
@@ -331,10 +330,10 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    CONSTANT SIZE    =      5    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      8      22
+   DATA SIZE        =      7      22
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

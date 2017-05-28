@@ -44,28 +44,7 @@
 
 #define FOSC 11059200L      //System frequency
 #define BAUDS2 115200         //UART baudrate
-#define UART2_BUF_SIZE 10
-
-
-///* Signed integer types  */
-//typedef   signed char     int8_t;
-//typedef   signed short    int16_t;
-//typedef   signed long     int32_t;
-
-///* Unsigned integer types  */
-//typedef unsigned char     uint8_t;
-//typedef unsigned short    uint16_t;
-//typedef unsigned long     uint32_t;
-
-//typedef int32_t  s32;
-//typedef int16_t s16;
-//typedef int8_t  s8;
-
-//typedef uint32_t  u32;
-//typedef uint16_t u16;
-//typedef uint8_t  u8;
-
-//typedef enum {FALSE = 0, TRUE = !FALSE} bool;
+#define UART2_BUF_SIZE 1000
 
 /* 每种类型的整数极限值 */
 #define U8_MAX     (255)
@@ -77,10 +56,6 @@
 #define U32_MAX    (4294967295uL)
 #define S32_MAX    (2147483647)
 #define S32_MIN    (-2147483648uL)
-
-
-
-
 
 /**
 * \brief 串口初始化
