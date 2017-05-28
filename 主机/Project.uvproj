@@ -311,7 +311,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\Head</IncludePath>
+              <IncludePath>.\Head;.\Source\APP\include</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -407,6 +407,46 @@
               <FileName>esp8266.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Source\esp8266.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>APP</GroupName>
+          <Files>
+            <File>
+              <FileName>app_elc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_elc.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_home.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_home.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_other.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_other.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_setting.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_setting.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_temp_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_temp_set.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_time_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\APP\source\app_time_set.c</FilePath>
             </File>
           </Files>
         </Group>

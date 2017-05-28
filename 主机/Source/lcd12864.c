@@ -453,12 +453,12 @@ void lcd12864_write_string (char *string)
 * \return 无
 */
 #ifdef LCD12864_WRITE_UINT_STRING
-void lcd12864_write_uint_string(unsigned int value )
-{
+//void lcd12864_write_uint_string(unsigned int value )
+//{
 //	char uintbuf[10] = {0};
 //	sprintf(uintbuf, "%d", (int)value);
 //	lcd12864_write_string(uintbuf);
-}
+//}
 #endif
 
 /*******************************************************************************
@@ -478,12 +478,12 @@ void lcd12864_write_uint_string(unsigned int value )
 * \return 无
 */
 #ifdef LCD12864_WRITE_FLOAT_STRING
-void lcd12864_write_float_string(float value)
-{
+//void lcd12864_write_float_string(float value)
+//{
 //	char floatbuf[10] = {0};
 //	char *p = floatbuf;
 //	sprintf(floatbuf,"%.2f", (float)value);		//取小数点后两位
 //	lcd12864_write_string(floatbuf);
 	
-}
+//}
 #endif

@@ -1,0 +1,112 @@
+C51 COMPILER V9.56.0.0   APP_MENU                                                          05/28/2017 22:23:06 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE APP_MENU
+OBJECT MODULE PLACED IN .\Objects\app_menu.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\APP\source\app_menu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;.\So
+                    -urce\APP\include) DEBUG OBJECTEXTEND PRINT(.\Listings\app_menu.lst) TABS(2) OBJECT(.\Objects\app_menu.obj)
+
+line level    source
+
+   1          #include "__std_type.h"
+   2          #include "lcd12864.h"
+   3          #include "key.h"
+   4          #include "app_menu.h"
+   5          
+   6          
+   7          extern unsigned char choose_page;
+   8          extern uint8_t g_home ;
+   9          /*主菜单*/
+  10          void menu (void)
+  11          {
+  12   1        static unsigned char menu_save = 2;
+  13   1        lcd12864_write_cmd(0x01);
+  14   1        choose_page++;
+  15   1        lcd12864_set_window(0, 1);
+  16   1        lcd12864_write_string("≡≡菜单≡≡");
+  17   1        lcd12864_set_window(1, 0);
+  18   1        lcd12864_write_string("1.家电");
+  19   1        lcd12864_set_window(2, 0);
+  20   1        lcd12864_write_string("2.设置");
+  21   1        lcd12864_set_window(3, 0);
+  22   1        lcd12864_write_string("3.其他");
+  23   1        
+  24   1        while (g_home) {
+  25   2      
+  26   2          unsigned char keyval = keyscan(5);  
+  27   2          if (EN_KEY1 == keyval) {  /* 菜单下选择 */
+  28   3                
+  29   3            choose_page++;
+  30   3            menu_save = choose_page;
+  31   3            if (choose_page == 5) {
+  32   4              choose_page = 2;
+  33   4              menu_save = choose_page;
+  34   4            }
+  35   3            
+  36   3          } else if (EN_KEY2 == keyval) { /* 菜单上选择 */
+  37   3            choose_page--;
+  38   3            menu_save = choose_page;
+  39   3            if (choose_page == 1) {
+  40   4              choose_page = 4;
+  41   4              menu_save = 4;
+  42   4            }
+  43   3          } else if (EN_KEY3 == keyval) {
+  44   3            choose_page = 0;
+  45   3            break;
+  46   3          } else if (EN_KEY0 == keyval) {
+  47   3            choose_page = menu_save;
+  48   3              break;
+  49   3          }
+  50   2          
+  51   2          switch (menu_save) {
+  52   3            case 2:
+  53   3              lcd12864_set_window(3, 3);
+  54   3              lcd12864_write_data(32);
+C51 COMPILER V9.56.0.0   APP_MENU                                                          05/28/2017 22:23:06 PAGE 2   
+
+  55   3            
+  56   3              lcd12864_set_window(2, 3);
+  57   3              lcd12864_write_data(32);
+  58   3            
+  59   3              lcd12864_set_window(1, 3);
+  60   3              lcd12864_write_data(17);
+  61   3            break;
+  62   3            
+  63   3            case 3:
+  64   3              lcd12864_set_window(1, 3);
+  65   3              lcd12864_write_data(32);
+  66   3            
+  67   3              lcd12864_set_window(3, 3);
+  68   3              lcd12864_write_data(32);
+  69   3            
+  70   3              lcd12864_set_window(2, 3);
+  71   3              lcd12864_write_data(17);
+  72   3              break;
+  73   3            case 4:
+  74   3              lcd12864_set_window(1, 3);
+  75   3              lcd12864_write_data(32);  
+  76   3            
+  77   3              lcd12864_set_window(2, 3);
+  78   3              lcd12864_write_data(32);
+  79   3            
+  80   3              lcd12864_set_window(3, 3);
+  81   3              lcd12864_write_data(17);
+  82   3              break;
+  83   3          }
+  84   2          
+  85   2        }
+  86   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    263    ----
+   CONSTANT SIZE    =     34    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

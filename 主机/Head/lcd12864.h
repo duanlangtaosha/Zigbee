@@ -217,7 +217,7 @@ void lcd12864_write_string (char *string);
 *
 * \return 无
 */
-void lcd12864_write_uint_string(unsigned int value );
+//void lcd12864_write_uint_string(unsigned int value );
 
 /**
 * \brief LCD12864写浮点数函数
@@ -228,7 +228,7 @@ void lcd12864_write_uint_string(unsigned int value );
 *
 * \return 无
 */
-void lcd12864_write_float_string(float value);
+//void lcd12864_write_float_string(float value);
 //#endif
 
 #endif

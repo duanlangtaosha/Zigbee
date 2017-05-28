@@ -1,0 +1,384 @@
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE APP_TIME_SET
+OBJECT MODULE PLACED IN .\Objects\app_time_set.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\APP\source\app_time_set.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;
+                    -.\Source\APP\include) DEBUG OBJECTEXTEND PRINT(.\Listings\app_time_set.lst) TABS(2) OBJECT(.\Objects\app_time_set.obj)
+
+line level    source
+
+   1          #include "__std_type.h"
+   2          #include "lcd12864.h"
+   3          #include "ds1302.h"
+   4          #include "key.h"
+   5          #include "app_time_set.h"
+   6          
+   7          extern unsigned char choose_page;
+   8          extern uint8_t g_home ;
+   9          
+  10          void Timer0Init(void)   //1??@11.0592MHz
+  11          {
+  12   1      //  AUXR |= 0x80;   
+  13   1        TMOD &= 0xF0;   
+  14   1        TL0 = 0xCD;   
+  15   1        TH0 = 0xD4;   
+  16   1        TF0 = 0;    
+  17   1        TR0 = 1;    
+  18   1        
+  19   1        EA = 1;
+  20   1        ET0 = 1;
+  21   1      }
+  22          
+  23          bit refresh = 0;
+  24          void isr_timer0 (void) interrupt 1
+  25          {
+  26   1        static unsigned int count = 0;
+  27   1        TF0 = 0;
+  28   1        TL0 = 0xCD;   
+  29   1        TH0 = 0xD4; 
+  30   1        
+  31   1        count++;
+  32   1        if (500 == count) {
+  33   2          count = 0;
+  34   2          refresh = !refresh;
+  35   2        }
+  36   1      }
+  37          
+  38          
+  39          
+  40          void date_time_setting (void) 
+  41          {
+  42   1        unsigned char point_select = 0;
+  43   1        unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
+  44   1        lcd12864_write_cmd(0x01);
+  45   1        
+  46   1        get_ds1302_time(ds1302_buf);
+  47   1        
+  48   1        lcd12864_set_window(0, 0);
+  49   1        lcd12864_write_string("≡时间日期设置≡");
+  50   1        
+  51   1        lcd12864_set_window(1, 0);
+  52   1        lcd12864_write_string("日期  ");
+  53   1        
+  54   1        lcd12864_set_window(2, 0);
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 2   
+
+  55   1        lcd12864_write_string("时间  ");
+  56   1        
+  57   1        
+  58   1        /* 日期设置 */
+  59   1        lcd12864_set_window(1, 3);
+  60   1        
+  61   1        /* 年 */
+  62   1        lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+  63   1        lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+  64   1        lcd12864_write_string("-");
+  65   1        
+  66   1        /* 月 */
+  67   1        lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+  68   1        lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+  69   1        lcd12864_write_string("-");
+  70   1        
+  71   1        /* 日 */
+  72   1        lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+  73   1        lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+  74   1        
+  75   1        /* 时间的设置 */
+  76   1        lcd12864_set_window(2, 3);
+  77   1        
+  78   1        /* 时 */
+  79   1        lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+  80   1        lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+  81   1        lcd12864_write_string(":");
+  82   1        
+  83   1        /* 分 */
+  84   1        lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+  85   1        lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+  86   1        lcd12864_write_string(":");
+  87   1        
+  88   1        /* 秒 */
+  89   1        lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+  90   1        lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+  91   1          
+  92   1        Timer0Init();
+  93   1        while (g_home) {
+  94   2          
+  95   2          unsigned char keyval = keyscan(5);
+  96   2          
+  97   2          switch (point_select) {
+  98   3          
+  99   3            case 0 :
+ 100   3              if ( refresh == 1) {
+ 101   4                lcd12864_set_window(1, 3);
+ 102   4                lcd12864_write_data(32);
+ 103   4              } else {
+ 104   4                lcd12864_set_window(1, 3);
+ 105   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 106   4              }
+ 107   3              break;
+ 108   3            case 1 :
+ 109   3              if ( refresh == 1) {
+ 110   4                lcd12864_set_window(1, 3);
+ 111   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 112   4                lcd12864_write_data(32);
+ 113   4              } else {
+ 114   4                lcd12864_set_window(1, 3);
+ 115   4                lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 116   4                lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 3   
+
+ 117   4              }
+ 118   3              break;
+ 119   3            case 2 :
+ 120   3              if ( refresh == 1) {
+ 121   4                lcd12864_set_window(1, 4);
+ 122   4                lcd12864_write_string("-");
+ 123   4                lcd12864_write_data(32);
+ 124   4              } else {
+ 125   4                lcd12864_set_window(1, 4);
+ 126   4                lcd12864_write_string("-");
+ 127   4                lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+ 128   4              }
+ 129   3              break;
+ 130   3            case 3 :
+ 131   3              if ( refresh == 1) {
+ 132   4                lcd12864_set_window(1, 5);
+ 133   4                lcd12864_write_data(32);
+ 134   4              } else {
+ 135   4                lcd12864_set_window(1, 5);
+ 136   4                lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+ 137   4              }
+ 138   3              break;
+ 139   3            case 4 :
+ 140   3              if ( refresh == 1) {
+ 141   4                lcd12864_set_window(1, 6);
+ 142   4                lcd12864_write_data(32);
+ 143   4              } else {
+ 144   4                lcd12864_set_window(1, 6);
+ 145   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 146   4              }
+ 147   3              break;
+ 148   3            case 5 :
+ 149   3              if ( refresh == 1) {
+ 150   4                lcd12864_set_window(1, 6);
+ 151   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 152   4                lcd12864_write_data(32);
+ 153   4              } else {
+ 154   4                lcd12864_set_window(1, 6);
+ 155   4                lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 156   4                lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+ 157   4              }
+ 158   3              break;
+ 159   3            case 6 :
+ 160   3              if ( refresh == 1) {
+ 161   4                lcd12864_set_window(2, 3);
+ 162   4                lcd12864_write_data(32);
+ 163   4              } else {
+ 164   4                lcd12864_set_window(2, 3);
+ 165   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 166   4              }
+ 167   3              break;
+ 168   3            case 7 :
+ 169   3              if ( refresh == 1) {
+ 170   4                lcd12864_set_window(2, 3);
+ 171   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 172   4                lcd12864_write_data(32);
+ 173   4              } else {
+ 174   4                lcd12864_set_window(2, 3);
+ 175   4                lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 176   4                lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+ 177   4              }
+ 178   3              break;
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 4   
+
+ 179   3            case 8 :
+ 180   3              if ( refresh == 1) {
+ 181   4                lcd12864_set_window(2, 4);
+ 182   4                lcd12864_write_string(":");
+ 183   4                lcd12864_write_data(32);
+ 184   4              } else {
+ 185   4                lcd12864_set_window(2, 4);
+ 186   4                lcd12864_write_string(":");
+ 187   4                lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 188   4              }
+ 189   3              break;
+ 190   3            case 9 :
+ 191   3              if ( refresh == 1) {
+ 192   4                lcd12864_set_window(2, 5);
+ 193   4                lcd12864_write_data(32);
+ 194   4              } else {
+ 195   4                lcd12864_set_window(2, 5);
+ 196   4                lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 197   4              }
+ 198   3              break;
+ 199   3            case 10:
+ 200   3              if ( refresh == 1) {
+ 201   4                lcd12864_set_window(2, 6);
+ 202   4                lcd12864_write_data(32);
+ 203   4              } else {
+ 204   4                lcd12864_set_window(2, 6);
+ 205   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 206   4              }
+ 207   3              break;
+ 208   3            case 11:
+ 209   3              if ( refresh == 1) {
+ 210   4                lcd12864_set_window(2, 6);
+ 211   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 212   4                lcd12864_write_data(32);
+ 213   4              } else {
+ 214   4                lcd12864_set_window(2, 6);
+ 215   4                lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 216   4                lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+ 217   4              }
+ 218   3              break;
+ 219   3            default:
+ 220   3              break;
+ 221   3          }
+ 222   2          
+ 223   2          if (EN_KEY2 == keyval) {
+ 224   3            point_select++;
+ 225   3            
+ 226   3            if (point_select == 12) {
+ 227   4              point_select = 0;
+ 228   4            }
+ 229   3            /* 日期设置 */
+ 230   3            lcd12864_set_window(1, 3);
+ 231   3            
+ 232   3            /* 年 */
+ 233   3            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+ 234   3            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+ 235   3            lcd12864_write_string("-");
+ 236   3            
+ 237   3            /* 月 */
+ 238   3            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+ 239   3            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+ 240   3            lcd12864_write_string("-");
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 5   
+
+ 241   3            
+ 242   3            /* 日 */
+ 243   3            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+ 244   3            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+ 245   3            
+ 246   3            /* 时间的设置 */
+ 247   3            lcd12864_set_window(2, 3);
+ 248   3            
+ 249   3            /* 时 */
+ 250   3            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+ 251   3            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+ 252   3            lcd12864_write_string(":");
+ 253   3            
+ 254   3            /* 分 */
+ 255   3            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 256   3            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 257   3            lcd12864_write_string(":");
+ 258   3            
+ 259   3            /* 秒 */
+ 260   3            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 261   3            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );
+ 262   3          }
+ 263   2          if (EN_KEY0 == keyval) {
+ 264   3            switch (point_select) {
+ 265   4              case 0 :
+ 266   4                ds1302_buf[6] = (ds1302_buf[6] & 0x0F) | ((ds1302_buf[6] >> 4) + 1) << 4;
+ 267   4                if((ds1302_buf[6] >> 4) > 9 ) {
+ 268   5                ds1302_buf[6] = ds1302_buf[6] & 0x0F;
+ 269   5                }
+ 270   4                break;
+ 271   4              case 1 :
+ 272   4                ds1302_buf[6] = (ds1302_buf[6] & 0xF0) | ((ds1302_buf[6] & 0x0F) + 1) ;
+ 273   4                if((ds1302_buf[6] & 0x0F) > 9 ) {
+ 274   5                ds1302_buf[6] = ds1302_buf[6] & 0xF0;
+ 275   5                }
+ 276   4                break;
+ 277   4              case 2 :
+ 278   4                ds1302_buf[4] = (ds1302_buf[4] & 0x0F) | ((ds1302_buf[4] >> 4) + 1) << 4;
+ 279   4                if((ds1302_buf[4] >> 4) > 9 ) {
+ 280   5                ds1302_buf[4] = ds1302_buf[6] & 0x0F;
+ 281   5                }
+ 282   4                break;
+ 283   4              case 3 :
+ 284   4                ds1302_buf[4] = (ds1302_buf[4] & 0xF0) | ((ds1302_buf[4] & 0x0F) + 1) ;
+ 285   4                if((ds1302_buf[4] & 0x0F) > 9 ) {
+ 286   5                ds1302_buf[4] = ds1302_buf[4] & 0xF0;
+ 287   5                }
+ 288   4                break;                
+ 289   4              case 4 :
+ 290   4                ds1302_buf[3] = (ds1302_buf[3] & 0x0F) | ((ds1302_buf[3] >> 4) + 1) << 4;
+ 291   4                if((ds1302_buf[3] >> 4) > 9 ) {
+ 292   5                ds1302_buf[3] = ds1302_buf[3] & 0x0F;
+ 293   5                }
+ 294   4                break;    
+ 295   4              case 5 :
+ 296   4                ds1302_buf[3] = (ds1302_buf[3] & 0xF0) | ((ds1302_buf[3] & 0x0F) + 1) ;
+ 297   4                if((ds1302_buf[3] & 0x0F) > 9 ) {
+ 298   5                ds1302_buf[3] = ds1302_buf[3] & 0xF0;
+ 299   5                }
+ 300   4                break;
+ 301   4              case 6 :
+ 302   4                ds1302_buf[2] = (ds1302_buf[2] & 0x0F) | ((ds1302_buf[2] >> 4) + 1) << 4;
+C51 COMPILER V9.56.0.0   APP_TIME_SET                                                      05/28/2017 22:23:07 PAGE 6   
+
+ 303   4                if((ds1302_buf[2] >> 4) > 2 ) {
+ 304   5                ds1302_buf[2] = ds1302_buf[2] & 0x0F;
+ 305   5                }
+ 306   4                break;
+ 307   4              case 7 :
+ 308   4                ds1302_buf[2] = (ds1302_buf[2] & 0xF0) | ((ds1302_buf[2] & 0x0F) + 1) ;
+ 309   4                if((ds1302_buf[2] & 0x0F) > 9 ) {
+ 310   5                ds1302_buf[2] = ds1302_buf[2] & 0xF0;
+ 311   5                }
+ 312   4                break;
+ 313   4              case 8 :
+ 314   4                ds1302_buf[1] = (ds1302_buf[1] & 0x0F) | ((ds1302_buf[1] >> 4) + 1) << 4;
+ 315   4                if((ds1302_buf[1] >> 4) > 5 ) {
+ 316   5                ds1302_buf[1] = ds1302_buf[1] & 0x0F;
+ 317   5                }
+ 318   4                break;
+ 319   4              case 9 :
+ 320   4                ds1302_buf[1] = (ds1302_buf[1] & 0xF0) | ((ds1302_buf[1] & 0x0F) + 1) ;
+ 321   4                if((ds1302_buf[1] & 0x0F) > 9 ) {
+ 322   5                ds1302_buf[1] = ds1302_buf[1] & 0xF0;
+ 323   5                }
+ 324   4                break;
+ 325   4              case 10 :
+ 326   4                ds1302_buf[0] = (ds1302_buf[0] & 0x0F) | ((ds1302_buf[0] >> 4) + 1) << 4;
+ 327   4                if((ds1302_buf[0] >> 4) > 5 ) {
+ 328   5                ds1302_buf[0] = ds1302_buf[0] & 0x0F;
+ 329   5                }
+ 330   4                break;
+ 331   4              case 11 :
+ 332   4                ds1302_buf[0] = (ds1302_buf[0] & 0xF0) | ((ds1302_buf[0] & 0x0F) + 1) ;
+ 333   4                if((ds1302_buf[0] & 0x0F) > 9 ) {
+ 334   5                ds1302_buf[0] = ds1302_buf[0] & 0xF0;
+ 335   5                }
+ 336   4                break;
+ 337   4              default:
+ 338   4                break;
+ 339   4            }
+ 340   3          }
+ 341   2          if (EN_KEY3 == keyval) {
+ 342   3            choose_page = 3;
+ 343   3            set_ds1302_time(&ds1302_buf);
+ 344   3            
+ 345   3            TR0 = 0;
+ 346   3            ET0 = 0;
+ 347   3            break;
+ 348   3          }
+ 349   2        }
+ 350   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1362    ----
+   CONSTANT SIZE    =     42    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

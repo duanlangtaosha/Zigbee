@@ -27,10 +27,6 @@ void uart_isr() interrupt 4	 //中断接收程序
 	unsigned char res = 0;
 	if(RI) {			   /* 判断是否接收完，接收完成后，由硬件置RI位 */
 		RI = 0;
-//		__g_uart_buf[__g_uart_recieve_counter++] = SBUF;
-//		if (__g_uart_recieve_counter >= UART_BUF_SIZE) {
-//			__g_uart_recieve_counter = 0;
-//		}
 			res = SBUF;
 			if(!(g_uart_sta & 0x80))
 			{
@@ -117,14 +113,14 @@ void uart_send_buf (uint8_t *p_buf, uint8_t _len)
 }
 
 
-void uart_send_string (uint8_t *s)
-{
+//void uart_send_string (uint8_t *s)
+//{
 
-    while (*s)              //Check the end of the string
-    {
-        uart_send_byte(*s++);     //Send current char and increment string ptr
-    }
-}
+//    while (*s)              //Check the end of the string
+//    {
+//        uart_send_byte(*s++);     //Send current char and increment string ptr
+//    }
+//}
 
 /**
 * \brief 串口接收数据缓存

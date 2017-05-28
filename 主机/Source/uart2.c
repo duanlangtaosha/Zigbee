@@ -109,13 +109,13 @@ void uart2_send_byte (uint8_t _data)
 *
 * \return 无
 */
-void uart2_send_buf (uint8_t *p_buf, uint8_t _len)
-{
-	while (_len--) {
-	
-		uart2_send_byte (*p_buf++);
-	}
-}
+//void uart2_send_buf (uint8_t *p_buf, uint8_t _len)
+//{
+//	while (_len--) {
+//	
+//		uart2_send_byte (*p_buf++);
+//	}
+//}
 
 /**
 * \brief 串口接收数据缓存

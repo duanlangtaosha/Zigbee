@@ -219,8 +219,8 @@ void init_ds1302(void)
 	ds1302_write_data(0x8e, 0x80);
 	
 	temp = ds1302_read_data(81);
-//	if(temp & 0x80) {
+	if(temp & 0x80) {
 	 	set_ds1302_initial_time(__g_initial_time);
-//	}
+	}
 	
 }

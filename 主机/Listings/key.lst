@@ -1,10 +1,10 @@
-C51 COMPILER V9.56.0.0   KEY                                                               05/28/2017 15:55:37 PAGE 1   
+C51 COMPILER V9.56.0.0   KEY                                                               05/28/2017 22:23:06 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE KEY
 OBJECT MODULE PLACED IN .\Objects\key.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND 
-                    -PRINT(.\Listings\key.lst) TABS(2) OBJECT(.\Objects\key.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;.\Source\APP\include
+                    -) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) TABS(2) OBJECT(.\Objects\key.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1        pin_arry = (copy_pin3 << 3 ) | (copy_pin2 << 2 ) | (copy_pin1 << 1 ) | (copy_pin0 ); /* 合并成一组 */
   53   1      /***********************按下检测****************************/   
   54   1         if ((0x0f != pin_arry) && (0 == s_keyok) && (1 == s_keyup)) {  /* 确认按键抬起后，按下才能有效 */
-C51 COMPILER V9.56.0.0   KEY                                                               05/28/2017 15:55:37 PAGE 2   
+C51 COMPILER V9.56.0.0   KEY                                                               05/28/2017 22:23:06 PAGE 2   
 
   55   2          s_keypress++;   
   56   2         }

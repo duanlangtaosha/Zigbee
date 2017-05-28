@@ -6,6 +6,13 @@
 ".\Objects\key.obj",
 ".\Objects\uart.obj",
 ".\Objects\uart2.obj",
-".\Objects\esp8266.obj" 
+".\Objects\esp8266.obj",
+".\Objects\app_elc.obj",
+".\Objects\app_home.obj",
+".\Objects\app_menu.obj",
+".\Objects\app_other.obj",
+".\Objects\app_setting.obj",
+".\Objects\app_temp_set.obj",
+".\Objects\app_time_set.obj" 
 TO ".\Objects\Project" 
 PRINT(".\Listings\Project.m51") RAMSIZE(256) 
