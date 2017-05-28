@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 22:23:06 PAGE 1   
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE APP_ELC
@@ -62,7 +62,7 @@ line level    source
   52   4              lcd12864_set_window(1, 0);
   53   4              lcd12864_write_string("E1:OFF");
   54   4            }
-C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 22:23:06 PAGE 2   
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 2   
 
   55   3            
   56   3            if(elc_sta & 0x02) {
@@ -126,7 +126,7 @@ line level    source
  114   4              case 3:
  115   4                lcd12864_set_window(2, 3);
  116   4                lcd12864_write_data(32);
-C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 22:23:06 PAGE 3   
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 3   
 
  117   4              
  118   4                lcd12864_set_window(1, 7);
@@ -190,7 +190,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    526    ----
    CONSTANT SIZE    =     69    ----
    XDATA SIZE       =   ----    ----
-C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 22:23:06 PAGE 4   
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 4   
 
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----       7

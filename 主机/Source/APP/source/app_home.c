@@ -4,6 +4,7 @@
 #include "ds1302.h"
 #include "uart.h"
 #include "key.h"
+#include "eeprom.h"
 #include "app_home.h"
 uint8_t g_home = 1;
 
@@ -32,11 +33,13 @@ void home (void)
 	lcd12864_write_string("");
 	while (g_home) {
 		unsigned char ds1302_buf[7] = {0};	/* DS1302接收缓存区 */
-		unsigned char keyval = keyscan(5);
+		unsigned char keyval = keyscan(2);
 		int8_t temp = rd_temperature_i();	/* 读取温度 */
 		
 		float device_temp = 0.0;
 		unsigned char control = 0;
+		
+		unsigned char read_eeprom = 0;
 		if (EN_KEY0 == keyval) {
 		
 			choose_page = 1; /* 进入主菜单*/
@@ -51,11 +54,12 @@ void home (void)
 			/* 从机温度 */
 			if (1 == uartf_reciev_frame(&device_temp, &control)) {
 				temp = (unsigned char)device_temp;
+				read_eeprom = iap_read_byte(0x0000);
 				lcd12864_set_window(1, 5);
 				lcd12864_write_data((temp / 10) | 0x30 );
 				lcd12864_write_data((temp % 10) | 0x30 );
 				
-				if (temp > g_temp) {
+				if (temp > read_eeprom) {
 					uart_send_frame(15.0, control | 0x04);
 				} else {
 				
