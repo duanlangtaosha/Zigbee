@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"MAIN.obj" 
+TO "ASK" 
+RAMSIZE(256) 

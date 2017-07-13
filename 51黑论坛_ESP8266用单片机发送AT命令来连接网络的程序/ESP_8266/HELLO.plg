@@ -1,0 +1,16 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Keil\C51\Examples\ESP_8266\Hello.uvproj
+Project File Date:  04/09/2015
+
+<h2>Output:</h2>
+Build target 'Simulator'
+compiling HELLO.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_UART_SEND_STR?HELLO
+Program Size: data=95.1 xdata=0 code=1077
+"HELLO" - 0 Error(s), 1 Warning(s).

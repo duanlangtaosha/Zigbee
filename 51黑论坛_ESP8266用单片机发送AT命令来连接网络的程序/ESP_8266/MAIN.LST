@@ -1,0 +1,1085 @@
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN MAIN.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE MAIN.C COMPACT BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          
+   3            ±¾³ÌĞòÓÃ51µ¥Æ¬»ú¾­¹ıATÖ¸Áî¿ØÖÆÄ£¿é£¬Íê³É´ÓSMARTLINK µ½ ÊÖ»úÓëÄ£¿éµÄ°ó¶¨£¬ÒÔ¼°ÔÆÆ·Ì¨µÄµÇÂ¼£¬±¾µØÊı¾İ·¢¸øÒ
+             -ìµØÊÖ»ú£¬ÊÖ»úÒìµØ¿ØÖÆ²âÊÔ°åÉÏµÄ¼ÌµçÆ÷¶¯×÷¡£
+   4            ±¾³ÌĞò¿ÉÒÔÒÆÖ²µ½STM8Õâ¿îÖ»Òª1ÔªÇ®µÄµ¥Æ¬»úÉÏÅäºÏATÄ£¿é£¬Íê³É¸ßĞÔ¼ÛµÄ²úÆ·£¬±ÈÈç¿ª¹Ø²å×ù¡£Ö÷ÒªÑİÊ¾°²ĞÅ¿ÉµÄÔ
+             -ÆÆ½Ì¨µÄÊÔÓÃ£¡ÒÔ¼°Õû¸öÎïÁªÍøµÄÁ÷³Ì
+   5          
+   6            ×¢Òâ£º±äÁ¿³õÊ¼»¯³É0£¬·ñÕßËæ»ú  Êı×é×¢ÒâÒç³öÎÊÌâ  0X55 ÔÚÆäËûÊı¾İÖĞÓĞ¿ÉÄÜ³öÏÖ£¬²¢Ôì³É»ìÂÒ£¬Ö÷ÒªÊÇ¼ÆÊı  ¹ı
+             -ÂËÊı¾İ£¬¸ù¾İÍøÂç»·¾³²»Í¬£¬·µ»ØÓĞ¿ÉÄÜ±ä»¯£¬×¢ÒâÍ¨ÓÃĞÔ
+   7            ÄÚ²¿ ID KEY Êä³ö¸ñÊ½ÒÑ¾­¹Ì¶¨Îª8¸ö×Ö½ÚÄ£Ê½       ±¾³ÌĞòÓÃµÄAT¹Ì¼ş°æ±¾ÊÇ1.01 £¬ÄÚÖÃºÏ·¨Ğ¾Æ¬ID ºÍÊÚÈ¨KEY £¬²¢ÇÒ
+             -ÕâÌõ¼ÇÂ¼ÒÑ¾­ÔÚ°²ĞÅ¿ÉÔÆ·şÎñÆ÷ÄÚ´æÔÚ
+   8            °²ĞÅ¿ÉµÄÔÆÓĞ¶à¼òµ¥£¿
+   9            1 µÇÂ¼£º    55 26 00 A0 00 60 96 96 60 02 DD 1E 00 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00 00 00
+             - 00 00 1E DD 26 AC 55
+  10            2 ·¢ËÍÊı¾İ£º55 28 00 AA EE EA 8F 8F EA 02 DD 1E 00 00 00 00 00 00 08 4A 42 85 A9 94 85 0C 00 54 02 45 4D
+             - 50 3A 32 35 35 3B 00 42 5C 55
+  11            Ö»Òª¹¹Ôì³öÉÏÃæµÄÊı¾İ°ü£¬¾­¹ıUDP ·¢ËÍµ½°²ĞÅ¿ÉÔÆ·şÎñÆ÷£¬¾ÍÄÜÍ¨Ñ¶ÁË
+  12             
+  13            Ê±¼ä²Ö´Ù£¬Íê³É¹¦ÄÜºó£¬Î´¾­¹ıÓÅ»¯´úÂëÓÅ»¯£¬ºÍÓï·¨·ç¸ñĞŞ¸Ä£¬¹©²Î¿¼¡£¸¨ÖúÎÄµµÓĞÕâ¸ö³ÌĞòÉè¼Æ¿ò¼Ü½âÊÍ£¬ºÍÏêÏ¸
+             -µÄÖ¸µ¼£¬ÕâĞ©ÎÄ¼ş¾ù¿ÉÒÔÔÚ°²ĞÅ¿É¹ÙÍø
+  14            WWW.AI-THINKER.COM  ai-cloud ÔÆÆ½Ì¨°å¿éµÃµ½×îĞÂµÄ×ÊÑ¶
+  15          
+  16                ±¾²âÊÔ³ÌĞòÔÚ°²ĞÅ¿É¿Æ¼¼50Ôª µÄ´ó²âÊÔ°åÉÏÕıÈ·ÔËĞĞ£¬ËùÓĞ°²ĞÅ¿É³öµÄµÄÄ£¿é´ÓESP-01µ½ESP-14¾ù¿ÉÒÔÕıÈ·ÔËĞĞ£
+             -¬ÓëÔ¶³Ì¿ØÖÆ¡£
+  17          
+  18          */
+  19          
+  20          
+  21          /*************  ±¾µØ³£Á¿ÉùÃ÷    **************/
+  22          #define MAIN_Fosc               22118400L       //¶¨ÒåÖ÷Ê±ÖÓ
+  23          #define RX1_Lenth               32                      //´®¿Ú½ÓÊÕ»º³å³¤¶È
+  24          #define BaudRate1               115200UL        //Ñ¡Ôñ²¨ÌØÂÊ
+  25          #define Timer1_Reload   (65536UL -(MAIN_Fosc / 4 / BaudRate1))          //Timer 1 ÖØ×°Öµ£¬ ¶ÔÓ¦300KHZ
+  26          #define Timer2_Reload   (65536UL -(MAIN_Fosc / 4 / BaudRate1))          //Timer 2 ÖØ×°Öµ£¬ ¶ÔÓ¦300KHZ
+  27          #include        "STC15Fxxxx.H"
+  28          /*************  ±¾µØ±äÁ¿ÉùÃ÷    **************/
+  29          u8      idata RX1_Buffer[RX1_Lenth];    //½ÓÊÕ»º³å
+  30          u8      TX1_Cnt;        //·¢ËÍ¼ÆÊı
+  31          u8      RX1_Cnt;        //½ÓÊÕ¼ÆÊı
+  32          bit     B_TX1_Busy;     //·¢ËÍÃ¦±êÖ¾
+  33          /*************  ¶Ë¿ÚÒı½Å¶¨Òå    **************/
+  34          unsigned char two_lab=0;
+  35          sbit LED1=P1^0;//LED1
+  36          sbit LED2=P1^1;//LED2
+  37          sbit LED3=P3^7;//LED3
+  38          sbit DK1=P3^3;//¼ÌµçÆ÷
+  39          sbit BEEP=P3^4;//·äÃùÆ÷
+  40          sbit K1=P1^3;//°´¼ü1
+  41          sbit K2=P1^2;//°´¼ü2
+  42          sbit K3=P1^4;//°´¼ü3
+  43          //////////////////////////////////////////////////////////////////////////////////////////////////////////
+             -////////////////////////
+  44          /////ÕâÊÇ°²ĞÅ¿ÉÔÆÆ½Ì¨Êı¾İ°üµÄÈ«²¿×é³É½á¹¹£¬Ï¸½Ú¿É²ÎÕÕ°²ĞÅ¿ÉµÄÔÆÆ½Ì¨V1.0°æ±¾¹æ¸ñÊé£¬°ü½á¹¹ÕÂ½Ú
+  45          #define O_PF    0X00  //°üÍ·1×Ö½Ú¹Ì¶¨0X55 
+  46          #define O_LEN_L 0X01  //Õû¸ö°ü³¤µÍ×Ö½Ú
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 2   
+
+  47          #define O_LEN_H 0X02  //Õû¸ö°ü³¤¸ß×Ö½Ú ×¢Òâ×ªÒåÂë Á½¸öÕâÀïÖ»¼ÆËãÒ»¸öÊı¾İ´¦Àí£¡
+  48          #define O_CMD_T 0X03  //ÃüÁîÀàĞÍ
+  49          #define O_CMD_C 0X04  //¾ßÌåÃüÁî
+  50          #define O_CIX_L 0X05  //±¾ÃüÁîĞòÁĞ±àºÅµÍ×Ö½Ú
+  51          #define O_CIX_H 0X06  //±¾ÃüÁîĞòÁĞ±àºÅ¸ß×Ö½Ú
+  52          #define O_EXMSH 0X07  //À©Õ¹ĞÅÏ¢¸ß×Ö½Ú
+  53          #define O_EXMSL 0X08  //À©Õ¹ĞÅÏ¢µÍ×Ö½Ú
+  54          #define O_RESTA 0X09  //Êı¾İ°ü×´Ì¬ĞÅÏ¢£¬³É¹¦ Ê§°Ü ÇëÇó Î´Öª
+  55          #define O_DEVID_START 0x0A  //8×Ö½ÚÉè±¸Ê¶±ğ  µÍ×Ö½ÚÔÚÇ°
+  56          #define O_DEVID 0x0A  //8×Ö½ÚÉè±¸Ê¶±ğ
+  57          #define O_TK_LEN      0X12 //1 BYTS TL_LEN        //»ñµÃµÄÉè±¸ÁÙÊ±Í¨Ñ¶ÁîÅÆ³¤¶È
+  58          #define O_TOKE_START  0X13
+  59          #define O_DATAS_START 0X1B
+  60          //N BYTS DATAS    //¿Í»§µÄÊı¾İ°ü´®
+  61          //CRC_L    1BYTE          //CRC16 µÍ×Ö½Ú
+  62          //CRC_H    1BYTE          //CRC16 ¸ß×Ö½Ú
+  63          //PACK_END 1BYTE          //°üÎ²1×Ö½Ú¹Ì¶¨0X55
+  64          
+  65          ////////////////////////////////////////////////////////////////////////ÒÔÉÏ¶¨ÒåÁË°üÖĞµÄ¸÷²ÎÊıµÄ¾ø¶ÔÎ»ÖÃ//
+             -////////////////////////////////
+  66          #define uart_rec_tcp_udp_data 0 //ÏµÍ³½øÈëÕı³£ÍøÂçÊı¾İÊÕ·¢×´Ì¬
+  67          #define uart_rec_csysid       1 //ÏµÍ³»ñÈ¡ESP8266WIFIÄ£¿éµÄĞí¿ÉºÅ×´Ì¬£¬»ñÈ¡ËÄ¸ö×Ö½ÚµÄĞ¾Æ¬ID ºÍ 4¸ö×Ö½ÚµÄÊÚ
+             -È¨Âë
+  68          #define uart_rec_smartlink    2 //ÏµÍ³½øÈë»ñÈ¡ÉÏÍøÕËºÅÃÜÂë×´Ì¬
+  69          #define uart_rec_bander       3 //ÏµÍ³½øÈë½«±¾WIFIÉè±¸ ºÍAPP ÊÖ»ú°ó¶¨¿ØÖÆ×´Ì¬
+  70          //////////////////////////////////////////////////////////////////////ÒÔÉÏ²¿·Ö¶¨ÒåÁËÏµÍ³µÄ¼¸ÖÖ×´Ì¬////////
+             -///////////////////////////////
+  71          bit have_tok=0;
+  72          bit have_data=0;
+  73          unsigned char rec_len=0;
+  74          bit                   a_vec=0;             //ÉèÖÃÒ»¸ö±êÖ¾Î»£¬´®¿Ú³ÌĞò ³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+  75          unsigned char          ceng=0;         //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+  76          unsigned char str_len_limt=16;         //ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+  77          unsigned char   str_len_num=11;        //×Ö·û¸öÊı
+  78          char str_ref=':';
+  79          /////////////////////////////////////////////////////////////////////ÉÏÃæ¼¸¸ö±äÁ¿ÓÃÀ´×÷ÎªÔÚ´®¿ÚÖĞ¹ıÂËÖ¸¶¨×
+             -Ö·û´®µÄ ÏŞ¶¨²ÎÊı£¬¸Ä±ä¹ıÂËÄÚÈİºó±Ø¶¨ÏÈ³õÊ¼»¯Õâ¼¸¸ö/////
+  80          code char CYSYS_code[]="+CSYSID:CHIP";
+  81          code char PIPD_code[]="+IPD,";
+  82          code char bander_code[]="+IPD,4,26:RPL:";//ÕâÀï¹ıÂËÓĞÂ©¶´
+  83          code char smartlink_code[]="SMART SUCCESS";
+  84          /////////////////////////////////////////////////////////////////////ÒÔÉÏÊÇ´ÓWIFIÄ£¿é´®¿ÚÊä³öµ½±¾µ¥Æ¬»ú´®¿
+             -ÚÊäÈëºó£¬±¾µ¥Æ¬»úÒª¹ıÂËµÄ¸÷ÖÖÍ·²¿////////////////////
+  85          unsigned char uart_rec_sta=uart_rec_csysid;// ´®¿ÚÄ¿Ç°Ëù´¦ÓÚµÄ×´Ì¬£¬±ÈÈç½øÈëÕı³£Êı¾İ½ÓÊÕ£¬»òÕßSMARTLINK »ò
+             -Õß »ñÈ¡Ä£¿éµÄID¡£
+  86          code unsigned char AT_RST[]="AT+RST";                                                
+  87          code unsigned char AT_MODE[]="AT+CWMODE=1";
+  88          code unsigned char AT_CWJAP[]="AT+CWJAP=\"360we\",\"zty0012001\"";
+  89          code unsigned char AT_CIP3[]="AT+CIPSTART=3,\"UDP\",\"cloud.ai-thinker.com\",5001,2468,0" ;
+  90          code unsigned char temp_bander[]="RPT:\"0xa1b23467\",\"0xaf321234\",\"192.168.0.123\",\"light\",\"123456a\
+             -"";
+  91          code unsigned char AT_CIPMUX[]="AT+CIPMUX=1";
+  92          code unsigned char CIPSTART[]="AT+CIPSTART=4,\"UDP\",\"cloud.ai-thinker.com\",5001,2468,0";
+  93          code unsigned char AT_CSYSID[]="AT+CSYSID";
+  94          code unsigned char AT_SMARTLINK[]="AT+CWSMARTSTART=1";
+  95          code unsigned char ZERO[]="00000000000000000000000000000000001";
+  96          code unsigned char CIPSEND_LEN[]="AT+CIPSEND=4,";
+  97          code unsigned char CIP3SEND_LEN[]="AT+CIPSEND=3,63";
+  98          /////////////////////////////////////////////////////////////////////ÒÔÉÏ×Ö´®ÊÇµ¥Æ¬»ú·¢¸ø´®¿ÚÄ£¿éµÄATÓï¾äÓ
+             -ĞµÄÊÇÖ±½Ó¸øWIFIÄ£¿éµÄÖ¸Áî£¬ÓĞĞ©ÊÇÓÃÀ´¿½±´×Ö·û´®ÓÃ/////////////
+  99          
+ 100          xdata unsigned char at_send_len_ox[20];                
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 3   
+
+ 101          idata unsigned char send_buf[64]="jisifsfhello:99999;oop";                           //·¢ËÍ»º³åÇø
+ 102          unsigned char recd_buf[64]= {0x55 ,0x25 ,0x00 ,0xAA ,0xFF ,0x00, 0x00, 0x00, 0x00 ,0x02 ,0x31, 0x0A ,0xFE 
+             -,0x00, 0x00, 0x00, 0x00 ,0x00, 0x08, 0x00 ,0x7C ,0xC8, 0x52 ,0xFE, 0x3D ,0x64 ,0x29, 0x4C ,0x49, 0x47, 0x48 ,0x54 ,0x02,
+             - 0x3A ,0x3F, 0x6C, 0x02, 0x55};                                                //½ÓÊÕ»º³åÇø
+ 103          data unsigned char temp_buf[72];                                 //¼Ó¹¤»º³åÇø
+ 104          idata unsigned char toke[8]={0x24,0x41,0xD6,0x39,0x48,0x83,0xAC,0x00};//´ËÉè±¸ÔÚ·şÎñÆ÷ÉÏ»ñµÃµÄÁîÅÆ°ü
+ 105          unsigned char esp_dev_id[8]={0,0,0,0,0,0,0X1E,0XDE};         //    8266µÄ8¸ö×Ö½ÚµÄÆ÷¼şIDºÅ£¬¿ÉÔÚ·şÎñÆ÷Êı¾İ
+             -¿âÖĞ²éµ½£¬Î¨Ò»±êÊ¾Ò»¸öÆ÷¼ş£¬µÇÂ¼¹ı³ÌĞèÒªÒ»¸öÆ÷¼şID,ºÍÊı¾İÇø·ÅÒ»¸öÊı¾İÃÜÂë£¬ÕâÃ´¼òµ¥µÇÂ¼
+ 106          unsigned char esp_TOK_id[8]={0,0,0,0,0,0,0,0};                           //    ·şÎñÆ÷·Ö¸øÆ÷¼şÆ÷¼şµÄÁîÅÆ°ü£¬ÁíÍâ¸öµØ·½Ò²¶¨ÒåÁË£¬Í
+             -êÈ«¿ÉÒÔÓÃÒ»¸öÊı×éÍê³ÉµÄ
+ 107          unsigned char esp_user_data[14]={0,0,0,0,0,0,0X1E,0XDE};         //    ¿Í»§µÄ¾»Êı¾İ¸ººÉÇø£¬¿ÉÒÔºÜ´ó£¬ÒòÎª±¾¿îµ¥Æ¬
+             -»úÓĞÏŞ£¬²¢ÇÒÒ»°ã¿ØÖÆĞÅºÅ£¬¶¨Òå¼¸¸ö×Ö½Ú¹»ÁË£¡×¢ÒâÔÚµÇÂ¼µÄÊ±ºò£¬ÕâÀïÊÇÆ÷¼şÃÜÂë£¡
+ 108          unsigned char temp_cd[]="TEMP:123;";                                             //    Ò»¸öÊı¾İ°ü£¬Ç°ÃæÊÇ°ü¸ñÊ½¶¨Òå£¬ºóÃæÊÇ¿Í»§Êı¾İÇø£¬ÕâÀï¶¨ÒåÒ
+             -»¸ö¼´½«Òª·¢ËÍµÄÎÂ¶ÈÊı¾İ
+ 109          unsigned char need_seed_len=0;                                                           //    È«¾Ö±äÁ¿£¬±¾´Î×Ü¹²ĞèÒª·¢µ½´®¿ÚµÄÊı¾İ
+ 110          bit t_o=0;                                                                                                       //  ÔÚ¹¹ÔìÒ»¸öÈç00123 µÄÊı¾İÊ±ºò£¬È¥µôÇ°ÃæµÄ00±ä³É123 ÕâÀïÈôÅöµ½0¾ÍÖÃ1
+ 111          code unsigned char cip3_lcport[]="2469,0";
+ 112          data unsigned char chip_id[8]={'0','0','0','0','0','0','0','0'};
+ 113          data unsigned char flash_id[8]={'0','0','0','0','0','0','0','0'};
+ 114          pdata unsigned char pass_id[8]={'0','0','0','0','0','0','0','0'};
+ 115          
+ 116          unsigned int time=0; //Ã¿¸ô30Ãë°ÑÒ»¸ö±äÁ¿¼Ó1£¬È»ºó°ÑÕâ¸ö±äÁ¿×÷ÎªÎÂ¶ÈÊı¾İÉÏ±¨¸øÔÆÆ½Ì¨£¬×ª¸øÊÖ»ú¶Ë
+ 117          
+ 118          xdata unsigned char ssid[32];     //Ôİ´æSSIDÕË»§ĞÅÏ¢
+ 119          xdata unsigned char password[20]; //Ôİ´æ¿Í»§ÃÜÂë
+ 120          idata char ssid_len=0;            //¼ÇÂ¼SSID ³¤¶È
+ 121          idata char pasd_len=0;                    //¼ÇÂ¼ÃÜÂë³¤¶È
+ 122          
+ 123          bit have_id=0;                                    //¼ÇÂ¼ÊÇ·ñÓÃATÖ¸Áî»ñÈ¡µ½ÁËÕâ¸öÄ£¿éµÄID ºÍKEYĞÅÏ¢
+ 124          bit have_smartlink=0;                     //¼ÇÂ¼ÊÇ·ñ¹ıÂËµ½ ´Ó´®¿ÚÀ´µÄTCP UDP Êı¾İ  smartlink 
+ 125          bit have_bander=0;                                //¼ÇÂ¼ÊÇ´Ó´®¿ÚÖĞÊä³öµÄÍøÂçÊı¾İÖĞ¹ıÂËµ½ ÊÖ»úÓÃUDP·¢À´µÄÇëÇóĞÅÏ¢
+ 126          
+ 127          unsigned char stac_a=0;               //È«¾Ö×¨ÓÃ±äÁ¿
+ 128          unsigned char stac_b=0;                   //È«¾Ö×¨ÓÃ±äÁ¿
+ 129                                                                            //
+ 130          #include "intrins.h"
+ 131          
+ 132          typedef unsigned char BYTE;
+ 133          typedef unsigned int WORD;
+ 134          
+ 135          void IapIdle();
+ 136          BYTE IapReadBYTE(WORD addr);
+ 137          #define EEPROM_SSID_LC     0            //¶¨ÒåSSID ´æÔÚFLASHÉÏµÄÏà¶ÔÎ»ÖÃ
+ 138          #define EEPROM_PASSWORD_LC 64           //¶¨ÒåÃÜÂë ´æÔÚFLASHÉÏµÄÏà¶ÔÎ»ÖÃ
+ 139          #define EEPROM_LAB         128          //¶¨ÒåÊÇ·ñÒÑ½«Â·ÓÉÆ÷ÕË»§ºÍÃÜÂë±£´æµ½FLASHÖĞ
+ 140          
+ 141          
+ 142          
+ 143          #define CMD_IDLE      0
+ 144          #define CMD_READ      1
+ 145          #define CMD_PROGRAM   2
+ 146          #define CMD_ERASE     3
+ 147          
+ 148          #define ENABLE_IAP  0X81
+ 149          #define IAP_ADDRESS 0X1200      //ÉèÖÃ¿Í»§²ÎÊı±£´æµÄÎ»ÖÃ£¬ÕâÀïÑ¡ÔñFLASHµÄ×îºóÒ»¸öÉÈÇø¡£
+ 150          
+ 151          
+ 152          /////////////////////////////////////////////////////////////////ÏÂÃæ²¿·Ö¶¨ÒåÁËCRC16Ğ£Ñéº¯ÊıÓÃµ½µÄ±í¸ñ////
+             -///////////////////////////////
+ 153          code unsigned int crc_table[256]=
+ 154          {               /* CRCÓàÊ½±í */
+ 155          0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 4   
+
+ 156          0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
+ 157          0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
+ 158          0x0A00, 0xCAC1, 0xCB81, 0x0B40, 0xC901, 0x09C0, 0x0880, 0xC841,
+ 159          0xD801, 0x18C0, 0x1980, 0xD941, 0x1B00, 0xDBC1, 0xDA81, 0x1A40,
+ 160          0x1E00, 0xDEC1, 0xDF81, 0x1F40, 0xDD01, 0x1DC0, 0x1C80, 0xDC41,
+ 161          0x1400, 0xD4C1, 0xD581, 0x1540, 0xD701, 0x17C0, 0x1680, 0xD641,
+ 162          0xD201, 0x12C0, 0x1380, 0xD341, 0x1100, 0xD1C1, 0xD081, 0x1040,
+ 163          0xF001, 0x30C0, 0x3180, 0xF141, 0x3300, 0xF3C1, 0xF281, 0x3240,
+ 164          0x3600, 0xF6C1, 0xF781, 0x3740, 0xF501, 0x35C0, 0x3480, 0xF441,
+ 165          0x3C00, 0xFCC1, 0xFD81, 0x3D40, 0xFF01, 0x3FC0, 0x3E80, 0xFE41,
+ 166          0xFA01, 0x3AC0, 0x3B80, 0xFB41, 0x3900, 0xF9C1, 0xF881, 0x3840,
+ 167          0x2800, 0xE8C1, 0xE981, 0x2940, 0xEB01, 0x2BC0, 0x2A80, 0xEA41,
+ 168          0xEE01, 0x2EC0, 0x2F80, 0xEF41, 0x2D00, 0xEDC1, 0xEC81, 0x2C40,
+ 169          0xE401, 0x24C0, 0x2580, 0xE541, 0x2700, 0xE7C1, 0xE681, 0x2640,
+ 170          0x2200, 0xE2C1, 0xE381, 0x2340, 0xE101, 0x21C0, 0x2080, 0xE041,
+ 171          0xA001, 0x60C0, 0x6180, 0xA141, 0x6300, 0xA3C1, 0xA281, 0x6240,
+ 172          0x6600, 0xA6C1, 0xA781, 0x6740, 0xA501, 0x65C0, 0x6480, 0xA441,
+ 173          0x6C00, 0xACC1, 0xAD81, 0x6D40, 0xAF01, 0x6FC0, 0x6E80, 0xAE41,
+ 174          0xAA01, 0x6AC0, 0x6B80, 0xAB41, 0x6900, 0xA9C1, 0xA881, 0x6840,
+ 175          0x7800, 0xB8C1, 0xB981, 0x7940, 0xBB01, 0x7BC0, 0x7A80, 0xBA41,
+ 176          0xBE01, 0x7EC0, 0x7F80, 0xBF41, 0x7D00, 0xBDC1, 0xBC81, 0x7C40,
+ 177          0xB401, 0x74C0, 0x7580, 0xB541, 0x7700, 0xB7C1, 0xB681, 0x7640,
+ 178          0x7200, 0xB2C1, 0xB381, 0x7340, 0xB101, 0x71C0, 0x7080, 0xB041,
+ 179          0x5000, 0x90C1, 0x9181, 0x5140, 0x9301, 0x53C0, 0x5280, 0x9241,
+ 180          0x9601, 0x56C0, 0x5780, 0x9741, 0x5500, 0x95C1, 0x9481, 0x5440,
+ 181          0x9C01, 0x5CC0, 0x5D80, 0x9D41, 0x5F00, 0x9FC1, 0x9E81, 0x5E40,
+ 182          0x5A00, 0x9AC1, 0x9B81, 0x5B40, 0x9901, 0x59C0, 0x5880, 0x9841,
+ 183          0x8801, 0x48C0, 0x4980, 0x8941, 0x4B00, 0x8BC1, 0x8A81, 0x4A40,
+ 184          0x4E00, 0x8EC1, 0x8F81, 0x4F40, 0x8D01, 0x4DC0, 0x4C80, 0x8C41,
+ 185          0x4400, 0x84C1, 0x8581, 0x4540, 0x8701, 0x47C0, 0x4680, 0x8641,
+ 186          0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
+ 187          };
+ 188             /////////////////////////////////////////////////////////////////ÉÏÃæ²¿·Ö¶¨ÒåÁËCRC16Ğ£Ñéº¯ÊıÓÃµ½µÄ±í¸ñ/
+             -//////////////////////////////////
+ 189          
+ 190          
+ 191          /////////////////////////////////////////////////////////////////////ÒÔÏÂ²¿·ÖÊÇSTCµÄµôµç´æ´¢³ÌĞò£¬¶ÁĞ´ÄÚ²¿
+             -µÄEEPROM ±£´æÉÏÍøÕË»§ºÍÃÜÂë////////////////////////
+ 192          void Delay(BYTE n);
+ 193          void IapIdle();
+ 194          BYTE IapReadByte(WORD addr);
+ 195          void IapProgramByte(WORD addr,BYTE dat);
+ 196          void IapEraseSector(WORD addr);
+ 197          
+ 198          
+ 199          void IapIdle()
+ 200          {
+ 201   1        IAP_CONTR=0;
+ 202   1        IAP_CMD=0;
+ 203   1        IAP_TRIG=0;
+ 204   1        IAP_ADDRH=0X80;
+ 205   1        IAP_ADDRL=0;
+ 206   1      }
+ 207          
+ 208          BYTE IapReadByte(WORD addr)
+ 209          {
+ 210   1         BYTE dat;
+ 211   1         IAP_CONTR=ENABLE_IAP;
+ 212   1         IAP_CMD=CMD_READ;
+ 213   1         IAP_ADDRL=addr;
+ 214   1         IAP_ADDRH=addr>>8;
+ 215   1         IAP_TRIG=0x5a;
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 5   
+
+ 216   1         IAP_TRIG=0xa5;
+ 217   1         _nop_();
+ 218   1         dat=IAP_DATA;
+ 219   1         IapIdle();
+ 220   1         return dat;
+ 221   1      }
+ 222          
+ 223          void IapProgramByte(WORD addr,BYTE dat)
+ 224          {
+ 225   1        IAP_CONTR=ENABLE_IAP;
+ 226   1        IAP_CMD=CMD_PROGRAM;
+ 227   1        IAP_ADDRL=addr;
+ 228   1        IAP_ADDRH=addr>>8;
+ 229   1        IAP_DATA=dat;
+ 230   1        IAP_TRIG=0x5a;
+ 231   1        IAP_TRIG=0xa5;
+ 232   1        _nop_();
+ 233   1        IapIdle();
+ 234   1      }
+ 235          
+ 236          void IapEraseSector(WORD addr)
+ 237          {
+ 238   1        IAP_CONTR=ENABLE_IAP;
+ 239   1        IAP_CMD=CMD_ERASE;
+ 240   1        IAP_ADDRL=addr;
+ 241   1        IAP_ADDRH=addr>>8;
+ 242   1        IAP_TRIG=0x5a;
+ 243   1        IAP_TRIG=0xa5;
+ 244   1        _nop_();
+ 245   1        IapIdle();
+ 246   1      }
+ 247          /////////////////////////////////////////////////////////////////////ÒÔÉÏ²¿·ÖÊÇSTCµÄµôµç´æ´¢³ÌĞò£¬¶ÁĞ´ÄÚ²¿
+             -µÄEEPROM ±£´æÉÏÍøÕË»§ºÍÃÜÂë////////////////////////
+ 248          
+ 249          
+ 250          void make_AT_CIP3(void)
+ 251          //¸ù¾İÉÏ±ß ÔÚ2468 ¶Ë¿Ú¼àÌıµ½µÄ ¹ã²¥ÄÚÈİ ÓÃ¹ã²¥ÄÚÈİµÄIP µØÖ·192.168.1.10ºÍ¶Ë¿Ú 48008ĞÂ½¨Ò»¸ö3Á¬½Ó£¬
+ 252          //AT+CIPSTART=3,"UDP","192.168.1.10",48008,2469,0
+ 253          ///ĞÂ½¨Ò»¸öÁ¬½Ó3 
+ 254          {
+ 255   1        unsigned char a,b;
+ 256   1        for(a=0,b=0;a<21;a++,b++)
+ 257   1        temp_buf[b]=AT_CIP3[b];
+ 258   1        for(a=0;recd_buf[a]!=',';a++,b++)
+ 259   1        temp_buf[b]=recd_buf[a];
+ 260   1        temp_buf[b]=',';
+ 261   1        b++;
+ 262   1        a+=2;
+ 263   1        for(;recd_buf[a]!='"';a++,b++)
+ 264   1        temp_buf[b]=recd_buf[a];
+ 265   1        temp_buf[b]=',';
+ 266   1        b++;
+ 267   1        for(a=0;cip3_lcport[a]!=0;a++,b++)
+ 268   1        temp_buf[b]=cip3_lcport[a];
+ 269   1        temp_buf[b]=0;
+ 270   1      }
+ 271          //½«16½øÖÆÊı£¬±ä³É16½øÖÆ×Ö·û±ÈÈç10±ä³ÉA
+ 272          char back_char(unsigned char user_d)
+ 273          {
+ 274   1        if(user_d<10)
+ 275   1        return (user_d+'0');
+ 276   1        else 
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 6   
+
+ 277   1        return (user_d-10+'A');
+ 278   1      }
+ 279          ////ÖÆ×÷ ÏòÊÖ»ú·¢ËÍÈçÏÂ¸ñÊ½UDPÊı¾İ
+ 280          ////RPT:"0x00FE6738","0xB8B3C281","192.168.0.123","light","123456a"
+ 281          void make_bander_data()
+ 282          {
+ 283   1        unsigned char a,b=0;
+ 284   1        for(a=0;temp_bander[a]!=0;a++)
+ 285   1        temp_buf[a]=temp_bander[a];
+ 286   1        temp_buf[a]=0;
+ 287   1      
+ 288   1        //ÒÔÉÏÓ²¿½±´ code unsigned char temp_bander[]="RPT:\"0xa1b23467\",\"0xaf321234\",\"192.168.0.123\",\"lig
+             -ht\",\"123456a\"";µ½ temp_buf
+ 289   1        //ÒÔÏÂÓï¾äĞŞ¸ÄRPT:"0x00FE6738","0xB8B3C281","192.168.0.123","light","123456a" ÖĞ½«±¾ÉíµÄÉè±¸ID£¨Èç0x00FE
+             -6738£© ºÍ KEY£¨0xB8B3C281£©·Åµ½ÉÏÃæĞŞ¸ÄºóµÄtemp_buf
+ 290   1        //ºóÃæµÄ "light","123456a"  Îª±¾Éè±¸Ãû×Ö£¬ºÍ±¾Éè±¸µÄÃÜÂë£¬ÔİÊ±Î´ÓÃ ¿ÉËæ±ãÌîĞ´
+ 291   1      
+ 292   1        temp_buf[7]=back_char(esp_dev_id[4]>>4);
+ 293   1        temp_buf[8]=back_char(esp_dev_id[4]&0x0f);
+ 294   1        temp_buf[9]=back_char(esp_dev_id[5]>>4);
+ 295   1        temp_buf[10]=back_char(esp_dev_id[5]&0x0f);
+ 296   1        temp_buf[11]=back_char(esp_dev_id[6]>>4);
+ 297   1        temp_buf[12]=back_char(esp_dev_id[6]&0x0f);
+ 298   1        temp_buf[13]=back_char(esp_dev_id[7]>>4);
+ 299   1        temp_buf[14]=back_char(esp_dev_id[7]&0x0f);
+ 300   1      
+ 301   1        temp_buf[20]=back_char(esp_user_data[7]>>4);
+ 302   1        temp_buf[21]=back_char(esp_user_data[7]&0x0f);
+ 303   1        temp_buf[22]=back_char(esp_user_data[6]>>4);
+ 304   1        temp_buf[23]=back_char(esp_user_data[6]&0x0f);
+ 305   1        temp_buf[24]=back_char(esp_user_data[5]>>4);
+ 306   1        temp_buf[25]=back_char(esp_user_data[5]&0x0f);
+ 307   1        temp_buf[26]=back_char(esp_user_data[4]>>4);
+ 308   1        temp_buf[27]=back_char(esp_user_data[4]&0x0f);
+ 309   1      }
+ 310          
+ 311          void make_AT_SEND(unsigned char a_len)   //Éú³ÉÓÒ±ßÕâÑùµÄÖ¸Áî£¬½«²ÎÊıa_len ¸Ä³É10½øÖÆ£¬ÓÒ±ßÕâÌõÖ¸Áî  "AT+C
+             -IPSEND=XX" XXÊÇ·¢ËÍµÄÊıÁ¿
+ 312          {
+ 313   1        unsigned char aa=0;
+ 314   1        for(aa=0;aa<13;aa++)
+ 315   1        {
+ 316   2          at_send_len_ox[aa]=CIPSEND_LEN[aa];  //¼ôÌù"AT+CIPSEND= µ½RAM  ºóÃæµÄÊ®½øÖÆ²ÎÊıÓÉÏÂÃæµÄ²¿·ÖÉú³É
+ 317   2        }
+ 318   1        t_o=0;                                 //È¥µôÇ°ÃæµÄ0£¬±ÈÈç·¢ËÍ38¸ö×Ö½Ú£¬038£¬Ç°ÃæµÄ0¾Í¿ÉÒÔÈ¥µôÁË¡£
+ 319   1        if((a_len/100))
+ 320   1        {
+ 321   2        at_send_len_ox[aa]=a_len/100+'0';
+ 322   2        aa++;
+ 323   2        t_o=1;
+ 324   2        }
+ 325   1        if((a_len%100)/10)
+ 326   1        {
+ 327   2        at_send_len_ox[aa]=(a_len%100)/10+'0';
+ 328   2        aa++;
+ 329   2        t_o=1;
+ 330   2        }
+ 331   1        else if(t_o)
+ 332   1        {
+ 333   2          at_send_len_ox[aa]=0+'0';
+ 334   2              aa++;
+ 335   2        }
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 7   
+
+ 336   1        at_send_len_ox[aa]=(a_len%10)+'0';
+ 337   1        aa++;
+ 338   1        at_send_len_ox[aa]=0;
+ 339   1      }
+ 340          //ÏÂÃæº¯Êı»ñµÃCRCĞ£ÑéÂë ²ÉÓÃ±ê×¼CRC16 ³õÊ¼CRC=0XFFFF  ÔËËã¶àÏîÊ½²ÎÊı 8005 ·Ç1021
+ 341          unsigned int GetRevCrc_16(unsigned char * pData, int nLength)
+ 342          {
+ 343   1        unsigned int cRc_16 = 0xffff;
+ 344   1        unsigned char temp;
+ 345   1        while(nLength-- > 0)
+ 346   1        {
+ 347   2          temp = cRc_16&0xff; 
+ 348   2          cRc_16 = (cRc_16 >> 8) ^ crc_table[(temp ^ *pData++) & 0xFF];
+ 349   2        }
+ 350   1        return cRc_16;    
+ 351   1      }
+ 352          //ÏÂÃæÕâ¸öº¯Êı¹¹ÔìÒ»¸ö·¢ËÍµÄÊı¾İ¸ñÊ½£¬Çë¿´Êı¾İ¸ñÊ½ÎÄµµ£¬ÍêÈ«¿ÉÒÔÓÃ½á¹¹ÌåÍê³É£¬ÕâÀï²ÉÓÃÊı¾İ£¬´ÓÉÏµ½ÏÂÃèÊöÕâ
+             -¸öÊı¾İ°ü
+ 353          //·¢ËÍµÄÊı¾İ°ü£¬Ä¿Ç°Ö»ÓĞµÇÂ¼Êı¾İ°ü£¬ºÍÉÏ±¨ÎÂ¶ÈÊı¾İ°ü£¬ÕâÁ½¸ö»ù±¾µÄÊı¾İ°ü£¬ÉÏ±¨Êı¾İ°ü¿ÉÒÔ³äµ±ĞÄÌø°ü£¬µÚÒ»¸ö
+             -²ÎÊı¾ö¶¨×Å£¬ÊÇ·¢ËÍµÇÂ¼°ü»¹ÊÇÎÂ¶È°ü
+ 354          //ÆäËû¼¸¸öÈë¿Ú²ÎÊıÊÇÆ÷¼şID£¬ÁîÅÆ°ü£¬ÒÔ¼°¿Í»§µÄÊı¾İ£¬ÒÔ¼°¿Í»§Êı¾İ³¤¶È
+ 355          
+ 356          void make_send_pack(unsigned char ms_opt,unsigned char *dev_id,unsigned char *toke_id,unsigned char *use_d
+             -ata,unsigned char use_data_len)
+ 357          {
+ 358   1        unsigned char a,b,i=0;
+ 359   1        unsigned esp_crc=0;
+ 360   1        send_buf[0]=0x55;                                                  //°üÍ·ÊÇ0X55¹Ì¶¨
+ 361   1        
+ 362   1        send_buf[O_LEN_L]=(O_DATAS_START+use_data_len+3)%0xff; //±¾Êı¾İ°üµÄËùÓĞÊı¾İ³¤¶È£¬°üÍ·ÖÁ°üÎ²£¬¼ÇµÃÊÇÃ»ÓĞ¾
+             -­¹ı×ªÒåÇ°µÄ°ü³¤
+ 363   1        send_buf[O_LEN_H]=(O_DATAS_START+use_data_len+3)/0xff;
+ 364   1      
+ 365   1        if(ms_opt==0)                                                                                  //¸ù¾İÈë¿Ú²ÎÊıÅĞ¶ÏÊÇ·¢ËÍµÇÂ¼Á´Â·²Ù×÷£¬»¹ÊÇ·¢ËÍÊı¾İ°üÔÆÆ½Ì¨
+ 366   1        send_buf[O_CMD_T]=0XA0;// 0XA0 Á´Â·²Ù×÷ 0XAA Êı¾İ´«Êä 0XAC ÊµÊ±¼ì²âÖ¸Áî 0XF0 ÖÕ¶Ë²Ù×÷ 
+ 367   1        else if (ms_opt==1)
+ 368   1        send_buf[O_CMD_T]=0XAA;// 0XA0 Á´Â·²Ù×÷ 0XAA Êı¾İ´«Êä 0XAC ÊµÊ±¼ì²âÖ¸Áî 0XF0 ÖÕ¶Ë²Ù×÷ 
+ 369   1      
+ 370   1        if(ms_opt==0)                                                         //0X00´ú±íµÇÂ¼²Ù×÷
+ 371   1        send_buf[O_CMD_C]=0X00;// reg  option
+ 372   1        else if (ms_opt==1)
+ 373   1        send_buf[O_CMD_C]=0XEE;                                                   //0XEE´ú±íÊı¾İÊÇ´ÓÉè±¸µ½ÔÆÆ½Ì¨µÄ·½Ïò
+ 374   1      
+ 375   1        send_buf[O_CIX_L]=0XF3;// CMD INDEXL                  //ÃüÁîĞòÁĞ±àºÅ£¬ÔİÊ±²»ÓÃ£¬¿ÉÒÔ×÷Îª¶Ô·½Ó¦´ğµÄÊı¾İ°üº
+             -Å±êÊ¾
+ 376   1        send_buf[O_CIX_H]=0XC0;//     CMD INDEXL                                      //ÃüÁîĞòÁĞ±àºÅ£¬ÔİÊ±²»ÓÃ£¬¿ÉÒÔ×÷Îª¶Ô·½Ó¦´ğµÄÊı¾İ°üºÅ±êÊ¾
+ 377   1        send_buf[O_EXMSH]=0XC0;//     EXTERN MESSAGE1                         //À©Õ¹×ÓÔİÊ±±£Áô
+ 378   1        send_buf[O_EXMSL]=0XF3;//     EXTERN MESSAGE2                         //À©Õ¹×ÓÔİÊ±±£Áô
+ 379   1      
+ 380   1        send_buf[O_RESTA]=0X02;//     CMD_STA 00 OK 01 FAIL 02 SEND 03 NO SUP  //´ú±í±¾Êı¾İ°üµÄ×´Ì¬£¬ÊÇ·¢ËÍ»¹ÊÇÓ¦´ğ³
+             -É¹¦»¹ÊÇÊ§°Ü
+ 381   1      
+ 382   1        for(i=0;i<8;i++)
+ 383   1        send_buf[O_DEVID+i]=*(dev_id+(7-i)); // ¿½±´Éè±¸µÄÎ¨Ò»IDºÅµ½Êı¾İ°üÀï
+ 384   1      
+ 385   1      
+ 386   1        send_buf[O_TK_LEN] =8;                   //´ú±í½ÓÏÂÀ´µÄÁîÅÆ°üÊÇ8¸ö×Ö½Ú
+ 387   1      
+ 388   1      
+ 389   1        for(i=0;i<8;i++)
+ 390   1        send_buf[O_TOKE_START+i]=*(toke_id+i);//8¸ö×Ö½ÚÁîÅÆ°ü£¬³õÊ¼ÁîÅÆ°üÎª00 ºóĞø·şÎñÆ÷»á·ÖÅäÒ»¸öÁîÅÆ°ü¸øÕâ¸öÉè
+             -±¸£¬Éè±¸Ã¿´ÎÍ¨Ñ¶ÒªĞ¯´øÕâ¸öÁîÅÆ°ü
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 8   
+
+ 391   1      
+ 392   1      
+ 393   1        for(i=0;i<use_data_len;i++)
+ 394   1        send_buf[O_DATAS_START+i]=*(use_data+i); // ¿Í»§µÄÊı¾İÇø£¬µÇÂ¼µÄÊ±ºò·ÅÊı¾İÃÜÂëÎÄ±¾
+ 395   1        
+ 396   1        temp_buf[0]=0x55;                                                //°üÎ²
+ 397   1      
+ 398   1        esp_crc=GetRevCrc_16(send_buf,O_DATAS_START+use_data_len);//µÃµ½×ªÒåÖ®Ç°µÄ×ÜÊı¾İ°üCRC£¬¾ßÌå¿ÉÒÔ²ÎÕÕCRCÊı
+             -¾İ¸ñÊ½£¬Òò´ËCRCÊÇÕë¶Ô×ªÒåÖ®Ç°µÄÊı¾İÉú³É
+ 399   1      
+ 400   1        for(a=1,b=1;a<(O_DATAS_START+use_data_len);a++)           //½«³öÈ¥°üÍ·£¬ËùÓĞµÄÊı¾İÖĞº¬ÓĞÓĞ0X55µÄÊı¾İ×ªÒå
+             -³É0X54£¬0X01£¬½«0X54 ±ä³É0X54£¬02£¬ÖØĞÂ×ªÒåÊı¾İ°ü
+ 401   1        {
+ 402   2          if(send_buf[a]==0x55)
+ 403   2              {
+ 404   3                temp_buf[b]=0x54;
+ 405   3                b+=1;
+ 406   3                temp_buf[b]=0x01;
+ 407   3                b+=1;
+ 408   3              }
+ 409   2              else if(send_buf[a]==0x54)
+ 410   2              {
+ 411   3                temp_buf[b]=0x54;
+ 412   3                b+=1;
+ 413   3                temp_buf[b]=0x02;
+ 414   3                b+=1;
+ 415   3              }
+ 416   2              else
+ 417   2              {
+ 418   3              temp_buf[b]=send_buf[a];
+ 419   3              b+=1;
+ 420   3              }
+ 421   2       }       ///////////////////////////////////////////////////////////ÒÔÉÏµÄÓï¾ä×ªÒåÊı¾İ°üÖĞ³ı°üÍ·µ½CRCÖ®Ç°µÄÈ«²¿
+             -µÄÊı¾İ///////////////////////////////////////////////////////////////////////
+ 422   1       //55 28 00 AA EE F3 C0 C0 F3 02 E6 1E 00 00 00 00 00 00 08 24 41 D6 39 48 83 AC 00 54 02 45 4D 50 3A 32 3
+             -5 35 3B 00 D1 52 55
+ 423   1       //55 28 00 AA EE F3 C0 C0 F3 02 E6 1E 00 00 00 00 00 00 08 24 41 D6 39 48 83 AC 00 54 02 45 4D 50 3A 32 3
+             -5 35 3B 00 D1 52 55
+ 424   1      
+ 425   1       temp_buf[b]=(esp_crc>>8);
+ 426   1       b+=1;
+ 427   1       temp_buf[b]=(esp_crc&0x00ff);   
+ 428   1       b+=1;
+ 429   1          ///////////////////////////////////////////////////////////ÉÏÃæÁ½¾ä¼ÓÉÏCRCĞ£Ñé////////////////////////
+             -////////////////
+ 430   1       temp_buf[b]=0x55;      //°üÎ²
+ 431   1       b+=1;
+ 432   1       temp_buf[b]=0x0d;
+ 433   1       b+=1;
+ 434   1       temp_buf[b]=0x0a;
+ 435   1       b+=1;                          //ÒÔÉÏ¹¹³É»Ø³µ
+ 436   1       need_seed_len=b;       //ÖÁ´Ë¹¹Ôì³öÁËĞèÒª·¢ËÍµÄÈ«²¿Êı¾İ °üÀ¨ATÖ¸ÁîĞèÒªµÄ»»ĞĞ
+ 437   1       temp_buf[b]=0x00;
+ 438   1      }
+ 439          
+ 440          
+ 441          
+ 442          void Delay1(unsigned long ms)//¼òµ¥ÑÓ³Ùº¯Êı£¬µ¥Î»ÊÇºÁÃë
+ 443          {
+ 444   1              unsigned char i, j,k;
+ 445   1              for(k=0;k<ms;k++)
+ 446   1              {
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 9   
+
+ 447   2                      _nop_();
+ 448   2                      _nop_();
+ 449   2                      i = 22;
+ 450   2                      j = 128;
+ 451   2                      do
+ 452   2                      {
+ 453   3                              while (--j);
+ 454   3                      } while (--i);
+ 455   2              }
+ 456   1      }
+ 457          
+ 458          
+ 459          void Delay2(unsigned long cnt)
+ 460          {
+ 461   1              long i;
+ 462   1              for(i=0;i<cnt*100;i++);
+ 463   1      }
+ 464          
+ 465          void at_uart_send_str(unsigned char *str)//·¢ËÍAT×Ö·û´®µ½´®¿Ú
+ 466          {
+ 467   1        unsigned char *st_p=str;
+ 468   1        do{
+ 469   2           SBUF=*st_p;
+ 470   2               st_p++;
+ 471   2               Delay1(1);
+ 472   2              }while(*st_p);
+ 473   1              SBUF='\r';
+ 474   1              Delay1(1);
+ 475   1              SBUF='\n';
+ 476   1              Delay1(1);
+ 477   1      }
+ 478          void at_uart_send_buf(unsigned char *str,unsigned char len)//·¢ËÍÊı¾İ»º³åÇøµÄ·Ç×Ö·û´®ĞÅÏ¢£¬Êı¾İÁ÷ĞÅÏ¢µ½´®¿
+             -Ú
+ 479          {
+ 480   1        unsigned char *st_p=str;
+ 481   1        
+ 482   1        while(len){
+ 483   2           SBUF=*st_p;
+ 484   2               st_p++;
+ 485   2               Delay1(1);
+ 486   2               len--;
+ 487   2              }while(*st_p);
+ 488   1              Delay1(1);
+ 489   1      }
+ 490          
+ 491          
+ 492          void change_pack()                                        //°Ñ½ÓÊÕµ½µÄÊı¾İ°ü×ªÒå¹ıÀ´£¬0X55 ×ªÒå³É0X54 0X01 0X54 Ìæ»»³É0X54 02
+ 493          {
+ 494   1                                         for(stac_a=1,stac_b=1;recd_buf[stac_a]!=0x55;)
+ 495   1                                         {
+ 496   2                                           if((recd_buf[stac_a]==0x54)&&(recd_buf[stac_a+1]==0x01))
+ 497   2                                               {
+ 498   3                                               temp_buf[stac_b]=0x55;
+ 499   3                                               stac_b++;
+ 500   3                                               stac_a+=2;
+ 501   3                                               }
+ 502   2                                               else if((recd_buf[stac_a]==0x54)&&(recd_buf[stac_a+1]==0x02))
+ 503   2                                               {
+ 504   3                                               temp_buf[stac_b]=0x54;
+ 505   3                                               stac_b++;
+ 506   3                                               stac_a+=2;
+ 507   3                                               }
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 10  
+
+ 508   2                                               else
+ 509   2                                               {
+ 510   3                                                 temp_buf[stac_b]=recd_buf[stac_a];
+ 511   3                                                 stac_b++;
+ 512   3                                                 stac_a++;
+ 513   3                                               }
+ 514   2                                        }
+ 515   1                                        temp_buf[stac_b]=0x55;
+ 516   1                                        temp_buf[0]=0x55;
+ 517   1                                        recd_buf[0]=temp_buf[0];
+ 518   1                                        for(stac_a=1;temp_buf[stac_a]!=0x55;stac_a++)
+ 519   1                                        recd_buf[stac_a]=temp_buf[stac_a];
+ 520   1                                        recd_buf[stac_a]=0x55;
+ 521   1                                        recd_buf[0]=0x55;
+ 522   1      }
+ 523          void init_uart(void)
+ 524          {
+ 525   1              B_TX1_Busy = 0;
+ 526   1              RX1_Cnt = 0;
+ 527   1              TX1_Cnt = 0;
+ 528   1              S1_8bit();                              //8Î»Êı¾İ
+ 529   1              S1_USE_P30P31();                //UART1 Ê¹ÓÃP30 P31¿Ú   Ä¬ÈÏ
+ 530   1              AUXR &= ~(1<<4);        //Timer stop            ²¨ÌØÂÊÊ¹ÓÃTimer2²úÉú
+ 531   1              AUXR |= 0x01;           //S1 BRT Use Timer2;
+ 532   1              AUXR |=  (1<<2);        //Timer2 set as 1T mode
+ 533   1              TH2 = (u8)(Timer2_Reload >> 8);
+ 534   1              TL2 = (u8)Timer2_Reload;
+ 535   1              AUXR |=  (1<<4);        //Timer run enable
+ 536   1              REN = 1;        //ÔÊĞí½ÓÊÕ
+ 537   1              ES  = 1;        //ÔÊĞíÖĞ¶Ï
+ 538   1              EA = 1;         //ÔÊĞíÈ«¾ÖÖĞ¶Ï
+ 539   1              P3M1 = 0x00;
+ 540   1          P3M0 = 0xFF;
+ 541   1              RX1_Cnt=0;
+ 542   1              DK1=0;
+ 543   1              BEEP=0;
+ 544   1      }
+ 545          bit have_config=0;
+ 546          void main(void)
+ 547          {
+ 548   1              char tt,i,k,n,z=0;
+ 549   1              unsigned int h=0;
+ 550   1              //////////////////////////////////////////////////////////////////////////////////////ÏÂÃæ²¿·ÖÎª¶¨Ê±Æ÷ÒÔ¼
+             -°´®¿Ú³õÊ¼»¯/////////////////////
+ 551   1              init_uart();
+ 552   1              Delay2(1000);
+ 553   1              if(K1==0)           //¿ª»úµÄÊ±ºò·¢ÏÖ°´¼ü1Ò²¾ÍÊÇMCU_P1.3 ±»°´ÏÂ£¬ÄÇÃ´Çå³ıµ¥Æ¬»úÖĞEEPROM´æµÄÊı¾İ
+ 554   1              {
+ 555   2                      IapEraseSector(IAP_ADDRESS);  //²Á³ı¿Í»§EEPROMÉÈÇø 512×Ö½Ú
+ 556   2                              LED2=0;
+ 557   2                              BEEP=1;
+ 558   2                              Delay2(200);
+ 559   2                          LED2=1;
+ 560   2                              BEEP=0;      //ÉÁÁÁĞÄÌøÖ¸Ê¾µÆ£¬ºÍĞÄÌøÒô
+ 561   2              }
+ 562   1              Delay2(300);
+ 563   1              if(IapReadByte(IAP_ADDRESS+EEPROM_LAB)==0x55) //¿ª»úºó¼ì²âÊÇ·ñÒÑ¾­±£´æÁË¿Í»§µÄĞÅÏ¢ÔÚEEPROMÖĞ
+ 564   1              have_config=0;
+ 565   1              else
+ 566   1              have_config=1; //EEPROMÃ»ÓĞ¼ÇÂ¼¿Í»§µÄÂ·ÓÉÆ÷ÕË»§ºÍÃÜÂë£¬ĞèÒªÅäÖÃ
+ 567   1              ///////////////////////////////////////////////////////////////////////////////////ÒÔÉÏ²¿·ÖÖ÷ÒªÍê³É´®¿ÚµÄ
+             -³õÊ¼»¯////////////////////////////
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 11  
+
+ 568   1              for(;;)
+ 569   1              {        
+ 570   2              a_vec=0;                          //³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+ 571   2              ceng=0;                   //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+ 572   2              str_len_limt=22;          //ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+ 573   2              str_len_num=13;           //Òª¹ıÂËÁ¬Ğø×Ö·û¸öÊı
+ 574   2              str_ref=':';                      // ¹ıÂËµ½×Ö·û´®ºó£¬½Ó×ÅÒª³öÏÖµÄ×Ö·û£¬Õâ¸ö×Ö·û³öÏÖµÄÎ»ÖÃ²ÅÊÇ¾ø¶Ô0Î»ÖÃ
+ 575   2                      uart_rec_sta=uart_rec_smartlink; //ÉèÖÃÔÚ´®¿ÚÖĞµÄ¹ıÂË·ÖÖ§Ìõ¼ş£¬´®¿ÚÖĞ¶ÏÖĞ£¬¸ù¾İÕâ¸ö±êÖ¾µ÷ÓÃ²»Í¬µÄ×Ö·û´®¹
+             -ıÂË²ÎÊı
+ 576   2      
+ 577   2                      at_uart_send_str(AT_MODE);               //ÉèÖÃÄ£¿é½øÈëSTATION Ä£Ê½
+ 578   2                      Delay2(1000);
+ 579   2                      if(have_config)                                  //ĞèÒªÅäÖÃ Ä£¿éÁ¬Èë±¾µØµÄÂ·ÓÉÆ÷ÕË»§ºÍÃÜÂë
+ 580   2                      {
+ 581   3                      at_uart_send_str(AT_SMARTLINK);  //·¢ËÍ½øÈëSMARTLINK ATÖ¸Áî
+ 582   3                      Delay2(2000);
+ 583   3                      }
+ 584   2                      else
+ 585   2                      have_smartlink=1;                                //·ñÔòÉèÖÃÒÑ¾­½øÈë¹ıSMARTLINK ×´Ì¬
+ 586   2      
+ 587   2                      do                                                               //´ËÑ­»·Íê³ÉSMARTLINK µÄÅäÖÃ
+ 588   2                      {
+ 589   3                      LED1=0;
+ 590   3                      LED2=0;
+ 591   3                      LED3=0;
+ 592   3                      Delay2(200);
+ 593   3                      LED1=1;
+ 594   3                      LED2=1;
+ 595   3                      LED3=1;
+ 596   3                      Delay2(200);
+ 597   3                      if(have_smartlink)//¼ÙÈç´Ó´®¿ÚÖĞ»ñµÃÕıÈ·µÄ SMARTLINK ÓÃ»§Â·ÓÉÆ÷ÕË»§ºÍÃÜÂë
+ 598   3                      {
+ 599   4                         if(have_config)//ĞèÒª¿Í»§ÖØĞÂÉèÖÃÂ·ÓÉÆ÷ÕË»§ºÍÃÜÂë
+ 600   4                         {
+ 601   5                               for(i=0;recd_buf[i]!=0x0d;i++)
+ 602   5                               {
+ 603   6                                      ssid_len++;
+ 604   6                                      ssid[i]=recd_buf[i];                              //¿½±´´®¿Ú»º³åÇøÖĞµÄÓÃ»§Â·ÓÉÆ÷Ãû×Ö
+ 605   6                                      IapProgramByte(IAP_ADDRESS+EEPROM_SSID_LC+i+1,recd_buf[i]);    //´æ´¢¿Í»§ÕË»§µ½EEPROMÖĞ
+ 606   6                               }
+ 607   5                               IapProgramByte(IAP_ADDRESS+EEPROM_SSID_LC,ssid_len);                      //´æ´¢¿Í»§µÄÕË»§³¤¶Èµ½EEPROMÖĞ
+ 608   5                               for(i=0;recd_buf[ssid_len+11+i]!='\r';i++)
+ 609   5                               {
+ 610   6                                      password[i]=recd_buf[ssid_len+11+i];                           //¿½±´´®¿Ú»º³åÇøÖĞµÄÓÃ»§Â·ÓÉÆ÷ÃÜÂë
+ 611   6                                      IapProgramByte(IAP_ADDRESS+EEPROM_PASSWORD_LC+i+1,password[i]);//´æ´¢¿Í»§ÃÜÂëµ½EEPROMÖĞ
+ 612   6                                      pasd_len++;                                                                                                        
+ 613   6                               }
+ 614   5      
+ 615   5                               IapProgramByte(IAP_ADDRESS+EEPROM_PASSWORD_LC,pasd_len);          //´æ´¢¿Í»§µÄÃÜÂë³¤¶Èµ½EEPROMÖĞ
+ 616   5                               IapProgramByte(IAP_ADDRESS+EEPROM_LAB,0x55);
+ 617   5                         }
+ 618   4                         else //ÎŞĞèÓÃSMARTLINK ·½Ê½»ñÈ¡Â·ÓÉÆ÷ÕË»§ºÍÃØÃÜ£¬ÕË»§ºÍÃÜÂëÖ±½Ó´Óµ¥Æ¬»úµÄEEPROMÖ±½Ó¶ÁÈ¡
+ 619   4                         {
+ 620   5                          ssid_len=IapReadByte(IAP_ADDRESS+EEPROM_SSID_LC);    //´ÓEEPROMÖĞµÄÕË»§³¤¶È
+ 621   5                              pasd_len=IapReadByte(IAP_ADDRESS+EEPROM_PASSWORD_LC);//´ÓEEPROMÖĞµÄÃÜÂë³¤¶È
+ 622   5                          for(i=0;i<ssid_len;i++)
+ 623   5                              {
+ 624   6                              ssid[i]=IapReadByte(IAP_ADDRESS+EEPROM_SSID_LC+i+1); //´ÓEEPROMÖĞ¶ÁÈ¡ÕË»§ĞÅÏ¢µ½RAMÖĞ
+ 625   6                              }
+ 626   5                              for(i=0;i<pasd_len;i++)
+ 627   5                              {
+ 628   6                              password[i]=IapReadByte(IAP_ADDRESS+EEPROM_PASSWORD_LC+i+1); //´ÓEEPROMÖĞ¶ÁÈ¡ÃÜÂëĞÅÏ¢µ½RAMÖĞ
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 12  
+
+ 629   6                              }
+ 630   5                         }
+ 631   4                      //code unsigned char AT_CWJAP[]="AT+CWJAP=\"360we\",\"zty0012001\"";
+ 632   4                              n=0;
+ 633   4                              for(i=0;i<63;i++)
+ 634   4                          temp_buf[i]=0;              //Çå¿ÕÁÙÊ±»º³åÇø
+ 635   4      
+ 636   4                              for(i=0;i<10;i++,n++)
+ 637   4                              temp_buf[n]=AT_CWJAP[i];      //¿½±´ATÖ¸Áî¼ÓÈëÂ·ÓÉÆ÷µÄ¸ñÊ½Í·AT+CWJAP="
+ 638   4      
+ 639   4                              for(i=0;i<ssid_len;i++,n++)       //ÓÃSMARTLINK »ñµÃµÄ SSID ºÍPASSWORLD Ìî³ä ¼ÓÈëÂ·ÓÉÆ÷ËùĞèÒªµÄÁ½¸ö²ÎÊı AT+
+             -CWJAP="360we","zty0012001"
+ 640   4                              temp_buf[n]=ssid[i];
+ 641   4                              temp_buf[n]='"';
+ 642   4                              n++;
+ 643   4                              temp_buf[n]=',';
+ 644   4                              n++;
+ 645   4                              temp_buf[n]='"';
+ 646   4                              n++;
+ 647   4                              for(i=0;i<pasd_len;i++,n++)
+ 648   4                              temp_buf[n]=password[i];
+ 649   4                              temp_buf[n]='"';                         //ÒÔÉÏÓï¾ä¹¹Ôì³ö£ºAT+CWJAP="360we","zty0012001" ÕâÑùµÄÖ¸Áî£¬ÆäÖĞÂ·ÓÉÆ÷ÕË»§ºÍÃÜÂë Ëæ
+             -¿Í»§±ä¶¯
+ 650   4                      }
+ 651   3                  }while(have_smartlink==0); //´ËÑ­»·Íê³ÉSMARTLINK µÄÅäÖÃ
+ 652   2      
+ 653   2                      LED1=1;
+ 654   2                      LED2=1;
+ 655   2                      LED3=1;
+ 656   2                  //////////////////////////////////////////////////////////ÏÂÃæµÄÓï¾ä»ñµÃÄ£¿éµÄÉè±¸ID/////////////////
+             -////////////////////////////////////////////
+ 657   2              a_vec=0;                          //³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+ 658   2              ceng=0;                   //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+ 659   2              str_len_limt=16;          //ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+ 660   2              str_len_num=12;           //Òª¹ıÂËµÄ×Ö·û¸öÊı +CSYSID:CHIP: ÎªÏÂÒ»¸ö×Ö·ûÁô¸öÎ»ÖÃ: Òò´ËÊÇ12¸ö×Ö·û
+ 661   2              str_ref=':';                      // Òª¹ıÂËµ½µÄ×Ö·û
+ 662   2                      uart_rec_sta=uart_rec_csysid;
+ 663   2                      at_uart_send_str(AT_CSYSID); //·µ»ØÈçÏÂ£º+CSYSID:CHIP:00FE6738;FLASH:001640EF;KEY:81C2B3B8;
+ 664   2                      Delay2(2000);                            //ÑÓÊ±Á½Ãëºó£¬´®¿ÚÖĞ±Ø¶¨Êä³ö ËùĞèÒªµÄÆ÷¼şID FLASH ID ºÍKEY 
+ 665   2                      if(have_id)                                      //´Ó´®¿ÚÖĞ»ñÈ¡ÁËĞ¾Æ¬µÄID ĞÅÏ¢ ºÍKEY ÒÔ¼°FLASH ĞÅÏ¢
+ 666   2                      {
+ 667   3                      have_id=0;
+ 668   3                      k=0;
+ 669   3                      for(i=0,tt=0;i<8;i++,tt++)      //  »ñÈ¡Ä£¿éÄÚ²¿µÄĞ¾Æ¬ID                         
+ 670   3                      chip_id[tt]=recd_buf[i];
+ 671   3                      for(i=15,tt=0;i<23;i++,tt++)//  »ñÈ¡Ä£¿éÄÚ²¿µÄFLASH ID 
+ 672   3                      flash_id[tt]=recd_buf[i];
+ 673   3                      for(i=28,tt=0;i<36;i++,tt++)//  »ñÈ¡Ä£¿éÄÚ²¿µÄKEY
+ 674   3                      pass_id[tt]=recd_buf[i];
+ 675   3              //ÏÂÃæµÄÓï¾ä½«»ñÈ¡µÄ16½øÖÆ×Ö·û»»³É 16½øÖÆÊı¾İ£¬8¸ö×Ö½ÚµÄ×Ö·û×î×ÜµÃµ½ËÄ¸ö×Ö½ÚµÄ16½øÖÆÊı¾İ ±ÈÈç×Ö·û´
+             -®"A2345678"×îÖÕ±ä³É0XA2£¬0X34£¬0X56£¬0X78 ËÄ¸ö×Ö½Ú´æ·Å
+ 676   3                  for(i=0;i<8;i++)            
+ 677   3                  {
+ 678   4                                if((chip_id[i]>='A')&&(chip_id[i]<='F'))
+ 679   4                                chip_id[i]=(chip_id[i]-'A'+10);
+ 680   4                                else if((chip_id[i]>='a')&&(chip_id[i]<='f'))
+ 681   4                    chip_id[i]=(chip_id[i]-'a'+10);
+ 682   4                                else
+ 683   4                                chip_id[i]-='0';
+ 684   4                  }
+ 685   3                                      
+ 686   3                      for(i=0;i<8;i++)
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 13  
+
+ 687   3                  esp_dev_id[i]=0;
+ 688   3      
+ 689   3                      esp_dev_id[7]=((chip_id[6])<<4)+chip_id[7];// ½«×Ö·û´®16½øÖÆ×ª»»ºó£¬±ä³É16½øÖÆÊı¾İËÄ¸ö×Ö½Ú´æ·Åµ½¶ÔÓ¦ÄÚ´æ
+             -ÖĞ
+ 690   3                      esp_dev_id[6]=((chip_id[4])<<4)+chip_id[5];
+ 691   3                      esp_dev_id[5]=((chip_id[2])<<4)+chip_id[3];
+ 692   3                      esp_dev_id[4]=((chip_id[0])<<4)+chip_id[1];
+ 693   3                      //½«»ñÈ¡µÄ16½øÖÆ×Ö·û»»³É 16½øÖÆÊı¾İ£¬8¸ö×Ö½ÚµÄ×Ö·û×î×ÜµÃµ½ËÄ¸ö×Ö½ÚµÄ16½øÖÆÊı¾İ ±ÈÈç×Ö·û´®"A2345678"×îÖÕ±
+             -ä³É0XA2£¬0X34£¬0X56£¬0X78 ËÄ¸ö×Ö½Ú´æ·Å
+ 694   3                  for(i=0;i<8;i++)
+ 695   3                  {
+ 696   4                                if((pass_id[i]>='A')&&(pass_id[i]<='F'))
+ 697   4                                pass_id[i]=(pass_id[i]-'A'+10);
+ 698   4                                else if((pass_id[i]>='a')&&(pass_id[i]<='f'))
+ 699   4                    pass_id[i]=(pass_id[i]-'a'+10);
+ 700   4                                else
+ 701   4                                pass_id[i]-='0';
+ 702   4                  }
+ 703   3                      for(i=0;i<8;i++)
+ 704   3                      flash_id[i]=0;
+ 705   3      
+ 706   3                      flash_id[7]=((pass_id[6])<<4)+pass_id[7];// ½«×Ö·û´®16½øÖÆ×ª»»ºó£¬±ä³É16½øÖÆÊı¾İËÄ¸ö×Ö½Ú´æ·Åµ½¶ÔÓ¦ÄÚ´æÖĞ
+ 707   3                      flash_id[6]=((pass_id[4])<<4)+pass_id[5];
+ 708   3                      flash_id[5]=((pass_id[2])<<4)+pass_id[3];
+ 709   3                      flash_id[4]=((pass_id[0])<<4)+pass_id[1];
+ 710   3      
+ 711   3                      for(i=0;i<8;i++)
+ 712   3                  esp_user_data[i]=flash_id[i];
+ 713   3      
+ 714   3                      // ÒÔÉÏ²Ù×÷½«Ä£¿éÊä³öµÄÄÚ²¿×Ö·û´®ĞÎÊ½µÄĞ¾Æ¬ID ºÍKEY £¨¶¼ÊÇ4¸ö×Ö½ÚµÄ£©»»³É16½øÖÆ ´æ·Åµ½ÄÚ´æÖĞ£¬ÔÚµÇÂ¼·şÎñ
+             -Æ÷µÄÊ±ºòµÄÁ½¸ö±ØÒª²ÎÊı¡£
+ 715   3                      //////////////////////////////////////////////////////////ÉÏÃæµÄÓï¾ä»ñµÃÄ£¿éµÄÉè±¸IDºÍKEY///////////////
+             -//////////////////////////////////////////////
+ 716   3                      }
+ 717   2                      //while(1);
+ 718   2                      //////////////////////////////////////////////////////////ÏÂÃæµÄÓï¾ä·¢ËÍATÖ¸Áî¼ÓÈëÄÚÍø£¬²¢Á´½Óµ½°²ĞÅ¿ÉÎï
+             -ÁªÍø·şÎñÆ÷/////////////////////
+ 719   2      
+ 720   2                      a_vec=0;                          //³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+ 721   2              ceng=0;                   //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+ 722   2              str_len_limt=16;          //ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+ 723   2              str_len_num=7;            //×Ö·û¸öÊı
+ 724   2              str_ref='"';
+ 725   2                      uart_rec_sta=uart_rec_bander;
+ 726   2      
+ 727   2                      Delay2(2000);
+ 728   2              at_uart_send_str(AT_MODE);
+ 729   2                      Delay2(2000);
+ 730   2              at_uart_send_str(temp_buf); //temp_buf ÖĞ´ËÊ±´æ·ÅµÄÊÇ  AT+CWJAP="360we","zty0012001"    ÕâÑùµÄATÖ¸Áî£
+             -¬ÕâÒ»²½¼ÓÈëÂ·ÓÉÆ÷ÖĞ
+ 731   2                      Delay2(10000);
+ 732   2                      at_uart_send_str(AT_CIPMUX);//½øÈë¶àÁ¬½ÓÄ£Ê½£¬µ¥Á¬½ÓÆäÊµÒ²¿ÉÒÔµÄ
+ 733   2                      Delay2(2000);
+ 734   2              at_uart_send_str(CIPSTART);     //ÓÃUDP·½Ê½Á¬½Óµ½°²ĞÅ¿ÉµÄÔÆ£¬Á¬½Óµ½Ä¿±ê5001°²ĞÅ¿ÉÔÆ·şÎñ£¬Ë³±ã¼àÌı 2468
+             - ¶Ë¿Ú£¬code unsigned char CIPSTART[]="AT+CIPSTART=4,\"UDP\",\"cloud.ai-thinker.com\",5001,2468,0"
+ 735   2                      Delay2(2000);
+ 736   2                      
+ 737   2                      if(have_config)                    //¿Í»§ĞèÒªÖØĞÂÅäÖÃ£¬Õâ¸öÊ±ºòÒ²Ë³±ã°ÑÄ£¿éºÍÊÖ»úµÄ°ó¶¨¹ØÏµ½¨Á¢£ºÔ­ÀíÊÇÄ£¿é°ÑĞ¾Æ¬IDºÍK
+             -EY¾­¹ıUDP·¢¸øÊÖ»ú£¬ÊÖ»ú°ÑÕâ¸öºÏ·¨IDÉÏ±¨¸ø·şÎñÆ÷£¬´Ó¶ø°ó¶¨£¡
+ 738   2                      {                                                  //¹ı³ÌÊÇÊÖ»úÔÚºÍÄ£¿éÍ¬Ò»¸ö¾ÖÓòÍøºó£¬ÊÖ»ú·¢ËÍUDPµ½2468¶Ë¿Ú£¬¶øÉÏÒ»²½£¬Ä£¿éÔÚ¼àÌı2468¶Ë¿Ú£¡ÊÖ»ú·
+             -¢ËÍµÄUDP°üÄÚÈİÊÇRPL:"192.168.1.10","48008"
+ 739   3                      do                                                 //ÆäÊµÊÖ»úÊÇ°Ñ×Ô¼ºÏÖÔÚµÄIPµØÖ·192.168.1.10 ºÍ¼´½«¼àÌıµÄ¶Ë¿Ú48008 ¸æËßÄ£¿é£¬È»ºóÄ£¿é¾Í¿ÉÒÔ°Ñ×Ô
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 14  
+
+             -¼ºµÄĞ¾Æ¬ID ºÍKEYÊÚÈ¨ ¸÷ËÄ¸ö×Ö½Ú »ØËÍ¸øÊÖ»ú
+ 740   3                      {                                                  //Òò´ËÈÎºÎÒ»¸öÊÖ»úÖ»Òª»ñµÃÕâ¸öÄ£¿éµÄĞ¾Æ¬ID ºÍKEY ,¼´¿ÉÏò·şÎñÆ÷ÀûÓÃÕâ¸öĞÅÏ¢£¬½øĞĞ¿ØÖÆÈ¨ÉêÇë£¬Ò²
+             -¾ÍÊÇ°ó¶¨£¡
+ 741   4                      LED1=0;
+ 742   4                      LED2=0;
+ 743   4                      LED3=0;
+ 744   4                      Delay2(200);
+ 745   4                      LED1=1;
+ 746   4                      LED2=1;
+ 747   4                      LED3=1;
+ 748   4                      Delay2(200);
+ 749   4                      
+ 750   4                      if(have_bander)
+ 751   4                      {
+ 752   5                        ;
+ 753   5                      }
+ 754   4      
+ 755   4                      }while(have_bander==0);        //¼àÌı¾ÖÓòÍøÄÚÊÖ»úÏò2468¶Ë¿Ú£¨2468¶Ë¿ÚºÍÁ¬½Ó4°ó¶¨£© ·¢³öµÄUDPÉ¨ÃèĞÅÏ¢£¬»ñ
+             -µÃRPL:"192.168.1.10","48008"  ÊÖ»úÍ¸Â¶×Ô¼ºµÄIPºÍ¶Ë¿Ú
+ 756   3                       
+ 757   3                       make_AT_CIP3();                                 //¸ù¾İÉÏ±ß ÔÚ2468 ¶Ë¿Ú¼àÌıµ½ÊÖ»úÍ¸Â¶µÄIPµØÖ·ºÍ¶Ë¿Ú ¹¹ÔìÒ»Ìõ½¨Á¢Á¬½ÓÖ¸ÁîÈçÓÒ±ßÊ¾Ò
+             -â£ºAT+CIPSTART=3,"UDP","192.168.1.10",48008,2469,0
+ 758   3                       at_uart_send_str(temp_buf);     //·¢ËÍ³öÉÏÃæ¹¹ÔìµÄÁ¬½Óµ½ATÖ¸Áî£¬Ä£¿éµÃÒÔÖ´ĞĞÉÏÃæ¹¹ÔìµÄATÖ¸Áî
+ 759   3                       Delay2(2000);
+ 760   3                       make_bander_data();                 //´Ó°ó¶¨ÊÖ»úºÍÉè±¸¹ØÏµµÄ´¦ÀíÖĞ£¬¹¹Ôì³öÈçÓÒ±ßµÄUDPÊı¾İ£ºRPT:"0x00FE6738","0xB8
+             -B3C281","192.168.0.123","light","123456a"
+ 761   3                       at_uart_send_str(CIP3SEND_LEN); //·¢ËÍATÖ¸Áî£¬¸æËßÄ£¿é¼´½«¾­¹ıÂ·ÓÉÆ÷·¢¸øÊÖ»úµÄÊı¾İ³¤¶È£¬  code unsigned
+             - char CIP3SEND_LEN[]="AT+CIPSEND=3,63";
+ 762   3                       Delay2(1000);
+ 763   3                       at_uart_send_str(temp_buf);     //·¢ËÍ¹¹ÔìºÃµÄUDPÊı¾İ£¡
+ 764   3                       Delay2(2000);
+ 765   3                       }                                                               //¸ù¾İÉÏÃæµÄ¼¸¸ö²½Öè£¬ÊÖ»ú»ñÈ¡µ½ÁËÄ£¿éµÄĞ¾Æ¬ID ºÍ KEY ID£¬ÊÖ»úµÃµ½ºó»áÀûÓÃÕâ¸öĞÅÏ¢ÈÃ·şÎñÆ÷°ó¶
+             -¨ËüÃÇÁ½¸ö 
+ 766   2      
+ 767   2                      //////////////////////////////////////////////////////////ÉÏÃæÃæµÄÓï¾ä·¢ËÍATÖ¸Áî¼ÓÈëÄÚÍø£¬²¢Á´½Óµ½°²ĞÅ¿É
+             -ÎïÁªÍø·şÎñÆ÷/////////////////////
+ 768   2                      at_uart_send_str(AT_MODE);
+ 769   2                      a_vec=0;                          //³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+ 770   2              ceng=0;                   //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+ 771   2              str_len_limt=12;          //ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+ 772   2              str_len_num=5;            //×Ö·û¸öÊı
+ 773   2              str_ref=':';
+ 774   2                      uart_rec_sta=uart_rec_tcp_udp_data;
+ 775   2      
+ 776   2                      make_send_pack(0,esp_dev_id,esp_TOK_id,esp_user_data,8);//¹¹ÔìµÇÂ¼Êı¾İ°ü
+ 777   2                      make_AT_SEND(need_seed_len);                            //½«Òª½ø¹ıWIFI·¢ËÍµÄ×Ü×Ö½ÚÊı±ä³É10½øÖÆ£¬¶¯Ì¬Éú³É
+             -·¢ËÍÊı¾İATÖ¸Áî
+ 778   2                      two_lab=0;                                                                                              ////////////////////////////////////////////////////////////////////Á½¸ö55¼ÆÊı£¡£¡
+             -ÓĞ¿ÉÄÜ´íÂÒ
+ 779   2              at_uart_send_str(at_send_len_ox);                       //½«¹¹ÔìºÃµÄAT·¢ËÍÊı¾İµ½»¥ÁªÍøµÄ¶¯Ì¬·¢ËÍÊı
+             -¾İ³¤¶È
+ 780   2                      Delay2(2000);
+ 781   2                      at_uart_send_buf(temp_buf,need_seed_len);                               //¾­¹ıWIFIÄ£¿é·¢ËÍ¹¹ÔìºÃµÄµÇÂ¼°ü
+ 782   2                      Delay2(4000);
+ 783   2      
+ 784   2                      //while(1);
+ 785   2      
+ 786   2                      while(1)
+ 787   2                      {                                                                                                        //Ö÷Ñ­»·ÌåÖĞ£¬Ã¿30Ãë¹¹ÔìÒ»¸öÉÏ´«Êı¾İ£¬ÉÏ´«Êı¾İÃ¿´Î¼Ó1. 
+ 788   3                              for(tt=0;tt<60;tt++)
+ 789   3                              {
+ 790   4                              Delay2(200);
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 15  
+
+ 791   4                              Delay2(200);
+ 792   4                          }
+ 793   3                          make_send_pack(1,esp_dev_id,toke,temp_cd,10);    //¹¹ÔìÉÏ´«Êı¾İµ½ÔÆ£¬×ª¸øÊÖ»úµÄÎÂ¶ÈÊı¾İ°ü£¬·ûºÏ»ù±¾Ê
+             -ı¾İ¸ñÊ½
+ 794   3                          make_AT_SEND(need_seed_len);                                         //¶¯Ì¬¹¹Ôì·¢ËÍATÖ¸Áî
+ 795   3                              at_uart_send_str(at_send_len_ox);                //·¢ËÍ¹¹ÔìºÃµÄ·¢ËÍÖ¸Áî
+ 796   3                          Delay2(2000);
+ 797   3                          at_uart_send_buf(temp_buf,need_seed_len);        //¾­¹ıWIFI·¢ËÍÊı¾İ
+ 798   3      
+ 799   3                              LED2=0;
+ 800   3                              BEEP=1;
+ 801   3                              Delay2(200);
+ 802   3                          LED2=1;
+ 803   3                              BEEP=0;                                         //ÉÁÁÁĞÄÌøÖ¸Ê¾µÆ£¬ºÍĞÄÌøÒô
+ 804   3                                                                                                                              //Ã¿30Ãë»áÔËĞĞµ½ÕâÀïÒ»´Î¡£¸üĞÂÒ»´ÎÎÂ¶ÈÊıÖµ
+ 805   3                              time++;
+ 806   3                              temp_cd[5]=(((time%1000)/100)+'0');
+ 807   3                              temp_cd[6]=(((time%100)/10)+'0');
+ 808   3                          temp_cd[7]=(((time%10))+'0');
+ 809   3                      }
+ 810   2              }
+ 811   1              Delay2(2000);
+ 812   1      }
+ 813          
+ 814          /********************* ×Ö·û´®¹ıÂËº¯Êı³õÊ¼²ÎÊı************************/
+ 815          /*
+ 816          bit a_vec=0;                      //³öÏÖÖ¸¶¨µÄ×Ö´®£¬²¢¶¯Ì¬¹ıÂËµ½Ö¸¶¨µÄ×Ö·ûºó ÖÃ1
+ 817          unsigned char ceng=0;         //×î¶à ¶àÉÙ×Ö½ÚÄÚ »á³öÏÖÖ¸¶¨×Ö´®,¾²Ì¬±äÁ¿£¬
+ 818          unsigned char str_len_limt=12;//ÉèÖÃÒ»¸öÏŞ¶¨²Î¿¼ÊıÖµ£¬ÔÚÕâ¸ö²Î¿¼¸öÊıÄÚ±Ø¶¨³öÏÖÖ¸¶¨×Ö·û´®
+ 819          unsigned char str_len_num=5;  //×Ö·û¸öÊı
+ 820          char str_ref=':';
+ 821          code char test_code[]="+IPD,";
+ 822          */
+ 823          
+ 824          void fit_stb(unsigned char *str_p) // Ã¿´Î´®¿Ú½ÓÊÕµ½Ò»¸ö×Ö·û¶¼»á½øÈë±¾¹ıÂËº¯Êı£¬¿´ÊÇ·ñ¹ıÂËµ½Ö¸¶¨µÄ×Ö·û´®¡£
+ 825          {
+ 826   1         if((a_vec==0)&&(ceng<str_len_limt))
+ 827   1         {
+ 828   2            if(ceng<str_len_num)
+ 829   2                {
+ 830   3            if(SBUF==(*(str_p+ceng)))
+ 831   3                ceng++; 
+ 832   3                else 
+ 833   3                ceng=0;
+ 834   3                }
+ 835   2                else
+ 836   2                {
+ 837   3                      ceng++;
+ 838   3                      if(SBUF==str_ref)
+ 839   3                      {
+ 840   4                        a_vec=1;
+ 841   4                        ceng=0;       
+ 842   4                      }
+ 843   3                }
+ 844   2                RX1_Cnt=0;
+ 845   2         }
+ 846   1         else if(ceng>=str_len_limt)
+ 847   1         {
+ 848   2                a_vec=0;
+ 849   2                        ceng=0;
+ 850   2         }
+ 851   1      }
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 16  
+
+ 852          
+ 853          //unsigned char 
+ 854          void UART1_int (void) interrupt UART1_VECTOR
+ 855          {
+ 856   1              if(RI)
+ 857   1              {
+ 858   2                      RI = 0;
+ 859   2                      if(a_vec==0)//ÉÏ´ÎÎ´Ôø¹ıÂËµ½Ö¸¶¨µÄ×Ö·û´®ÖĞËùÓĞµÄ×Ö·û³öÏÖ£¬Ã¿´ÎÖ»¹ıÂËÒ»¸ö×Ö·û
+ 860   2                      {
+ 861   3                       switch(uart_rec_sta)         //¸ù¾İÏµÍ³µÄ×´Ì¬£¬¾ö¶¨¹ıÂËÄÄ¸ö×Ö·û
+ 862   3                       {
+ 863   4                        case uart_rec_tcp_udp_data: //´®¿Ú½øÈëÕı³£µÄUDP TCP Êı¾İÊÕ·¢
+ 864   4                        fit_stb(PIPD_code);             //¹ıÂËÊı¾İ½ÓÊÕÍ·
+ 865   4                        break;
+ 866   4                        case  uart_rec_csysid:          //´®¿Ú½øÈë»ñµÃÄ£¿éÄÚ²¿ID ºÍKEY ×´Ì¬
+ 867   4                        fit_stb(CYSYS_code);        //¹ıÂËÖ¸¶¨µÄÍ·²¿
+ 868   4                        break;
+ 869   4                        case uart_rec_smartlink:        //´®¿Ú½øÈë»ñµÃ¿Í»§µÄÂ·ÓÉÆ÷ÕË»§ÃÜÂë×´Ì¬
+ 870   4                        fit_stb(smartlink_code);
+ 871   4                        break;
+ 872   4                        case uart_rec_bander:
+ 873   4                        fit_stb(bander_code);
+ 874   4                       }
+ 875   3                      }
+ 876   2                      else//////////////////////////////¹ıÂËµ½Ö¸¶¨µÄÍ·²¿
+ 877   2                      {
+ 878   3                      
+ 879   3                       recd_buf[RX1_Cnt] = SBUF;              //±£´æÒ»¸ö×Ö½Ú
+ 880   3                       if(recd_buf[RX1_Cnt]==0X55)    //¼ÇÂ¼0X55µÄ¸öÊı£¬³öÏÖÁ½´Îºó£¬´ú±íÒ»¸öÓĞÊı¾İ°ü½áÊø
+ 881   3                       two_lab++;
+ 882   3                       if(RX1_Cnt<62) /////////////////////·ÀÖ¹64×Ö½ÚµÄ»º³åÇøÒç³ö
+ 883   3                       RX1_Cnt++;
+ 884   3                       else                   ///////Ã¿´ÎÊÕµ½µÄÖ¸Áî³¬¹ı64×Ö½Ú£¬¾Í°ÑÊı¾İÇå¿Õ£¬½ÓÊÕÖ¸ÕëÖ¸Ïò¿ªÍ·
+ 885   3                       {
+ 886   4                         RX1_Cnt=0;
+ 887   4                         a_vec=0;
+ 888   4                         two_lab=0;
+ 889   4                       }
+ 890   3                       switch(uart_rec_sta)
+ 891   3                        {
+ 892   4                          case uart_rec_tcp_udp_data:
+ 893   4                              //have_dd=1;
+ 894   4                                 //LED2=0;
+ 895   4                                      if(two_lab==2)//////////////////////////////////////////µÃµ½Ò»°üÓĞĞ§µÄÊı¾İ£¡È¡³ö2¸öOX55Ö®¼äµÄÓĞĞ§Êı¾İ/
+             -///////////////////
+ 896   4                                       {
+ 897   5                                         a_vec=0;
+ 898   5                                         rec_len=RX1_Cnt;
+ 899   5                                         two_lab=0;
+ 900   5                                         RX1_Cnt=0;
+ 901   5                         LED1=0;
+ 902   5                                         LED2=0;
+ 903   5                                         LED3=0;
+ 904   5      
+ 905   5                                         change_pack();
+ 906   5                                         have_data=1;
+ 907   5                                          if((recd_buf[32])==':')           /////////////////////////////////////¼òµ¥µÃµ½ÊÖ»úµÄ¿ª¹ØÖ¸Áî/////////
+             -///////////
+ 908   5                                              {
+ 909   6                                               if((recd_buf[33])=='0')
+ 910   6                                               {
+ 911   7                                                DK1=0;
+C51 COMPILER V9.01   MAIN                                                                  05/06/2015 00:24:36 PAGE 17  
+
+ 912   7                                                LED1=1;         //¹ØµÆÖ¸Áî
+ 913   7                                               }
+ 914   6                                               else if((recd_buf[33])=='1')
+ 915   6                                               {
+ 916   7                                                DK1=1;
+ 917   7                                            LED1=0;    //¿ªµÆÖ¸Áî
+ 918   7                                               }
+ 919   6                                              }
+ 920   5                                              if((recd_buf[3]==0xa0)&&(recd_buf[9]==0x00)&&(have_tok==0))////////////////////»ñµÃTOKE°ü////////////
+             -//////////////////////
+ 921   5                                              {
+ 922   6                                                have_tok=1;
+ 923   6                                                toke[7]=recd_buf[19];      
+ 924   6                                                toke[6]=recd_buf[20];         
+ 925   6                                                toke[5]=recd_buf[21]; 
+ 926   6                                                toke[4]=recd_buf[22];          
+ 927   6                                                toke[3]=recd_buf[23];
+ 928   6                                                toke[2]=recd_buf[24];
+ 929   6                                                toke[1]=recd_buf[25];
+ 930   6                                                toke[0]=recd_buf[26];
+ 931   6      
+ 932   6                                              }
+ 933   5                                       }
+ 934   4                              break;
+ 935   4                         case  uart_rec_csysid:
+ 936   4                         if(RX1_Cnt>40)
+ 937   4                         have_id=1;
+ 938   4                         break;
+ 939   4                         case  uart_rec_smartlink:
+ 940   4                         if(RX1_Cnt>10)
+ 941   4                         have_smartlink=1;
+ 942   4                         break;
+ 943   4                         case  uart_rec_bander:
+ 944   4                         if(RX1_Cnt>20)
+ 945   4                         have_bander=1;
+ 946   4                         break;
+ 947   4                       };
+ 948   3                }
+ 949   2              }
+ 950   1              if(TI)
+ 951   1              {
+ 952   2                      TI = 0;
+ 953   2                      B_TX1_Busy = 0;         //Çå³ı·¢ËÍÃ¦±êÖ¾
+ 954   2              }
+ 955   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   3687    ----
+   CONSTANT SIZE    =    896    ----
+   XDATA SIZE       =     72    ----
+   PDATA SIZE       =    126      49
+   DATA SIZE        =     88    ----
+   IDATA SIZE       =    106    ----
+   BIT SIZE         =      9    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

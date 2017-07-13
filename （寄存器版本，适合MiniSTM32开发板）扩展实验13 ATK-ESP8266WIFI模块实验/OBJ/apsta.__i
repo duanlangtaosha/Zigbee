@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\ATK-ESP8266 -I ..\FATFS\exfuns -I ..\FATFS\src -I ..\FATFS\src\option -I ..\HARDWARE\24CXX -I ..\HARDWARE\FLASH -I ..\HARDWARE\KEY -I ..\HARDWARE\LCD -I ..\HARDWARE\LED -I ..\HARDWARE\SD -I ..\HARDWARE\SPI -I ..\HARDWARE\TIMER -I ..\HARDWARE\TOUCH -I ..\HARDWARE\USART2 -I ..\MALLOC -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\TEXT -I ..\USMART
+-I "G:\Desktop\（寄存器版本，适合MiniSTM32开发板）扩展实验13 ATK-ESP8266WIFI模块实验\USER\RTE"
+-I D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
+-I D:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="520" -DSTM32F10X_HD -DSTM32F10X_HD
+-o ..\obj\apsta.o --omf_browse ..\obj\apsta.crf --depend ..\obj\apsta.d "..\ATK-ESP8266\apsta.c"

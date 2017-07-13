@@ -157,14 +157,14 @@ void init_esp_8266_setting ( void)
 	Delay2000ms();
 	Delay2000ms();
 	
-	esp_8266_send_com("AT+CIPSTA=\"192.168.1.200\"", "OK", 2000);
+//	esp_8266_send_com("AT+CIPSTA=\"192.168.1.200\"", "OK", 2000);
 	Delay2000ms();
 	Delay2000ms();
 	
 	esp_8266_send_com("AT+CWSAP=\"LWL\",\"12345678\",1,4", "OK", 1000);
 	Delay2000ms();
 
-	esp_8266_send_com("AT+CWJAP=\"MERCURY_A78A\",\"zlgmcu18\"", "OK", 1000);
+//	esp_8266_send_com("AT+CWJAP=\"MERCURY_A78A\",\"zlgmcu18\"", "OK", 1000);
 	Delay2000ms();
 
 	esp_8266_send_com("AT+CIPMUX=1", "OK", 1000);
