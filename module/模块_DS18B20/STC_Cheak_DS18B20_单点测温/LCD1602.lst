@@ -1,0 +1,180 @@
+C51 COMPILER V9.56.0.0   LCD1602                                                           05/15/2017 17:19:31 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN LCD1602.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\LCD1602.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND
+                    - PRINT(.\LCD1602.lst) TABS(2) OBJECT(LCD1602.obj)
+
+line level    source
+
+   1          #include ".\Head\stc12c5a60s2.h"
+   2          #include ".\Head\intrins.h"
+   3          #include ".\Head\LCD1602.h"
+   4          
+   5          static void CheckBusy_LCD(void);
+   6          static void WriteToLCD(unsigned char LCD_data);
+   7          static void DelayMS(unsigned char MS_Counter);
+   8          static void TCGRAM(unsigned char DispAdr,unsigned char code *SpecialPtr);
+   9          //unsigned char code ASCII_CODE[] =   {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  10          //unsigned char code Speci_Char[] =   {
+  11          //                    0x06,0x02,0x0A,0x0A,0x0A,0x11,0x11,0x00,  /* 字符 '八' */
+  12          //                      0x04,0x04,0x04,0x1F,0x04,0x04,0x04,0x00   /* 字符 '十' */
+  13          //                    };
+  14          /*************************************************************************************************
+  15                      void InitialLCD(void)
+  16          功能说明: 设定显示为8bits，设定LCD为双列显示、5×7点字体
+  17          其他说明: 在电源上升到4.5V之后10ms，忙碌标识即设为1，一直到初始化过程结束才重新为0
+  18          **************************************************************************************************/
+  19          void Initial_LCD(void)
+  20          {
+  21   1        Command_LCD(SET_8BITS,UNCHK_BUSY);    /* 设置为16*2显示，5*7字符，8bit数据接口，不查忙  */
+  22   1        DelayMS(5);
+  23   1        Command_LCD(SET_8BITS,UNCHK_BUSY);    /* 设置为16*2显示，5*7字符，8bit数据接口，不查忙  */
+  24   1        DelayMS(5);
+  25   1        Command_LCD(SET_8BITS,UNCHK_BUSY);    /* 设置为16*2显示，5*7字符，8bit数据接口，不查忙  */
+  26   1        DelayMS(5);
+  27   1        Command_LCD(SET_8BITS,CHK_BUSY);    /* 设置为16*2显示，5*7字符，8bit数据接口，开始查忙  */
+  28   1        Command_LCD(OFF_DISPLAY,CHK_BUSY);    /* 关闭LCD1602                    */
+  29   1        Command_LCD(LCD_CLEAR_SCREEN,CHK_BUSY); /* 清屏                       */
+  30   1        Command_LCD(MODE_SET_2,CHK_BUSY);   /* 读写数据后，光标右移，屏幕不右移         */
+  31   1        Command_LCD(OFF_CURSOR,CHK_BUSY);   /* 打开LCD1602                    */
+  32   1      
+  33   1      
+  34   1      
+  35   1      
+  36   1      
+  37   1      //  TCGRAM(00,Speci_Char);          /* 生成特殊字符，字符地址存放在00           */
+  38   1      //  TCGRAM(01,Speci_Char+8);        /* 生成特殊字符，字符地址存放在01           */
+  39   1      }
+  40          /*************************************************************************************************
+  41                      void String_LCD(char *string)
+  42          功能说明: 在LCD上显示字符
+  43          其他说明: 
+  44          **************************************************************************************************/
+  45          void String_LCD(char *string)
+  46          {
+  47   1        char *strPtr = string;
+  48   1        while(*strPtr !=  00)
+  49   1        {
+  50   2          WriteToLCD(*strPtr);
+  51   2          strPtr++;
+  52   2        }
+  53   1      }
+  54          /*************************************************************************************************
+C51 COMPILER V9.56.0.0   LCD1602                                                           05/15/2017 17:19:31 PAGE 2   
+
+  55                      void LocatPos(unsigned char X,unsigned char Y)
+  56          功能说明: 设置显示屏坐标
+  57          其他说明: X列数，从00--15;
+  58                Y行数，Y=0，行一；Y=1，行二
+  59          *************************************************************************************************/
+  60          void LocatPos(unsigned char X,unsigned char Y)
+  61          {
+  62   1        unsigned char command = X & 0x0f;
+  63   1        if(Y&0x01)
+  64   1        command |= 0x40;
+  65   1        command |= 0x80;
+  66   1        Command_LCD(command,CHK_BUSY);
+  67   1      }
+  68          /*************************************************************************************************
+  69                      void WriteToLCD(unsigned char data)
+  70          功能说明: 写数据到LCD驱动器中，对于数据的地址需要看前一次是设定在哪个地址而定，常用带的地方是将
+  71                字符码写入LCD后，在光标的位置会显示相对应的字体。
+  72          其他说明: 1.输入:需要显示的字符（无符号字符）
+  73          **************************************************************************************************/
+  74          void WriteToLCD(unsigned char LCD_data)
+  75          {
+  76   1        CheckBusy_LCD();            /* 查忙信号               */  
+  77   1        RS_LCD    = 1;    
+  78   1        RW_LCD    = 0;
+  79   1        E_LCD   = 0;
+  80   1        BUS_LCD   = LCD_data;
+  81   1        E_LCD   = 1;
+  82   1        _nop_();
+  83   1        _nop_();
+  84   1        _nop_();
+  85   1        _nop_();
+  86   1        E_LCD   = 0;
+  87   1      }
+  88          /*************************************************************************************************
+  89                      void Command_LCD(unsigned char command)
+  90          功能说明: 写指令到LCD驱动器
+  91          其他说明: 1.输入:控制指令
+  92                2.由于初始化LCD1602的前几条命令不用查忙信号，所以要判断是否需要查忙信号。
+  93          **************************************************************************************************/
+  94          void Command_LCD(unsigned char command,bit BusyFlag )
+  95          {
+  96   1        if(BusyFlag)              /* 判断是否需要查忙信号         */
+  97   1        {
+  98   2          CheckBusy_LCD();
+  99   2        }
+ 100   1        RS_LCD    = 0;            /* 写命令时序               */
+ 101   1        RW_LCD    = 0;
+ 102   1        E_LCD   = 0;
+ 103   1        BUS_LCD   = command;
+ 104   1        E_LCD   = 1;
+ 105   1        _nop_();
+ 106   1        _nop_();
+ 107   1        _nop_();
+ 108   1        _nop_();
+ 109   1        E_LCD   = 0;
+ 110   1      }
+ 111          /*************************************************************************************************
+ 112                      void CheckBusy_LCD(void)
+ 113          功能说明: 检查LCD忙标志
+ 114          其他说明: 1.LCD每次写入命令或数据，内部都需要时间处理，所以每次作读/写操作之前，必须先检查忙标志，
+ 115                确定空间后，才可继续对LCD工作，否则读/写的数据后命令会被遗漏。
+ 116                2.初始化LCD1602的前20ms设置显示模式时，不用检测忙信号。
+C51 COMPILER V9.56.0.0   LCD1602                                                           05/15/2017 17:19:31 PAGE 3   
+
+ 117                3.此函数若在LCD驱动损坏的情况下，可能会一直死循环，故需要打开看门狗进行监视。
+ 118          **************************************************************************************************/
+ 119          void CheckBusy_LCD(void)
+ 120          {
+ 121   1        BUS_LCD   = 0xff;
+ 122   1        RS_LCD    = 0;            /* 读状态时序                 */
+ 123   1        RW_LCD    = 1;
+ 124   1        E_LCD     = 1;
+ 125   1        _nop_();
+ 126   1        _nop_();
+ 127   1        _nop_();
+ 128   1        while(BUS_LCD&0x80);          /* 读状态字的bit7，判断是否忙         */
+ 129   1        E_LCD   = 0;            /* E = L                  */
+ 130   1      }
+ 131          void Delay1ms()   //@12.000MHz
+ 132          {
+ 133   1        unsigned char i, j;
+ 134   1      
+ 135   1        _nop_();
+ 136   1        _nop_();
+ 137   1        i = 12;
+ 138   1        j = 168;
+ 139   1        do
+ 140   1        {
+ 141   2          while (--j);
+ 142   2        } while (--i);
+ 143   1      }
+ 144          void DelayMS(unsigned char MS_Counter)
+ 145          {
+ 146   1         while(MS_Counter--)
+ 147   1         {
+ 148   2             Delay1ms() ;
+ 149   2         }
+ 150   1      }
+ 151          
+ 152          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    211    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

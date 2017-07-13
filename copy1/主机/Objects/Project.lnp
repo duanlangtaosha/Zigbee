@@ -1,0 +1,11 @@
+".\Objects\STARTUP.obj",
+".\Objects\lcd12864.obj",
+".\Objects\main.obj",
+".\Objects\DS18B20.obj",
+".\Objects\ds1302.obj",
+".\Objects\key.obj",
+".\Objects\uart.obj",
+".\Objects\uart2.obj",
+".\Objects\esp8266.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 

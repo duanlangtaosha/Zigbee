@@ -1,0 +1,5 @@
+TRANSFER
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\lcd12864.obj" 
+TO ".\Objects\LCD12864.LIB"

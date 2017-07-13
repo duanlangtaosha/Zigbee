@@ -1,0 +1,531 @@
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LCD12864
+OBJECT MODULE PLACED IN .\Objects\lcd12864.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\lcd12864.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEX
+                    -TEND PRINT(.\Listings\lcd12864.lst) TABS(2) OBJECT(.\Objects\lcd12864.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          *                            STC51 MCU Module
+   3          *                       ---------------------------
+   4          *
+   5          * Copyright (c) 2001-2012 duanlantaosha
+   6          *
+   7          * Chip      : STC89C52RC&STC12C5A60S2
+   8          * OSC       : 11.0592M & 12M
+   9          * Made  By  : duanlangtaosha
+  10          * QQ        : 891650837
+  11          * e-mail:   : 891650837@qq.com
+  12          *******************************************************************************/
+  13          
+  14          /**
+  15           * \file
+  16           * \brief LCD12864 display module
+  17           *
+  18           * \note 实现汉字的打印，可以用printf函数打印出数字和汉字，也可以用LCD12864_WriteSring
+  19           *       支持画图，画点工程，无反白，注:延时不对可以在lcd12864_delayms中修改
+  20           *       printf不支持\n\r的换行。
+  21           *       支持sprintf把整数和小数转换成字符串输出。如:1.2356可以转换成字符串类型的1.2356
+  22           *
+  23           *       并行输入输出,支持不连续的IO口赋值（未测试）
+  24           *
+  25           * \internal
+  26           * \par Modification history
+  27           * - 1.00 17-05-10  duanlangtaosha, first implementation.
+  28           * \endinternal
+  29           */
+  30          
+  31          #include "lcd12864.h"
+  32          
+  33          /**
+  34          * \brief LCD12864延时ms级函数
+  35          *
+  36          * \param[in] c : 延时多少毫秒，最大是一个uint的值
+  37          *
+  38          * \return 无
+  39          */
+  40          void lcd12864_delayms (uint c)
+  41          {
+  42   1          uchar a,b;
+  43   1        for (; c > 0; c--) {
+  44   2            for(b = 199; b > 0; b--) {
+  45   3                for(a = 1; a > 0; a--);
+  46   3          }
+  47   2        }
+  48   1      }
+  49          
+  50          /**
+  51          * \brief LCD12864判忙操作
+  52          *
+  53          * \param none
+  54          *
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 2   
+
+  55          * \retval 0 : 判忙失败，等待超时
+  56          *         1 : 判忙成功，此时LCD12864空闲
+  57          */
+  58          
+  59          uchar lcd12864_busy (void)
+  60          {
+  61   1        uchar i = 0;
+  62   1      
+  63   1        LCD12864_RS = 0;  /* 选择命令 */
+  64   1        LCD12864_RW = 1;  /* 选择读取 */
+  65   1      
+  66   1        LCD12864_EN = 1;
+  67   1        lcd12864_delayms(1);
+  68   1      
+  69   1      //  while((LCD12864_DATAPORT & 0x80) == 0x80) /* 检测读取到的值 */
+  70   1        while((Read_LCD12864_DATAPORT & 0x80) == 0x80) {
+  71   2          i++;
+  72   2          if(i > 100) {
+  73   3            LCD12864_EN = 0;
+  74   3            return 0;    /* 超过等待时间返回0表示失败 */
+  75   3          }
+  76   2        }
+  77   1      
+  78   1        LCD12864_EN = 0;
+  79   1      
+  80   1        return 1;
+  81   1      }
+  82          
+  83          /**
+  84          * \brief LCD12864写指令操作
+  85          *
+  86          * \param[in] cmd : 传人相应的指令
+  87          *
+  88          * \return 无
+  89          */
+  90          void lcd12864_write_cmd(uchar cmd)
+  91          {
+  92   1        uchar i;
+  93   1        i = 0;
+  94   1        while( lcd12864_busy() == 0) {
+  95   2          lcd12864_delayms(1);
+  96   2          i++;
+  97   2          if( i > 100) {
+  98   3            return;    /* 超过等待退出 */
+  99   3          } 
+ 100   2        }
+ 101   1        
+ 102   1        LCD12864_RS = 0;     /* 选择命令 */
+ 103   1        LCD12864_RW = 0;     /* 选择写入 */
+ 104   1        LCD12864_EN = 0;     /* 初始化使能端 */
+ 105   1      
+ 106   1      //  LCD12864_DATAPORT = cmd;   /* 放置数据 */
+ 107   1        Write_LCD12864_DATAPORT(cmd);
+ 108   1      
+ 109   1        LCD12864_EN = 1;       /* 写时序 */
+ 110   1        lcd12864_delayms(5);
+ 111   1        LCD12864_EN = 0;              
+ 112   1      }
+ 113          
+ 114          /**
+ 115          * \brief LCD12864写数据操作
+ 116          *
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 3   
+
+ 117          * \param[in] dat : 传人相应的数据
+ 118          *
+ 119          * \return 无
+ 120          */
+ 121          void lcd12864_write_data(uchar dat)
+ 122          {
+ 123   1        uchar i;
+ 124   1        i = 0;
+ 125   1        while ( lcd12864_busy() == 0) {
+ 126   2          lcd12864_delayms(1);
+ 127   2          i++;
+ 128   2          if( i > 100) {
+ 129   3            return;    /* 超过等待退出 */
+ 130   3          } 
+ 131   2        }
+ 132   1      
+ 133   1        LCD12864_RS = 1;     /* 选择数据 */
+ 134   1        LCD12864_RW = 0;     /* 选择写入 */
+ 135   1        LCD12864_EN = 0;     /* 初始化使能端 */
+ 136   1      
+ 137   1      //  LCD12864_DATAPORT = dat;   /* 放置数据 */
+ 138   1        Write_LCD12864_DATAPORT(dat);
+ 139   1      
+ 140   1        LCD12864_EN = 1;       /* 写时序 */
+ 141   1        lcd12864_delayms(5);
+ 142   1        LCD12864_EN = 0;                    
+ 143   1      }
+ 144          
+ 145          /**
+ 146          * \brief LCD12864读取数据
+ 147          *
+ 148          * \param 无
+ 149          *
+ 150          * \return 读取到的数据
+ 151          */
+ 152          #ifdef LCD12864_PICTURE
+              
+              uchar lcd12864_read_data (void)
+              {
+                uchar i = 0, lcd12864_read_data = 0;
+              
+                i = 0;
+                while ( lcd12864_busy() == 0) {
+                  lcd12864_delayms(1);
+                  i++;
+                  if ( i > 100) {
+                    return 0;    /* 超过等待退出 */
+                  } 
+                }
+              
+                LCD12864_RS = 1;       /* 选择命令 */
+                LCD12864_RW = 1;
+                LCD12864_EN = 0;
+                lcd12864_delayms(1);  /* 等待 */
+              
+                LCD12864_EN = 1;
+                lcd12864_delayms(1);
+                lcd12864_read_data = Read_LCD12864_DATAPORT;
+                LCD12864_EN = 0;
+              
+                return lcd12864_read_data;
+              }
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 4   
+
+              
+              #endif
+ 181          
+ 182          /**
+ 183          * \brief LCD12864初始化
+ 184          *
+ 185          * \param  无
+ 186          *
+ 187          * \return 无
+ 188          */
+ 189          void lcd12864_init (void)
+ 190          {
+ 191   1        LCD12864_PSB = 1;   /* 选择并行输入 */
+ 192   1        LCD12864_RST = 1;   /* 复位 */
+ 193   1      
+ 194   1        lcd12864_write_cmd(0x30);  /* 选择基本指令操作 */
+ 195   1        lcd12864_write_cmd(0x0c);  /* 显示开，关光标   */
+ 196   1        lcd12864_write_cmd(0x01);  /* 清除LCD12864的显示内容 */
+ 197   1      }
+ 198          
+ 199          
+ 200          /**
+ 201          * \brief LCD12864清屏（在画图模式下）
+ 202          *
+ 203          * \note 在画图模式下，LCD12864的01H命令不能清屏，所以要自己写一个清屏函数
+ 204          *
+ 205          * \param 无
+ 206          *
+ 207          * \return 无
+ 208          */
+ 209          #ifdef LCD12864_PICTURE
+              
+              void lcd12864_clear_screen (void)
+              {
+                uchar i,j;
+              
+                lcd12864_write_cmd(0x34);   /*开启拓展指令集 */
+              
+                for(i = 0; i < 32; i++) {    /* 因为LCD有纵坐标32格所以写三十二次 */
+                
+                  lcd12864_write_cmd(0x80+i); /* 先写入纵坐标Y的值 */
+                  lcd12864_write_cmd(0x80);   /* 再写入横坐标X的值 */
+                  for(j=0;j<32;j++) {     /*
+                                          /* 横坐标有16位，每位写入两个字节的的数据，也
+                                          /* 就写入32次以为当写入两个字节之后横坐标会自
+                                          */
+                    lcd12864_write_data(0xFF);    /* 动加1，所以就不用再次写入地址了。 */
+                  }
+                }
+              
+                lcd12864_write_cmd(0x36);  /* 0x36扩展指令里面打开绘图显示 */
+                lcd12864_write_cmd(0x30);  /* 恢复基本指令集 */
+              }
+              
+              #endif
+ 234          
+ 235          /**
+ 236          * \brief LCD12864画点
+ 237          *
+ 238          * \param[in] x : x坐标
+ 239          * \param[in] y : y坐标
+ 240          *
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 5   
+
+ 241          * \return 无
+ 242          */
+ 243          #ifdef LCD12864_PICTURE
+              
+              void lcd12864_drow_point (uchar x, uchar y)
+              {
+                uint bt = 0, lcd12864_read_data = 0;
+                uchar x_adr, y_adr, h_bit, l_bit;
+              
+                /* --Y轴最大一共64，但是12864分为上半屏和下半屏，超过32就是下半屏了，--*/
+                /* --地址得又从零开始了。所以对32求余数，得到Y轴的坐标，然后加上80H的基地址--*/
+                y_adr = 0x80 + y % 32;    //计算Y轴的地址 
+                
+                /* --当Y大于31时是下半屏，X（水平位置的地址）是从88H开始的，而且它是16位一--*/
+                /* --个地址，所以对16求模。而上半屏的地址是从80H开始的--*/ 
+                if(y > 31) {
+                  x_adr = 0x88 + x / 16;  /* 计算X轴的地址 */
+                }
+                
+                else {
+                  x_adr = 0x80 + x / 16;
+                }
+                
+                /* --求出X（水平位置），点亮的点是在16位数据里面的哪一个位--*/
+                /* --所以对这个数求余数--*/
+                bt = 0x8000 >> (x % 16);
+              
+                lcd12864_write_cmd(0x34);   /* 进入拓展指令集 */
+              
+                lcd12864_write_cmd(y_adr);    /* 读取数据的时候要先写入所取数据的地址 */
+                lcd12864_write_cmd(x_adr);
+              
+                lcd12864_read_data();     /* 读取的第一个字节不要 */
+                lcd12864_read_data = lcd12864_read_data();    /* 从第二个字节开始接收 */
+                lcd12864_read_data <<= 8;
+                lcd12864_read_data |= lcd12864_read_data();
+                bt = bt | lcd12864_read_data;
+                h_bit = bt >> 8;
+                l_bit = bt;
+              
+                lcd12864_write_cmd(y_adr);     /* 写入点的时候，从新写入地址，因为地址已经改变 */
+                lcd12864_write_cmd(x_adr);
+              
+                lcd12864_write_data(h_bit);
+                lcd12864_write_data(l_bit);
+              
+                lcd12864_write_cmd(0x36);    /* 开显示 */
+                lcd12864_write_cmd(0x30);    /* 关闭绘图指令集   */
+              }
+              #endif
+ 291          
+ 292          
+ 293          /*******************************************************************************
+ 294          * 函 数 名         : lcd12864_clear_screen
+ 295          * 函数功能       : 在画图模式下，LCD12864的01H命令不能清屏，所以要自己写一个清
+ 296          *                  * 屏函数
+ 297          * 输    入         : 无
+ 298          * 输    出         : 无
+ 299          *******************************************************************************/
+ 300          
+ 301          /**
+ 302          * \brief LCD12864画图
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 6   
+
+ 303          *
+ 304          * \param[in] a : 图片数组的地址
+ 305          *
+ 306          * \return 无
+ 307          */
+ 308          #ifdef LCD12864_PICTURE
+              
+              void LCD12864_DrowPic (uchar *a)     
+              {
+              
+                unsigned char i,j;
+              
+                lcd12864_clear_screen();
+              
+                lcd12864_write_cmd(0x34);  /* 开启扩展指令集，并关闭画图显示。*/
+                for(i=0;i<32;i++) {       /* 因为LCD有纵坐标32格所以写三十二次 */ 
+                  lcd12864_write_cmd(0x80+i);   /* 先写入纵坐标Y的值 */
+                  lcd12864_write_cmd(0x80);     /* 再写入横坐标X的值 */
+                  for(j = 0; j < 16; j++) {   /* 横坐标有16位，每位写入两个字节的的数据，也
+                                               * 就写入32次以为当写入两个字节之后横坐标会自
+                                               * 动加1，所以就不用再次写入地址了。
+                                               */
+                    lcd12864_write_data(*a);        
+                    a++;
+                  }
+                }  
+                for(i = 0; i < 32; i++) {     /* 因为LCD有纵坐标32格所以写三十二次 */
+                
+                  
+                  lcd12864_write_cmd(0x80+i);     /* 先写入纵坐标Y的值 */
+                  lcd12864_write_cmd(0x88);     /* 再写入横坐标X的值 */
+                  for(j = 0; j < 16; j++) {   /* 横坐标有16位，每位写入两个字节的的数据，也
+                                           * 就写入32次以为当写入两个字节之后横坐标会自
+                                           * 动加1，所以就不用再次写入地址了
+                                           */
+                    
+                    lcd12864_write_data(*a);        
+                    a++;
+                  }
+                } 
+              
+                lcd12864_write_cmd(0x36);    /* 开显示 */
+                lcd12864_write_cmd(0x30);    /* 转回基本指令集 */
+              }
+              
+              #endif
+ 349          
+ 350          /**
+ 351          * \brief LCD12864设置窗口
+ 352          *
+ 353          * \note 设置在基本指令模式下设置显示坐标。注意：x是设置行，y是设置列
+ 354          *
+ 355          * \param[in] x : 行坐标（总共有4行, x = 0, 1, 2, 3）
+ 356          * \param[in] y : 列坐标
+ 357          *
+ 358          * \return 无
+ 359          */
+ 360          void lcd12864_set_window(uchar x, uchar y)
+ 361          {
+ 362   1        uchar pos = 0;
+ 363   1      
+ 364   1        /* 第一行的地址是80H */
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 7   
+
+ 365   1        if (x == 0) {
+ 366   2          x = 0x80;
+ 367   2        }
+ 368   1          
+ 369   1        /* 第二行的地址是90H */
+ 370   1        else if (x == 1) {
+ 371   2          x = 0x90; 
+ 372   2        }
+ 373   1        
+ 374   1        /* 第三行的地址是88H */
+ 375   1        else if (x == 2) {
+ 376   2          x = 0x88;
+ 377   2        }
+ 378   1        
+ 379   1        else if (x == 3) {
+ 380   2          x = 0x98;
+ 381   2        }
+ 382   1        
+ 383   1        pos = x + y;
+ 384   1        lcd12864_write_cmd(pos);
+ 385   1      }
+ 386          
+ 387          /*
+ 388          *********************************************************************************************************
+ 389          * 函 数 名: putchar
+ 390          * 功能说明: 重定义 putchar 函数， 这样可以使用printf函数打印输出到LCD12864
+ 391          * 形    参: 等待发送的字符
+ 392          * 返 回 值: 返回已发送的字符
+ 393          *********************************************************************************************************
+ 394          */
+ 395          
+ 396          /**
+ 397          * \brief printf函数的重装载，printf后的打印在LCD12864上
+ 398          *
+ 399          * \note 重定义 putchar 函数， 这样可以使用printf函数打印输出到LCD12864
+ 400          *
+ 401          * \param[in] c : 字符
+ 402          *
+ 403          * \return 相应的字符
+ 404          */
+ 405          //char putchar(char c)
+ 406          //{
+ 407          //  /* 发送一个字符 c 到UART1 */
+ 408          //  lcd12864_write_data(c);
+ 409          
+ 410          //  return (c);
+ 411          //}
+ 412          
+ 413          /*
+ 414          *********************************************************************************************************
+ 415          * 函 数 名: getchar
+ 416          * 功能说明: 重定义C库中的 getchar 函数,这样可以使用scanff函数从串口输入数据
+ 417          * 形    参: 无
+ 418          * 返 回 值: 返回已读到的字符
+ 419          *********************************************************************************************************
+ 420          */
+ 421          //char getchar(void)
+ 422          //{
+ 423          //  //return UART_GetByte();
+ 424          //  return 0;
+ 425          //}
+ 426          
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 8   
+
+ 427          
+ 428          /**
+ 429          * \brief LCD12864写字符串函数
+ 430          *
+ 431          * \note 直接写入字符串无需引入数组，如lcd12864_write_string("断浪淘沙");
+ 432          *
+ 433          * \param[in] string : 字符串地址
+ 434          *
+ 435          * \return 无
+ 436          */
+ 437          void lcd12864_write_string (char *string)
+ 438          {
+ 439   1        char *p = string;
+ 440   1        while (*p != '\0') {
+ 441   2          lcd12864_write_data(*p);
+ 442   2          p++;
+ 443   2        }
+ 444   1      }
+ 445          
+ 446          /**
+ 447          * \brief LCD12864写整数函数
+ 448          *
+ 449          * \note 送人一个整数把整数打印到LCD12864
+ 450          *
+ 451          * \param[in] value : 送人的整数
+ 452          *
+ 453          * \return 无
+ 454          */
+ 455          #ifdef LCD12864_WRITE_UINT_STRING
+ 456          void lcd12864_write_uint_string(unsigned int value )
+ 457          {
+ 458   1      //  char uintbuf[10] = {0};
+ 459   1      //  sprintf(uintbuf, "%d", (int)value);
+ 460   1      //  lcd12864_write_string(uintbuf);
+ 461   1      }
+*** WARNING C280 IN LINE 456 OF Source\lcd12864.c: 'value': unreferenced local variable
+ 462          #endif
+ 463          
+ 464          /*******************************************************************************
+ 465          * 函 数 名         : LCD12864_WriteFloatString
+ 466          * 函数功能        : 送人一个Float型的小数打印到LCD12864
+ 467          * 输    入          : float value
+ 468          * 输    出          : 无
+ 469          *******************************************************************************/
+ 470          
+ 471          /**
+ 472          * \brief LCD12864写浮点数函数
+ 473          *
+ 474          * \note 送人一个foat型的小数打印到LCD12864
+ 475          *
+ 476          * \param[in] value : 送人浮点数
+ 477          *
+ 478          * \return 无
+ 479          */
+ 480          #ifdef LCD12864_WRITE_FLOAT_STRING
+ 481          void lcd12864_write_float_string(float value)
+ 482          {
+ 483   1      //  char floatbuf[10] = {0};
+ 484   1      //  char *p = floatbuf;
+ 485   1      //  sprintf(floatbuf,"%.2f", (float)value);   //取小数点后两位
+ 486   1      //  lcd12864_write_string(floatbuf);
+ 487   1        
+C51 COMPILER V9.56.0.0   LCD12864                                                          05/27/2017 02:16:02 PAGE 9   
+
+ 488   1      }
+*** WARNING C280 IN LINE 481 OF Source\lcd12864.c: 'value': unreferenced local variable
+ 489          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    443    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

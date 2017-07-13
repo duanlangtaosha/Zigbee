@@ -1,0 +1,125 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 23:43:07 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;.\Source\APP\includ
+                    -e) DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "stc12c5a60s2.h"
+   2          #include "intrins.h"
+   3          #include "uart.h"
+   4          #include "uart2.h"
+   5          #include "lcd12864.h"
+   6          #include "ds18b20.h"
+   7          #include "ds1302.h"
+   8          #include "key.h"
+   9          #include "esp8266.h"
+  10          
+  11          #include "app_home.h"
+  12          #include "app_menu.h"
+  13          #include "app_other.h"
+  14          #include "app_elc.h"
+  15          #include "app_setting.h"
+  16          #include "app_time_set.h"
+  17          #include "app_temp_set.h"
+  18          
+  19          unsigned char choose_page = 0;
+  20          
+  21          void Delay2000ms()    //@11.0592MHz
+  22          {
+  23   1        unsigned char i, j, k;
+  24   1      
+  25   1        _nop_();
+  26   1        _nop_();
+  27   1        i = 85;
+  28   1        j = 12;
+  29   1        k = 155;
+  30   1        do
+  31   1        {
+  32   2          do
+  33   2          {
+  34   3            while (--k);
+  35   3          } while (--j);
+  36   2        } while (--i);
+  37   1      }
+  38          
+  39          void main (void)
+  40          {
+  41   1      
+  42   1        lcd12864_init ();
+  43   1        P2M1 = 0x00;
+  44   1        P2M0 = 0xFF;
+  45   1        lcd12864_set_window(0, 1);
+  46   1        lcd12864_write_string("智能家居系统");
+  47   1        lcd12864_set_window(1, 1);
+  48   1        lcd12864_write_string("系统启动中...");
+  49   1        uart_init();
+  50   1      
+  51   1      //  lcd12864_init ();
+  52   1        
+  53   1        init_ds18b20();
+  54   1        init_ds1302();
+C51 COMPILER V9.56.0.0   MAIN                                                              05/28/2017 23:43:07 PAGE 2   
+
+  55   1        
+  56   1        uart2_init();
+  57   1        Delay2000ms();
+  58   1        init_esp_8266_setting();
+  59   1      
+  60   1        while (1) {
+  61   2          
+  62   2      //    unsigned char buuu[5]={0x11 ,0x22, 0x33,0x44,0x55};
+  63   2      //    float a = 18.5,c = 0.0;
+  64   2      //    unsigned char b = 0x01, d = 0;
+  65   2          
+  66   2          switch (choose_page) {
+  67   3          
+  68   3          case 0:
+  69   3            home () ;
+  70   3            break;
+  71   3          case 1:
+  72   3            menu();
+  73   3            break;
+  74   3          case 2:
+  75   3            elec_app();
+  76   3            break;
+  77   3            
+  78   3          case 3:
+  79   3            setting();
+  80   3            break;
+  81   3          case 4:
+  82   3            other();
+  83   3            break;
+  84   3          case 5:
+  85   3            date_time_setting();
+  86   3            break;
+  87   3          case 6:
+  88   3            temp_setting();
+  89   3            break;
+  90   3            default:
+  91   3              break;
+  92   3          
+  93   3          }
+  94   2        }
+  95   1      
+  96   1      }
+  97          
+  98          
+  99          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    143    ----
+   CONSTANT SIZE    =     27    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

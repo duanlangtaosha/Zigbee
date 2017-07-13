@@ -1,0 +1,1 @@
+"App\uart2.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND PRINT(.\Listings\uart2.lst) TABS (2) OBJECT(.\Objects\uart2.obj)

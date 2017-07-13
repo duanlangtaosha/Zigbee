@@ -1,0 +1,202 @@
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE APP_ELC
+OBJECT MODULE PLACED IN .\Objects\app_elc.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\APP\source\app_elc.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;.\Sou
+                    -rce\APP\include) DEBUG OBJECTEXTEND PRINT(.\Listings\app_elc.lst) TABS(2) OBJECT(.\Objects\app_elc.obj)
+
+line level    source
+
+   1          #include "__std_type.h"
+   2          #include "lcd12864.h"
+   3          #include "key.h"
+   4          #include "uart.h"
+   5          #include "uart2.h"
+   6          #include "app_elc.h"
+   7          
+   8          
+   9          extern uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE];
+  10          extern uint8_t g_wifi_ok ;
+  11          extern uint8_t g_uart2_sta;
+  12          extern uint8_t g_home ;
+  13          extern unsigned char choose_page;
+  14          /* 家电 */
+  15          void elec_app (void)
+  16          {
+  17   1        unsigned char elc_num = 0;
+  18   1        
+  19   1        unsigned char elc_sta = 0;
+  20   1        lcd12864_write_cmd(0x01);
+  21   1      
+  22   1        lcd12864_set_window(0, 1);
+  23   1        lcd12864_write_string("≡≡家电≡≡");
+  24   1        lcd12864_set_window(1, 0);
+  25   1        lcd12864_write_string("E1:OFF");
+  26   1        lcd12864_set_window(2, 0);
+  27   1        lcd12864_write_string("E2:OFF");
+  28   1        lcd12864_set_window(1, 4);
+  29   1        lcd12864_write_string("E3:OFF");
+  30   1        lcd12864_set_window(2, 4);
+  31   1        lcd12864_write_string("E4:OFF");
+  32   1        while (1) {
+  33   2          float temp = 10.0;
+  34   2          unsigned char keyval = keyscan(2);
+  35   2          
+  36   2            if (g_wifi_ok) {
+  37   3              
+  38   3              if (g_uart2_sta & 0x80) {
+  39   4              
+  40   4                  uart_send_frame(15.0, __g_uart2_buf[1]);
+  41   4                g_uart2_sta = 0x00;
+  42   4              }
+  43   3              
+  44   3            }
+  45   2          
+  46   2          /* 获取当前从机家用电器的状态 */
+  47   2          if (1 == uartf_reciev_frame(&temp, &elc_sta)) {
+  48   3            if(elc_sta & 0x01) {
+  49   4              lcd12864_set_window(1, 0);
+  50   4              lcd12864_write_string("E1:ON ");
+  51   4            } else {
+  52   4              lcd12864_set_window(1, 0);
+  53   4              lcd12864_write_string("E1:OFF");
+  54   4            }
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 2   
+
+  55   3            
+  56   3            if(elc_sta & 0x02) {
+  57   4              lcd12864_set_window(2, 0);
+  58   4              lcd12864_write_string("E2:ON ");
+  59   4            } else {
+  60   4              lcd12864_set_window(2, 0);
+  61   4              lcd12864_write_string("E2:OFF");
+  62   4            }
+  63   3            
+  64   3            if(elc_sta & 0x04) {
+  65   4              lcd12864_set_window(1, 4);
+  66   4              lcd12864_write_string("E3:ON ");
+  67   4            } else {
+  68   4              lcd12864_set_window(1, 4);
+  69   4              lcd12864_write_string("E3:OFF");
+  70   4            }
+  71   3      
+  72   3            if(elc_sta & 0x08) {
+  73   4              lcd12864_set_window(2, 4);
+  74   4              lcd12864_write_string("E4:ON ");
+  75   4            } else {
+  76   4              lcd12864_set_window(2, 4);
+  77   4              lcd12864_write_string("E4:OFF");
+  78   4            }
+  79   3          } else {
+  80   3            
+  81   3            /* 不加上这句校验和就会永远的出错 */
+  82   3      //      uart_send_string("eorr\r\n");
+  83   3          }
+  84   2          
+  85   2          
+  86   2          /* 返回上一页 */
+  87   2          if (EN_KEY3 == keyval) {
+  88   3            g_home = 1;
+  89   3            choose_page = 1;
+  90   3            break;
+  91   3          } else if (EN_KEY1 == keyval) {
+  92   3            elc_num++;
+  93   3            if(elc_num == 5) {
+  94   4              elc_num = 1;
+  95   4            }
+  96   3              switch (elc_num) {
+  97   4      
+  98   4              case 1:
+  99   4                lcd12864_set_window(2, 7);
+ 100   4                lcd12864_write_data(32);  
+ 101   4              
+ 102   4                lcd12864_set_window(1, 3);
+ 103   4                lcd12864_write_data(17);
+ 104   4                
+ 105   4                break;
+ 106   4              case 2:
+ 107   4                
+ 108   4                lcd12864_set_window(1, 3);
+ 109   4                lcd12864_write_data(32);
+ 110   4              
+ 111   4                lcd12864_set_window(2, 3);
+ 112   4                lcd12864_write_data(17);
+ 113   4                break;
+ 114   4              case 3:
+ 115   4                lcd12864_set_window(2, 3);
+ 116   4                lcd12864_write_data(32);
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 3   
+
+ 117   4              
+ 118   4                lcd12864_set_window(1, 7);
+ 119   4                lcd12864_write_data(17);
+ 120   4                break;
+ 121   4              case 4:
+ 122   4                lcd12864_set_window(1, 7);
+ 123   4                lcd12864_write_data(32);
+ 124   4              
+ 125   4                lcd12864_set_window(2, 7);
+ 126   4                lcd12864_write_data(17);
+ 127   4                break;
+ 128   4              default:
+ 129   4                break;
+ 130   4            }
+ 131   3          } else if (EN_KEY0 == keyval) {
+ 132   3              switch (elc_num) {
+ 133   4              case 1:
+ 134   4                if (elc_sta & 0x01) {
+ 135   5                  elc_sta &= ~0x01;
+ 136   5                } else {
+ 137   5                  elc_sta |= 0x01;
+ 138   5                }
+ 139   4                uart_send_frame(0.0, elc_sta);
+ 140   4                    
+ 141   4                break;
+ 142   4              case 2:
+ 143   4                if (elc_sta & 0x02) {
+ 144   5                  elc_sta &= ~0x02;
+ 145   5                } else {
+ 146   5                  elc_sta |= 0x02;
+ 147   5                }
+ 148   4                uart_send_frame(0.0, elc_sta);
+ 149   4      
+ 150   4                break;
+ 151   4              case 3:
+ 152   4                if (elc_sta & 0x04) {
+ 153   5                  elc_sta &= ~0x04;
+ 154   5                } else {
+ 155   5                  elc_sta |= 0x04;
+ 156   5                }
+ 157   4                uart_send_frame(0.0, elc_sta);
+ 158   4                break;
+ 159   4              case 4:
+ 160   4                if (elc_sta & 0x08) {
+ 161   5                  elc_sta &= ~0x08;
+ 162   5                } else {
+ 163   5                  elc_sta |= 0x08;
+ 164   5                }
+ 165   4                uart_send_frame(0.0, elc_sta);
+ 166   4                break;
+ 167   4              default:
+ 168   4                break;
+ 169   4            }
+ 170   3          }
+ 171   2        }
+ 172   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    526    ----
+   CONSTANT SIZE    =     69    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.56.0.0   APP_ELC                                                           05/28/2017 23:43:08 PAGE 4   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

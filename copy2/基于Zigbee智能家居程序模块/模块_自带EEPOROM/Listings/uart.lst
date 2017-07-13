@@ -1,0 +1,290 @@
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 23:19:25 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\uart.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\uart.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND PR
+                    -INT(.\Listings\uart.lst) TABS(2) OBJECT(.\Objects\uart.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+   2          * Model Name  : 串口驱动模块
+   3          * File  Name  : uart.c
+   4          * Chip      : STC89C52RC&STC12C5A60S2，注STC89C52不能用1T模式的
+   5          * OSC       : 11.0592M
+   6          * Made  By    : 断浪淘沙
+   7          * Vision      : 1.3
+   8          * Discription   : 实现printf和scanf函数重定向到串口1，即支持printf信息到UART1，即该模块支持
+   9          *           printf的打印到串口。
+  10          *           波特率  :115200
+  11          *           晶振  : 11.0592M
+  12          * Time      : 2016-8-5
+  13          * Copyright (C), 2016-2017, 断浪淘沙 QQ:891650837
+  14          *
+  15          *********************************************************************************************************/
+  16          
+  17          #include "uart.h"
+  18          uint8_t __g_uart_buf[UART_BUF_SIZE] = {0};
+  19          uint8_t __g_uart_recieve_counter = 0;
+  20          void uart_isr() interrupt 4  //中断接收程序
+  21          {
+  22   1        if(RI) {         /* 判断是否接收完，接收完成后，由硬件置RI位 */
+  23   2          RI = 0;
+  24   2        
+  25   2          /* 这样是有问题的要重新开机一次 */
+  26   2          __g_uart_buf[__g_uart_recieve_counter++] = SBUF;
+  27   2          
+  28   2      //    __g_uart_buf[__g_uart_recieve_counter] = SBUF;
+  29   2      //    __g_uart_recieve_counter++;
+  30   2      
+  31   2          
+  32   2      //    if (__g_uart_recieve_counter >= UART_BUF_SIZE) {
+  33   2      //      __g_uart_recieve_counter = 0;
+  34   2      //    }
+  35   2        }
+  36   1      }
+  37          
+  38          
+  39          /**
+  40          * \brief 串口发送单字节
+  41          *
+  42          * \param[in] _data : 要发送的数据
+  43          *
+  44          * \return 无
+  45          */
+  46          void uart_send_byte (uint8_t _data)
+  47          {
+  48   1        SBUF = _data; /* 发送数据送缓冲 */
+  49   1        while (!TI);    /* 等待发送完成 */
+  50   1        TI = 0;
+  51   1      }
+  52          
+  53          /**
+  54          * \brief 串口接收单字节
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 23:19:25 PAGE 2   
+
+  55          *
+  56          * \param 无
+  57          *
+  58          * \return 返回接收的数据
+  59          */
+  60          uint8_t uart_get_byte (void)
+  61          {
+  62   1        uint8_t c = 0;
+  63   1      
+  64   1        while (RI == 0);
+  65   1        c = SBUF;
+  66   1        RI = 0; 
+  67   1      
+  68   1        return c;
+  69   1      }
+  70          
+  71          /**
+  72          * \brief 串口发送一串字节数据
+  73          *
+  74          * \param[in] p_buf : 待发送的数据缓存区
+  75          * \param[in] len   : 缓存区的大小
+  76          *
+  77          * \return 无
+  78          */
+  79          void uart_send_buf (uint8_t *p_buf, uint8_t _len)
+  80          {
+  81   1        while (_len--) {
+  82   2        
+  83   2          uart_send_byte (*p_buf++);
+  84   2        }
+  85   1      }
+  86          
+  87          /**
+  88          * \brief 串口接收数据缓存
+  89          *
+  90          * \param[in] p_buf : 接收数据缓存区
+  91          * \param[in] len   : 缓存区的大小
+  92          *
+  93          * \retval 1 : 正确
+  94          *         0 : 错误
+  95          */
+  96          uint8_t uart_recieve_buf (uint8_t *p_buf, uint8_t _len)
+  97          {
+  98   1        uint8_t i = 0;
+  99   1        if (__g_uart_recieve_counter >= _len) {
+ 100   2          
+ 101   2          for( i = 0; i< _len; i++) {
+ 102   3           p_buf[i] = __g_uart_buf[i];
+ 103   3          }
+ 104   2          __g_uart_recieve_counter = 0;
+ 105   2          
+ 106   2          return 1;
+ 107   2        } else {
+ 108   2          return 0;
+ 109   2        }
+ 110   1      }
+ 111          
+ 112          /**
+ 113          * \brief 串口初始化
+ 114          *
+ 115          * \param 无
+ 116          *
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 23:19:25 PAGE 3   
+
+ 117          * \return 无
+ 118          */
+ 119          void uart_init (void)
+ 120          {
+ 121   1        
+ 122   1        SCON = 0x50;  /* 010 1 0000B，工作方式1, 8位UART，波特率可变，允许接收 */
+ 123   1        TMOD = 0x20;  /* T1工作于方式2 */
+ 124   1        TCON = 0x40;  /* 定时器1开始计数 */
+ 125   1      //  TH1 = 250;    /* T1计数初值 */
+ 126   1      //  TL1 = 250;
+ 127   1      
+ 128   1        #if UART_SPEED_X12
+                AUXR = (AUXR | (1 << 6));
+                
+                /* 由于下面是双倍速率所以说，这里BAUD/2;((FCLK/12/32/(BAUD/2)))等于6 */
+                TH1  = TL1 =(-(FCLK / 32 / (BAUD / 2)));    
+                #else     
+ 134   1        
+ 135   1        /* ((FCLK/12/32/BAUD/2))等于1.5 */  
+ 136   1        TH1  = TL1 =(-(FCLK / 12 / 32 / (BAUD / 2)));
+ 137   1        #endif
+ 138   1        
+ 139   1        /* SMOD置1,双倍速率 */
+ 140   1        PCON = 0x80;  
+ 141   1        RI   = 0;
+ 142   1        TI   = 0;
+ 143   1        
+ 144   1        ES = 1;
+ 145   1        EA = 1;
+ 146   1      }
+ 147          
+ 148          /**
+ 149          * \brief 发送数据帧信息
+ 150          *
+ 151          * \note  发送的帧信息： D[0](帧头) + D1(温度的整数) +D2(温度小数) + 
+ 152          *                       D[3](控制和状态量) + D[4](校验和)
+ 153          *
+ 154          * \param[in] temp        : 温度量
+ 155          * \param[in] control_sta : 控制和状态量
+ 156          *
+ 157          * \return 无
+ 158          */
+ 159          void uart_send_frame ( float temp, uint8_t control_sta)
+ 160          {
+ 161   1        uint8_t send_frame[5] = {0};
+ 162   1        
+ 163   1        /* 帧头 */
+ 164   1        send_frame[0] = 0xAA;
+ 165   1        
+ 166   1        /* 温度的整数 */
+ 167   1        send_frame[1] = (uint8_t)temp;
+ 168   1        
+ 169   1        /* 温度的小数 */
+ 170   1        send_frame[2] = ((uint16_t)(temp * 10)) % 10;
+ 171   1        
+ 172   1        /* 控制或状态信息量 */
+ 173   1        send_frame[3] = control_sta;
+ 174   1        
+ 175   1        /* 校验和 */
+ 176   1        send_frame[4] = send_frame[0] + send_frame[1] + send_frame[2] + send_frame[3];
+ 177   1        
+ 178   1        uart_send_buf(send_frame, 5);
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 23:19:25 PAGE 4   
+
+ 179   1      }
+ 180          
+ 181          /**
+ 182          * \brief 接收数据帧信息
+ 183          *
+ 184          * \note  发送的帧信息： D[0](帧头) + D1(温度的整数) +D2(温度小数) + 
+ 185          *                       D[3](控制和状态量) + D[4](校验和)
+ 186          *
+ 187          * \param[in] temp        : 温度量
+ 188          * \param[in] control_sta : 控制和状态量
+ 189          *
+ 190          * \retval 0 : 错误
+ 191          *         1 : 正确
+ 192          */
+ 193          uint8_t uartf_reciev_frame(float *temp, uint8_t *control_sta)
+ 194          {
+ 195   1        uint8_t r_frame[5] = {0};
+ 196   1        
+ 197   1        if (uart_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
+ 198   2        
+ 199   2          if (r_frame[0] == 0xAA) {
+ 200   3            if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
+ 201   4      //        printf("abc\r\n");
+ 202   4              *temp = r_frame[1] + r_frame[2]/10.0;
+ 203   4              
+ 204   4              *control_sta = r_frame[3];
+ 205   4              
+ 206   4              return 1;
+ 207   4            } else {
+ 208   4              return 0; /* 校验错误 */
+ 209   4            }
+ 210   3            
+ 211   3          } else {
+ 212   3            return 0;
+ 213   3          }
+ 214   2       }
+ 215   1        return 0;
+ 216   1      }
+ 217          /********************************************************************************************************
+ 218          * Discription   : 实现printf和scanf函数重定向到串口1，即支持printf信息到UART1
+ 219          *           实现重定向，只需要添加2个函数:
+ 220          *           char putchar(char c);
+ 221          *           int fgetc(FILE *f);
+ 222          *           char getchar(void)
+ 223          *           这个c模块无对应的h文件。
+ 224          *********************************************************************************************************/
+ 225          
+ 226          
+ 227          ///*
+ 228          //********************************************************************************************************
+             -*
+ 229          //* 函 数 名: putchar
+ 230          //* 功能说明: 重定义 putchar 函数， 这样可以使用printf函数从串口1打印输出
+ 231          //* 形    参: 等待发送的字符
+ 232          //* 返 回 值: 返回已发送的字符
+ 233          //********************************************************************************************************
+             -*
+ 234          //*/
+ 235          //char putchar(char c)
+ 236          //{
+ 237          //  /* 发送一个字符 c 到UART1 */
+ 238          //  uart_send_byte(c);
+C51 COMPILER V9.56.0.0   UART                                                              05/28/2017 23:19:25 PAGE 5   
+
+ 239          
+ 240          //  return (c);
+ 241          //}
+ 242          
+ 243          ///*
+ 244          //********************************************************************************************************
+             -*
+ 245          //* 函 数 名: getchar
+ 246          //* 功能说明: 重定义C库中的 getchar 函数,这样可以使用scanff函数从串口1输入数据
+ 247          //* 形    参: 无
+ 248          //* 返 回 值: 返回已读到的字符
+ 249          //********************************************************************************************************
+             -*
+ 250          //*/
+ 251          //char getchar(void)
+ 252          //{
+ 253          //  return uart_get_byte();
+ 254          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    392    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     11      27
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

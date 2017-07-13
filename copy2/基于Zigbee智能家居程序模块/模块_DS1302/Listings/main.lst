@@ -1,0 +1,44 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 23:51:57 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND PR
+                    -INT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "stc12c5a60s2.h"
+   2          #include "uart.h"
+   3          #include "ds1302.h"
+   4          
+   5          //extern unsigned char data timeNow[7];
+   6          int main()
+   7          {
+   8   1        uart_init();
+   9   1        init_ds1302();
+  10   1      //  set_ds1302time();
+  11   1      
+  12   1        while(1)
+  13   1        {
+  14   2          unsigned char timenow[7] = {0};
+  15   2          
+  16   2          get_ds1302_time(timenow);
+  17   2          printf("%c",timenow[0]);
+  18   2        }
+  19   1        
+  20   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     48    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

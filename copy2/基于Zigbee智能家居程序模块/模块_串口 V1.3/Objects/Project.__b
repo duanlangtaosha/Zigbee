@@ -1,0 +1,5 @@
+TRANSFER
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\uart.obj" 
+TO ".\Objects\Project.LIB"

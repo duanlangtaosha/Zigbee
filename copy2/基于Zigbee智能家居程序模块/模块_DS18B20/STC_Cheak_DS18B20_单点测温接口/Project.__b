@@ -1,0 +1,5 @@
+TRANSFER
+"STARTUP.obj",
+"DS18B20.obj",
+"main.obj" 
+TO "Project.LIB"

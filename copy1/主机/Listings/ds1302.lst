@@ -1,0 +1,254 @@
+C51 COMPILER V9.56.0.0   DS1302                                                            05/28/2017 22:22:30 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTE
+                    -ND PRINT(.\Listings\ds1302.lst) TABS(2) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          #include "stc12C5A60S2.h"
+   2          #include "intrins.h"
+   3          #include "ds1302.h"
+   4          
+   5          /** \brief 初始化时间    秒     分   时   日   月,星期   年 */
+   6          unsigned char code __g_initial_time[7] = {0x55, 0x33, 0x10, 0x26, 0x05, 5, 0x17};
+   7          
+   8          void delay1us()   //@12.000MHz
+   9          {
+  10   1        _nop_();
+  11   1        _nop_();
+  12   1        _nop_();
+  13   1        _nop_();
+  14   1        _nop_();
+  15   1        _nop_();
+  16   1        _nop_();
+  17   1        _nop_();
+  18   1      }
+  19          
+  20          /**
+  21          * \brief SPI写单字节函数
+  22          *
+  23          * \param[in] dat : 要写入的数据
+  24          *
+  25          * \return 无
+  26          *         
+  27          */
+  28          void ds1302_write_spi (unsigned char dat)
+  29          {
+  30   1        unsigned char i = 0;
+  31   1      //  EA=0;
+  32   1        for (i = 0; i < 8; i++) {
+  33   2          
+  34   2          
+  35   2          DS1302_SCLK = 0;
+  36   2          DS1302_IO = dat & 0x01;
+  37   2          
+  38   2          delay1us();
+  39   2          dat >>= 1;
+  40   2          DS1302_SCLK = 1;
+  41   2          
+  42   2          delay1us();
+  43   2          
+  44   2          
+  45   2        } 
+  46   1      //  EA=1;
+  47   1      }
+  48          
+  49          /**
+  50          * \brief SPI读单字节函数
+  51          *
+  52          * \param[in] dat : 要写入的数据
+  53          *
+  54          * \return 无
+C51 COMPILER V9.56.0.0   DS1302                                                            05/28/2017 22:22:30 PAGE 2   
+
+  55          *         
+  56          */
+  57          unsigned char ds1302_read_spi (void)
+  58          {
+  59   1        unsigned char i = 0, dat = 0;
+  60   1      //  EA=0;
+  61   1        for (i = 0; i < 8; i++) {
+  62   2        
+  63   2          DS1302_SCLK = 0;
+  64   2          dat >>= 1;
+  65   2          delay1us();
+  66   2          if (DS1302_IO) {
+  67   3            dat|= 0x80;
+  68   3          }
+  69   2          
+  70   2          DS1302_SCLK = 1;
+  71   2          delay1us();
+  72   2        }
+  73   1      //  EA=1;
+  74   1         return dat;
+  75   1      }
+  76          
+  77          /**
+  78          * \brief 向DS1302相应的地址写入数据
+  79          *
+  80          * \param[in] addr : 要写入的地址
+  81          * \param[in] dat  : 要写入的数据
+  82          *
+  83          * \return 无
+  84          *         
+  85          */
+  86          void ds1302_write_data(unsigned char addr, unsigned char dat)
+  87          {
+  88   1        DS1302_CE   = 0;
+  89   1          _nop_();
+  90   1        DS1302_SCLK = 0;
+  91   1      
+  92   1        delay1us();
+  93   1        DS1302_CE = 1;
+  94   1        
+  95   1        ds1302_write_spi(addr);
+  96   1        ds1302_write_spi(dat);
+  97   1        
+  98   1        
+  99   1      //  DS1302_SCLK = 1;
+ 100   1        DS1302_CE   = 0;
+ 101   1        
+ 102   1        delay1us();
+ 103   1        delay1us();
+ 104   1        delay1us();
+ 105   1        delay1us(); 
+ 106   1      }
+ 107          
+ 108          /**
+ 109          * \brief 读取DS1302相应地址中的值
+ 110          *
+ 111          * \param[in] addr : 要读取的地址
+ 112          *
+ 113          * \return 读出的数据
+ 114          *         
+ 115          */
+ 116          unsigned char ds1302_read_data (unsigned char addr)
+C51 COMPILER V9.56.0.0   DS1302                                                            05/28/2017 22:22:30 PAGE 3   
+
+ 117          {
+ 118   1        unsigned char dat = 0;
+ 119   1        DS1302_CE   = 0;
+ 120   1        _nop_();
+ 121   1        _nop_();
+ 122   1        DS1302_SCLK = 0;
+ 123   1        delay1us();
+ 124   1        DS1302_CE = 1;
+ 125   1        _nop_();
+ 126   1        _nop_();
+ 127   1        
+ 128   1        ds1302_write_spi(addr);
+ 129   1        dat = ds1302_read_spi();
+ 130   1        
+ 131   1        DS1302_CE   = 0;
+ 132   1        _nop_();
+ 133   1        _nop_();
+ 134   1        DS1302_SCLK = 1;
+ 135   1        
+ 136   1        delay1us();
+ 137   1        delay1us();
+ 138   1        delay1us();
+ 139   1        delay1us(); 
+ 140   1        return dat;
+ 141   1      }
+ 142          
+ 143          /**
+ 144          * \brief 设置DS1302的初始时间
+ 145          *
+ 146          * \param[in] p_init_time : 初始化时间数组
+ 147          *
+ 148          * \return 无
+ 149          *         
+ 150          */
+ 151          void set_ds1302_initial_time (unsigned char code *p_init_time)
+ 152          {
+ 153   1        unsigned char i = 0;
+ 154   1      
+ 155   1        ds1302_write_data(0x8e, 0x00);  /* 写保护关闭 */
+ 156   1        for(i = 0; i < 7; i++) {
+ 157   2        
+ 158   2          ds1302_write_data(0x80 + i * 2, p_init_time[i]);
+ 159   2        }
+ 160   1        ds1302_write_data(0x8e, 0x80);  /* 写保护开 */
+ 161   1      
+ 162   1      }
+ 163          
+ 164          void set_ds1302_time (unsigned char  *p_init_time)
+ 165          {
+ 166   1        unsigned char i = 0;
+ 167   1      
+ 168   1        ds1302_write_data(0x8e, 0x00);  /* 写保护关闭 */
+ 169   1        for(i = 0; i < 7; i++) {
+ 170   2        
+ 171   2          ds1302_write_data(0x80 + i * 2, p_init_time[i]);
+ 172   2        }
+ 173   1        ds1302_write_data(0x8e, 0x80);  /* 写保护开 */
+ 174   1      
+ 175   1      }
+ 176          
+ 177          
+ 178          /**
+C51 COMPILER V9.56.0.0   DS1302                                                            05/28/2017 22:22:30 PAGE 4   
+
+ 179          * \brief 获取DS1302的时钟值
+ 180          *
+ 181          * \param p_get_time ：一个7字节数组，存储 D[0]秒 + D[1]分 + D2时+ D[3]日 + 
+ 182          *                                         D[4]月 + D[5]星期 + D[6]年
+ 183          *
+ 184          * \return 无
+ 185          *         
+ 186          */
+ 187          void get_ds1302_time (unsigned char *p_get_time)
+ 188          {
+ 189   1        unsigned char i = 0; 
+ 190   1        
+ 191   1      //  EA = 0;               /* 这个很重要 */
+ 192   1          
+ 193   1        for (i = 0; i < 7; i++) {
+ 194   2        
+ 195   2          p_get_time[i] = ds1302_read_data(0x81 + i * 2);
+ 196   2          ds1302_read_data(0x81 + i * 2);    /* 执行一个空操作 */
+ 197   2        }
+ 198   1      //  EA = 1;
+ 199   1      }
+ 200          
+ 201          /**
+ 202          * \brief 初始化DS1302
+ 203          *
+ 204          * \param 无
+ 205          *
+ 206          * \return 无
+ 207          *         
+ 208          */
+ 209          void init_ds1302(void)
+ 210          {
+ 211   1        unsigned char temp = 0;
+ 212   1        DS1302_CE   = 0;
+ 213   1        DS1302_SCLK = 0;
+ 214   1        ds1302_write_data(0x8e, 0x00);
+ 215   1        ds1302_write_data(0x90, 0xa6);
+ 216   1      //  ds1302_write_data(0x80,0x00);  //开时钟 这个加上则秒每次开电都是从0开始
+ 217   1        ds1302_write_data(0x8e, 0x80);
+ 218   1        
+ 219   1        temp = ds1302_read_data(81);
+ 220   1        if(temp & 0x80) {
+ 221   2          set_ds1302_initial_time(__g_initial_time);
+ 222   2        }
+ 223   1        
+ 224   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    303    ----
+   CONSTANT SIZE    =      7    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

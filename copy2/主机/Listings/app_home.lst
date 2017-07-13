@@ -1,0 +1,135 @@
+C51 COMPILER V9.56.0.0   APP_HOME                                                          05/28/2017 23:43:08 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE APP_HOME
+OBJECT MODULE PLACED IN .\Objects\app_home.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Source\APP\source\app_home.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head;.\So
+                    -urce\APP\include) DEBUG OBJECTEXTEND PRINT(.\Listings\app_home.lst) TABS(2) OBJECT(.\Objects\app_home.obj)
+
+line level    source
+
+   1          #include "__std_type.h"
+   2          #include "lcd12864.h"
+   3          #include "ds18b20.h"
+   4          #include "ds1302.h"
+   5          #include "uart.h"
+   6          #include "key.h"
+   7          #include "eeprom.h"
+   8          #include "app_home.h"
+   9          uint8_t g_home = 1;
+  10          
+  11          extern unsigned char choose_page;
+  12          extern char g_temp;
+  13          void home (void) 
+  14          {
+  15   1        
+  16   1        lcd12864_write_cmd(0x01);
+  17   1      
+  18   1        lcd12864_set_window(0, 0);            
+  19   1        lcd12864_write_string("主机温度:");
+  20   1        lcd12864_set_window(0, 7);            
+  21   1        lcd12864_write_string("℃");
+  22   1        lcd12864_set_window(1, 0);
+  23   1        lcd12864_write_string("从机温度:");
+  24   1        lcd12864_set_window(1, 7);            
+  25   1        lcd12864_write_string("℃");
+  26   1        lcd12864_set_window(2, 0);
+  27   1        lcd12864_write_string("日期:");
+  28   1        lcd12864_set_window(2, 3);  
+  29   1        lcd12864_write_string("");
+  30   1        lcd12864_set_window(3, 0);
+  31   1        lcd12864_write_string("时间:");
+  32   1        lcd12864_set_window(3, 3);
+  33   1        lcd12864_write_string("");
+  34   1        while (g_home) {
+  35   2          unsigned char ds1302_buf[7] = {0};  /* DS1302接收缓存区 */
+  36   2          unsigned char keyval = keyscan(2);
+  37   2          int8_t temp = rd_temperature_i(); /* 读取温度 */
+  38   2          
+  39   2          float device_temp = 0.0;
+  40   2          unsigned char control = 0;
+  41   2          
+  42   2          unsigned char read_eeprom = 0;
+  43   2          if (EN_KEY0 == keyval) {
+  44   3          
+  45   3            choose_page = 1; /* 进入主菜单*/
+  46   3            break;
+  47   3          }
+  48   2          
+  49   2            /* 主机温度 */
+  50   2            lcd12864_set_window(0, 5);
+  51   2            lcd12864_write_data((temp / 10) | 0x30 );
+  52   2            lcd12864_write_data((temp % 10) | 0x30 );
+  53   2          
+  54   2            /* 从机温度 */
+C51 COMPILER V9.56.0.0   APP_HOME                                                          05/28/2017 23:43:08 PAGE 2   
+
+  55   2            if (1 == uartf_reciev_frame(&device_temp, &control)) {
+  56   3              temp = (unsigned char)device_temp;
+  57   3              read_eeprom = iap_read_byte(0x0000);
+  58   3              lcd12864_set_window(1, 5);
+  59   3              lcd12864_write_data((temp / 10) | 0x30 );
+  60   3              lcd12864_write_data((temp % 10) | 0x30 );
+  61   3              
+  62   3              if (temp > read_eeprom) {
+  63   4                uart_send_frame(15.0, control | 0x04);
+  64   4              } else {
+  65   4              
+  66   4                uart_send_frame(15.0, control & ~0x04);
+  67   4              }
+  68   3              
+  69   3            }
+  70   2      
+  71   2            get_ds1302_time(ds1302_buf);
+  72   2            
+  73   2            /* 日期设置 */
+  74   2            lcd12864_set_window(2, 3);
+  75   2            
+  76   2            /* 年 */
+  77   2            lcd12864_write_data((ds1302_buf[6] >> 4) | 0x30 );
+  78   2            lcd12864_write_data((ds1302_buf[6] & 0x0F) | 0x30 );
+  79   2            lcd12864_write_string("-");
+  80   2            
+  81   2            /* 月 */
+  82   2            lcd12864_write_data((ds1302_buf[4] >> 4) | 0x30 );
+  83   2            lcd12864_write_data((ds1302_buf[4] & 0x0F) | 0x30 );
+  84   2            lcd12864_write_string("-");
+  85   2            
+  86   2            /* 日 */
+  87   2            lcd12864_write_data((ds1302_buf[3] >> 4) | 0x30 );
+  88   2            lcd12864_write_data((ds1302_buf[3] & 0x0F) | 0x30 );
+  89   2            
+  90   2            /* 时间的设置 */
+  91   2            lcd12864_set_window(3, 3);
+  92   2            
+  93   2            /* 时 */
+  94   2            lcd12864_write_data((ds1302_buf[2] >> 4) | 0x30 );
+  95   2            lcd12864_write_data((ds1302_buf[2] & 0x0F) | 0x30 );
+  96   2            lcd12864_write_string(":");
+  97   2            
+  98   2            /* 分 */
+  99   2            lcd12864_write_data((ds1302_buf[1] >> 4) | 0x30 );
+ 100   2            lcd12864_write_data((ds1302_buf[1] & 0x0F) | 0x30 );
+ 101   2            lcd12864_write_string(":");
+ 102   2            
+ 103   2            /* 秒 */
+ 104   2            lcd12864_write_data((ds1302_buf[0] >> 4) | 0x30 );
+ 105   2            lcd12864_write_data((ds1302_buf[0] & 0x0F) | 0x30 );  
+ 106   2        }
+ 107   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    540    ----
+   CONSTANT SIZE    =     47    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      15
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.56.0.0   APP_HOME                                                          05/28/2017 23:43:08 PAGE 3   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

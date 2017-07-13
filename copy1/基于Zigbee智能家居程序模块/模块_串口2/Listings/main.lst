@@ -1,0 +1,154 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 11:45:30 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND PR
+                    -INT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*------------------------------------------------------------------*/
+   2          /* --- STC MCU Limited ---------------------------------------------*/
+   3          /* --- STC12C5Axx Series MCU UART2 (8-bit/9-bit)Demo ---------------*/
+   4          /* --- Mobile: (86)13922805190 -------------------------------------*/
+   5          /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   6          /* --- Tel: 86-0513-55012928,55012929,55012966----------------------*/
+   7          /* --- Web: www.STCMCU.com -----------------------------------------*/
+   8          /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9          /* If you want to use the program or the program referenced in the  */
+  10          /* article, please specify in which data and procedures from STC    */
+  11          /*------------------------------------------------------------------*/
+  12          
+  13          #include "stc12c5a60s2.h"
+  14          #include "intrins.h"
+  15          #include "uart2.h"
+  16          
+  17          typedef unsigned char BYTE;
+  18          typedef unsigned int WORD;
+  19          
+  20          //#define FOSC 11059200L      //System frequency
+  21          //#define BAUD 115200         //UART baudrate
+  22          
+  23          /*Define UART parity mode*/
+  24          //#define NONE_PARITY     0   //None parity
+  25          //#define ODD_PARITY      1   //Odd parity
+  26          //#define EVEN_PARITY     2   //Even parity
+  27          //#define MARK_PARITY     3   //Mark parity
+  28          //#define SPACE_PARITY    4   //Space parity
+  29          
+  30          //#define PARITYBIT EVEN_PARITY   //Testing even parity
+  31          
+  32          /*Declare SFR associated with the UART2 */
+  33          //sfr AUXR  = 0x8e;           //Auxiliary register
+  34          //sfr S2CON = 0x9a;           //UART2 control register
+  35          //sfr S2BUF = 0x9b;           //UART2 data buffer
+  36          //sfr BRT   = 0x9c;           //Baudrate generator
+  37          //sfr IE2   = 0xaf;           //Interrupt control 2
+  38          
+  39          //#define S2RI  0x01          //S2CON.0
+  40          //#define S2TI  0x02          //S2CON.1
+  41          //#define S2RB8 0x04          //S2CON.2
+  42          //#define S2TB8 0x08          //S2CON.3
+  43          
+  44          bit busy;
+  45          
+  46          void SendData(BYTE dat);
+  47          void SendString(char *s);
+  48          
+  49          void main()
+  50          {
+  51   1        
+  52   1        float a;
+  53   1        unsigned char b;
+  54   1        uart2_init();
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 11:45:30 PAGE 2   
+
+  55   1        uart2_send_string("STC12C5A60S2\r\nUart2 Test !\r\n");
+  56   1          while(1)
+  57   1          {
+  58   2          uart2f_reciev_frame(&a, &b);
+  59   2          }
+  60   1      }
+  61          
+  62          /*----------------------------
+  63          UART2 interrupt service routine
+  64          ----------------------------*/
+  65          //void Uart2() interrupt 8 using 1
+  66          //{
+  67          //    if (S2CON & S2RI)
+  68          //    {
+  69          //        S2CON &= ~S2RI;     //Clear receive interrupt flag
+  70          //        P0 = S2BUF;         //P0 show UART data
+  71          //        P2 = (S2CON & S2RB8);//P2.2 show parity bit
+  72          //    }
+  73          //    if (S2CON & S2TI)
+  74          //    {
+  75          //        S2CON &= ~S2TI;     //Clear transmit interrupt flag
+  76          //        busy = 0;           //Clear transmit busy flag
+  77          //    }
+  78          //}
+  79          
+  80          /*----------------------------
+  81          Send a byte data to UART
+  82          Input: dat (data to be sent)
+  83          Output:None
+  84          ----------------------------*/
+  85          void SendData(BYTE _data)
+  86          {
+  87   1      //    while (busy);           //Wait for the completion of the previous data is sent
+  88   1      //    ACC = dat;              //Calculate the even parity bit P (PSW.0)
+  89   1      //    if (P)                  //Set the parity bit according to P
+  90   1      //    {
+  91   1      //#if (PARITYBIT == ODD_PARITY)
+  92   1      //        S2CON &= ~S2TB8;    //Set parity bit to 0
+  93   1      //#elif (PARITYBIT == EVEN_PARITY)
+  94   1      //        S2CON |= S2TB8;     //Set parity bit to 1
+  95   1      //#endif
+  96   1      //    }
+  97   1      //    else
+  98   1      //    {
+  99   1      //#if (PARITYBIT == ODD_PARITY)
+ 100   1      //        S2CON |= S2TB8;     //Set parity bit to 1
+ 101   1      //#elif (PARITYBIT == EVEN_PARITY)
+ 102   1      //        S2CON &= ~S2TB8;    //Set parity bit to 0
+ 103   1      //#endif
+ 104   1      //    }
+ 105   1      //    busy = 1;
+ 106   1      //    S2BUF = ACC;            //Send data to UART2 buffer
+ 107   1        
+ 108   1        
+ 109   1        S2BUF = _data;  /* 发送数据送缓冲 */
+ 110   1        while (!(S2CON & 0x02));    /* 等待发送完成 */
+ 111   1        S2CON &= ~0x02;
+ 112   1      }
+ 113          
+ 114          /*----------------------------
+ 115          Send a string to UART
+ 116          Input: s (address of string)
+C51 COMPILER V9.56.0.0   MAIN                                                              05/24/2017 11:45:30 PAGE 3   
+
+ 117          Output:None
+ 118          ----------------------------*/
+ 119          void SendString(char *s)
+ 120          {
+ 121   1          while (*s)              //Check the end of the string
+ 122   1          {
+ 123   2              SendData(*s++);     //Send current char and increment string ptr
+ 124   2          }
+ 125   1      }
+ 126          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     80    ----
+   CONSTANT SIZE    =     29    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,122 @@
+C51 COMPILER V9.56.0.0   ESP8266                                                           05/27/2017 16:53:10 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE ESP8266
+OBJECT MODULE PLACED IN .\Objects\esp8266.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\esp8266.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND
+                    - PRINT(.\Listings\esp8266.lst) TABS(2) OBJECT(.\Objects\esp8266.obj)
+
+line level    source
+
+   1          #include "uart2.h"
+   2          #include "intrins.h"
+   3          
+   4          extern uint8_t g_uart2_sta;
+   5          extern uint8_t xdata __g_uart2_buf[UART2_BUF_SIZE];
+   6          
+   7          void delay_ms (uint8_t time) 
+   8          {
+   9   1          unsigned char i, j;
+  10   1        unsigned char t;
+  11   1        for (t = 0; t < time; t++) {
+  12   2            _nop_();
+  13   2            i = 11;
+  14   2            j = 190;
+  15   2            do
+  16   2            {
+  17   3              while (--j);
+  18   3            } while (--i);
+  19   2        }
+  20   1      
+  21   1      
+  22   1      }
+  23          
+  24          uint8_t* esp_8266_check_cmd(uint8_t *str)
+  25          {
+  26   1        
+  27   1        char *strx=0;
+  28   1      
+  29   1      //  uart2_send_string("2222\r\n");
+  30   1        strx = strstr(( char*)__g_uart2_buf,( char*)str);
+  31   1        return (u8*)strx;
+  32   1      }
+  33          
+  34          
+  35          uint8_t esp_8266_send_com ( uint8_t *com, uint8_t *ack, uint16_t waittime)
+  36          {
+  37   1        uart2_send_string(com);
+  38   1        uart2_send_string("\r\n");
+  39   1        
+  40   1        if (ack && waittime) {
+  41   2        
+  42   2          while (--waittime) {
+  43   3            delay_ms(1);
+  44   3            
+  45   3            if (esp_8266_check_cmd(ack)) {
+  46   4      //        uart2_send_string("33333\r\n");
+  47   4      //        uart2_send_string(ack);
+  48   4      //        uart2_send_string("\r\n");
+  49   4              g_uart2_sta = 0;
+  50   4              break;  //响应正确
+  51   4            }
+  52   3          }
+  53   2          
+  54   2          if (0 == waittime) {
+C51 COMPILER V9.56.0.0   ESP8266                                                           05/27/2017 16:53:10 PAGE 2   
+
+  55   3            return 1;
+  56   3          }
+  57   2          
+  58   2        }
+  59   1        return 0;
+  60   1      }
+  61          
+  62          extern void Delay2000ms() ;
+  63          
+  64          uint8_t g_wifi_ok = 0;
+  65          void init_esp_8266_setting ( void)
+  66          {
+  67   1        uint8_t res = 0;
+  68   1        
+  69   1        /* 设置模式 */
+  70   1        esp_8266_send_com("AT+CWMODE=3", "OK", 100);
+  71   1        Delay2000ms();
+  72   1        
+  73   1        /* 复位 */
+  74   1        esp_8266_send_com("AT+RST", "ready", 5000);
+  75   1        
+  76   1        Delay2000ms();
+  77   1        Delay2000ms();
+  78   1        esp_8266_send_com("AT+CWSAP=\"LWL\",\"12345678\",1,4", "OK", 1000);
+  79   1        Delay2000ms();
+  80   1        Delay2000ms();
+  81   1        esp_8266_send_com("AT+CWJAP=\"MERCURY_A78A\",\"zlgmcu18\"", "OK", 1000);
+  82   1        Delay2000ms();
+  83   1        Delay2000ms();
+  84   1        esp_8266_send_com("AT+CIPMUX=1", "OK", 1000);
+  85   1        Delay2000ms();
+  86   1        Delay2000ms();
+  87   1        res = esp_8266_send_com("AT+CIPSERVER=1,8086", "OK", 1000);
+  88   1        Delay2000ms();
+  89   1        Delay2000ms();
+  90   1        
+  91   1        if (res == 0) {
+  92   2          g_wifi_ok = 1;
+  93   2          g_uart2_sta = 0;
+  94   2        }
+  95   1      
+  96   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    310    ----
+   CONSTANT SIZE    =    128    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

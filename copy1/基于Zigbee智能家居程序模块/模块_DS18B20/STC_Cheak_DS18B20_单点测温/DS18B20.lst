@@ -1,0 +1,397 @@
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN DS18B20.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\DS18B20.C OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND
+                    - PRINT(.\DS18B20.lst) TABS(2) OBJECT(DS18B20.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          *                            STC51 MCU Module
+   3          *                       ---------------------------
+   4          *
+   5          * Copyright (c) 2001-2012 duanlantaosha
+   6          *
+   7          * Chip      : STC89C52RC&STC12C5A60S2
+   8          * OSC       : 11.0592M & 12M
+   9          * Made  By  : duanlangtaosha
+  10          * QQ        : 891650837
+  11          * e-mail:   : 891650837@qq.com
+  12          *******************************************************************************/
+  13          
+  14          /**
+  15           * \file
+  16           * \brief DS18B20接口程序
+  17           *
+  18           * \internal
+  19           * \par Modification history
+  20           * - 1.00 17-05-15  duanlangtaosha, first implementation.
+  21           * \endinternal
+  22           */
+  23          
+  24          #include "stc12c5a60s2.h"
+  25          #include "intrins.h"
+  26          #include "LCD1602.H"
+  27          #include "ds18b20.h"
+  28          
+  29          unsigned char g_DS18B20_ROM_Buff[8]={0}; //可以把一个新的不知道ROM的18B20的ROM数据读取到该数组中
+  30          
+  31          /**********下面这两个ROM是我做测试时测出来的两个18B20的ROM，如果遇到新的了要更改*****/
+  32          unsigned char code Code_DS18B20_ROM1[8]={0x28,0xfb,0xa8,0x45,0x06,0x00,0x00,0x29};   //这个没有写好，笨办法
+             -，要先检测出DS18B20的ROM，填入这个数组中才有效
+  33          unsigned char code Code_DS18B20_ROM2[8]={0x28,0x4a,0xf9,0x33,0x05,0x00,0x00,0x04};
+  34          
+  35          
+  36          //单总线延时函数
+  37          //#ifndef STC12  
+  38          //void Delay_OneWire(unsigned int t)  //STC89C52RC
+  39          //{
+  40          //  while(t--);
+  41          //}
+  42          //#else
+  43          void Delay_OneWire(unsigned int t)  //STC12C5260S2
+  44          {
+  45   1        unsigned char i;
+  46   1        while(t--){
+  47   2          for(i=0;i<12;i++);
+  48   2        }
+  49   1      }
+  50          //#endif
+  51          
+  52          /* 通过单总线向DS18B20写一个字节 */
+  53          
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 2   
+
+  54          
+  55          /**
+  56          * \brief 向DS18B20中写入数据
+  57          *
+  58          * \param[in] dat : 要写入的数据
+  59          *
+  60          * \return 无
+  61          *
+  62          */
+  63          void write_ds18b20(unsigned char dat)
+  64          {
+  65   1        unsigned char i;
+  66   1        for (i = 0; i < 8; i++) {
+  67   2          PIN_DS18B20 = 0;
+  68   2          PIN_DS18B20 = dat & 0x01;
+  69   2          Delay_OneWire(5);
+  70   2          PIN_DS18B20 = 1;
+  71   2          dat >>= 1;
+  72   2        }
+  73   1        Delay_OneWire(5);
+  74   1      }
+  75          
+  76          /**
+  77          * \brief 从DS18B20读取一个字节
+  78          *
+  79          * \param 无
+  80          *
+  81          * \return 读出的数据
+  82          *
+  83          */
+  84          unsigned char read_ds18b20 (void)
+  85          {
+  86   1        unsigned char i;
+  87   1        unsigned char dat;
+  88   1        
+  89   1        for (i = 0; i < 8; i++) {
+  90   2        
+  91   2          PIN_DS18B20 = 0;
+  92   2          dat >>= 1;
+  93   2          PIN_DS18B20 = 1;
+  94   2          if (PIN_DS18B20) {
+  95   3          
+  96   3            dat |= 0x80;
+  97   3          }     
+  98   2          Delay_OneWire(5);
+  99   2        }
+ 100   1        return dat;
+ 101   1      }
+ 102          
+ 103          /**
+ 104          * \brief DS18B20初始化
+ 105          *
+ 106          * \param 无
+ 107          *
+ 108          * \return 返回初始化的状态
+ 109          *
+ 110          */
+ 111          bit init_ds18b20(void)
+ 112          {
+ 113   1          bit initflag = 0;
+ 114   1          
+ 115   1          PIN_DS18B20 = 1;
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 3   
+
+ 116   1          Delay_OneWire(12);
+ 117   1          PIN_DS18B20 = 0;
+ 118   1          Delay_OneWire(80); /* 延时大于480us */
+ 119   1          PIN_DS18B20 = 1;
+ 120   1          Delay_OneWire(10);  /* 14 */
+ 121   1          initflag = PIN_DS18B20;     /* initflag等于1初始化失败 */
+ 122   1          Delay_OneWire(5);
+ 123   1        
+ 124   1          return initflag;
+ 125   1      }
+ 126          
+ 127          //DS18B20温度采集程序：整数
+ 128          
+ 129          /**
+ 130          * \brief 读取DS1820的温度数据(整数)
+ 131          *
+ 132          * \param 无
+ 133          *
+ 134          * \return 返回带小数的温度,步进是1℃
+ 135          *
+ 136          */
+ 137           unsigned char rd_temperature_i(void)
+ 138           {
+ 139   1          unsigned char low = 0, high = 0;
+ 140   1          char temp = 0;
+ 141   1         
+ 142   1          init_ds18b20();
+ 143   1          write_ds18b20(0xCC);
+ 144   1          write_ds18b20(0x44); //启动温度转换
+ 145   1          Delay_OneWire(200);
+ 146   1      
+ 147   1          init_ds18b20();
+ 148   1          write_ds18b20(0xCC);
+ 149   1          write_ds18b20(0xBE); //读取寄存器
+ 150   1      
+ 151   1          low = read_ds18b20(); //低字节
+ 152   1          high = read_ds18b20(); //高字节
+ 153   1         
+ 154   1          /* 精度为1摄氏度 */  
+ 155   1          temp  = high << 4;
+ 156   1          temp |= (low >> 4);
+ 157   1         
+ 158   1          return temp;
+ 159   1       }
+ 160          
+ 161          /**
+ 162          * \brief 读取DS1820的温度数据(浮点数)
+ 163          *
+ 164          * \param 无
+ 165          *
+ 166          * \return 返回带小数的温度,步进是0.0625℃
+ 167          *
+ 168          */
+ 169          float rd_temperature_f (void)
+ 170          {
+ 171   1          unsigned int temp = 0;
+ 172   1          float temperature = 0.0;
+ 173   1          unsigned char low = 0, high = 0;
+ 174   1        
+ 175   1          init_ds18b20();
+ 176   1          write_ds18b20(0xCC);
+ 177   1          write_ds18b20(0x44); /* 启动温度转换 */
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 4   
+
+ 178   1          Delay_OneWire(200);
+ 179   1      
+ 180   1          init_ds18b20();
+ 181   1          write_ds18b20(0xCC);
+ 182   1          write_ds18b20(0xBE); /* 读取寄存器 */
+ 183   1      
+ 184   1          low = read_ds18b20(); /* 低字节 */
+ 185   1          high = read_ds18b20(); /* 高字节 */
+ 186   1        
+ 187   1          /* 精度为0.0625摄氏度 */  
+ 188   1          temp = (high&0x0f);
+ 189   1          temp <<= 8;
+ 190   1          temp |= low;
+ 191   1          temperature = temp * 0.0625;
+ 192   1        
+ 193   1          return temperature;
+ 194   1      }
+ 195          //void DS18B20_Mode(void)
+ 196          //{
+ 197          //    unsigned char temperature=0;
+ 198          //    unsigned char key_value=0;
+ 199          //    Command_LCD(LCD_CLEAR_SCREEN,CHK_BUSY); // 清屏 
+ 200          //    LocatPos(0,0);
+ 201          //    String_LCD("Mode:Temperature");        //距离    第2行
+ 202          //    LocatPos(0,1);
+ 203          //    String_LCD("CurrentTemp:");   
+ 204          //    LocatPos(15,1);
+ 205          //    String_LCD("C");
+ 206          //    while(1)
+ 207          //    {
+ 208          //       if(g_DS18B20_Process)
+ 209          //      {
+ 210          //        g_DS18B20_Process = 0;
+ 211          //        temperature = (unsigned char)rd_temperature_f();  //读温度         
+ 212          //        LocatPos(12,1);
+ 213          //        WriteToLCD(0x30|temperature/10);
+ 214          //        WriteToLCD(0x30|temperature%10);
+ 215          //          }
+ 216          //      key_value=keyscan(); 
+ 217          //      if(EN_KEY0==key_value)
+ 218          //      {
+ 219          //        g_Mode=EN_TDS_Mode;
+ 220          //      break;
+ 221          //      }
+ 222          //    } 
+ 223          //}
+ 224          
+ 225          
+ 226          /**
+ 227          * \brief 检测DS18B20的ROM值（独一无二光刻64bit的设备名）
+ 228          *
+ 229          * \param[out] p_buf : 保持8个字节的ROM的值（放到一个8字节的数组中）
+ 230          *
+ 231          * \return 无
+ 232          *
+ 233          */
+ 234          void read_ds18b20_rom (unsigned char *p_buf)           
+ 235          {
+ 236   1        unsigned char i = 0;
+ 237   1        
+ 238   1        init_ds18b20();
+ 239   1        write_ds18b20(0x33);
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 5   
+
+ 240   1        
+ 241   1        for (i = 0; i < 8; i++) {
+ 242   2          p_buf[i] = read_ds18b20();  /* 保存序列号到一个数组中去 */
+ 243   2        }
+ 244   1      }
+ 245          
+ 246          
+ 247          /**
+ 248          * \brief 匹配ROM,如果是多点通信就要用ROM值区分设备
+ 249          *
+ 250          * \param[in] num_ds18b20 : 输入设备号，如果有多个设备就从1开始
+ 251          * \param[in] p_rom_buf   : 存储已知的DS18B20的ROM值，放在一个二维数组中
+ 252          *
+ 253          * \note test[x][8] = { {0x??, 0x??, 0x??, 0x??, 0x??, 0x??, 0x??, 0x??}, {}, {}.....}
+ 254          *
+ 255          * \return 无
+ 256          *
+ 257          */
+ 258          void match_rom(unsigned char num_ds18b20, unsigned char *p_rom_buf)      
+ 259          {
+ 260   1        unsigned char j = 0, i = 0;
+ 261   1      
+ 262   1          write_ds18b20(0x55);
+ 263   1        
+ 264   1        for (i = 0; i < num_ds18b20; i++) {
+ 265   2          for(j = 0; j < 8; j++) {
+ 266   3          
+ 267   3            write_ds18b20(p_rom_buf[j]);
+ 268   3          }
+ 269   2        }
+ 270   1      //  if(num_ds18b20==1)
+ 271   1      //  {
+ 272   1      //    for(j=0;j<8;j++)
+ 273   1      //    {
+ 274   1      //      write_ds18b20(Code_DS18B20_ROM1[j]);
+ 275   1      //    }
+ 276   1      //  }
+ 277   1      //  if(num_ds18b20==2)
+ 278   1      //  {
+ 279   1      //    for(j=0;j<8;j++)
+ 280   1      //    {
+ 281   1      //      write_ds18b20(Code_DS18B20_ROM2[j]);
+ 282   1      //    }
+ 283   1      //  }
+ 284   1      }
+ 285          
+ 286          ///****现在可以读取两个DS18B20，1读取第一个，2读取第2个**********/
+ 287          //float read_ds18b20_Num(unsigned int num_ds18b20)
+ 288          //{
+ 289          //  unsigned char low=0,high=0;
+ 290          //  unsigned int temp=0;
+ 291          //  float temperature=0.0;
+ 292          //  
+ 293          //  init_ds18b20();       //初始化
+ 294          //  write_ds18b20(0xcc);  //跳过
+ 295          //  init_ds18b20();     
+ 296          //  if (num_ds18b20 == 1) {
+ 297          //  
+ 298          //    Match_ROM(1);    //  匹配rom1
+ 299          //  }
+ 300          //  if(num_ds18b20 == 2) {
+ 301          //  
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 6   
+
+ 302          //    Match_ROM(2);    //   匹配rom2
+ 303          //  }
+ 304          
+ 305          //  write_ds18b20(0x44);
+ 306          //  init_ds18b20();
+ 307          //  write_ds18b20(0xcc);
+ 308          //  init_ds18b20();
+ 309          //  if (num_ds18b20 == 1) {
+ 310          //  
+ 311          //    Match_ROM(1);    //
+ 312          //  }
+ 313          //  if (num_ds18b20 == 2)
+ 314          //  {
+ 315          //    Match_ROM(2);    //
+ 316          //  }
+ 317          
+ 318          //  write_ds18b20(0xbe);  //启动读暂存器。读内部ram中9字节温度数据
+ 319          //  low=read_ds18b20();
+ 320          //  high=read_ds18b20();
+ 321          
+ 322          ///** 精度为0.0625摄氏度 */  
+ 323          //  temp = (high & 0x0f);
+ 324          //  temp <<= 8;
+ 325          //  temp |= low;
+ 326          //  temperature = temp * 0.0625;
+ 327          
+ 328          //  return temperature; 
+ 329          //}
+ 330          
+ 331          /*****把DS18B20的ROM显示在LCD1602上*********/
+ 332          void Display_DS18B20_ROM(void)
+ 333          {
+ 334   1        unsigned char i=0,temp=0;
+ 335   1        read_ds18b20_rom(g_DS18B20_ROM_Buff);
+ 336   1        Command_LCD(0x80,CHK_BUSY);           
+ 337   1        for(i=0;i<8;i++)
+ 338   1        {
+ 339   2          temp=g_DS18B20_ROM_Buff[i]>>4;
+ 340   2          if(temp<10)
+ 341   2          {
+ 342   3            WriteToLCD(0x30+temp);
+ 343   3          }
+ 344   2          else
+ 345   2          {
+ 346   3             WriteToLCD(0x37+temp);
+ 347   3          }
+ 348   2          temp=g_DS18B20_ROM_Buff[i]&0x0f;
+ 349   2          if(temp<10)
+ 350   2          {
+ 351   3            WriteToLCD(0x30+temp);
+ 352   3          }
+ 353   2          else
+ 354   2          {
+ 355   3             WriteToLCD(0x37+temp);
+ 356   3          }
+ 357   2        } 
+ 358   1      }
+ 359          
+ 360          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.56.0.0   DS18B20                                                           05/15/2017 17:19:30 PAGE 7   
+
+   CODE SIZE        =    415    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

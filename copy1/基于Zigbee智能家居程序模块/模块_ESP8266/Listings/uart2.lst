@@ -1,0 +1,276 @@
+C51 COMPILER V9.56.0.0   UART2                                                             05/27/2017 16:53:10 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE UART2
+OBJECT MODULE PLACED IN .\Objects\uart2.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\uart2.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND P
+                    -RINT(.\Listings\uart2.lst) TABS(2) OBJECT(.\Objects\uart2.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+   2          * Model Name  : 串口驱动模块
+   3          * File  Name  : uart2.c
+   4          * Chip      : STC89C52RC&STC12C5A60S2，注STC89C52不能用1T模式的
+   5          * OSC       : 11.0592M
+   6          * Made  By    : 断浪淘沙
+   7          * Vision      : 1.3
+   8          * Discription   : 实现printf和scanf函数重定向到串口1，即支持printf信息到UART1，即该模块支持
+   9          *           printf的打印到串口。
+  10          *           波特率  :115200
+  11          *           晶振  : 11.0592M
+  12          * Time      : 2016-8-5
+  13          * Copyright (C), 2016-2017, 断浪淘沙 QQ:891650837
+  14          *
+  15          *********************************************************************************************************/
+  16          
+  17          #include "uart2.h"
+  18          uint8_t  xdata __g_uart2_buf[UART2_BUF_SIZE] = {0};
+  19          uint8_t __g_uart2_recieve_counter = 0;
+  20          uint8_t g_uart2_sta = 0;
+  21          
+  22          extern uint8_t g_wifi_ok ;
+  23          void uart2_isr() interrupt 8 using 1   //中断接收程序
+  24          {
+  25   1        uint8_t res = 0;
+  26   1        if(S2CON & S2RI) {         /* 判断是否接收完，接收完成后，由硬件置RI位 */
+  27   2          S2CON &= ~S2RI;
+  28   2      
+  29   2            res = S2BUF;
+  30   2      
+  31   2          if (g_wifi_ok == 0) {
+  32   3            __g_uart2_buf[(g_uart2_sta)] = res;
+  33   3            g_uart2_sta ++;
+  34   3             
+  35   3             if (g_uart2_sta > UART2_BUF_SIZE) {
+  36   4              g_uart2_sta = 0;
+  37   4             }
+  38   3           } else {
+  39   3           
+  40   3            if(!(g_uart2_sta & 0x80))
+  41   3            {
+  42   4              if(!(g_uart2_sta & 0x40))
+  43   4              {
+  44   5                if(res == 0xAA) {
+  45   6                  g_uart2_sta = 0x40; 
+  46   6                  __g_uart2_buf[0] = 0xAA;
+  47   6                  g_uart2_sta++;
+  48   6                } else {
+  49   6                  g_uart2_sta &= ~0x40;
+  50   6                }
+  51   5              } else {
+  52   5                __g_uart2_buf[(g_uart2_sta & 0x0F)] = res;
+  53   5                g_uart2_sta ++;
+  54   5                if((g_uart2_sta & 0x0F) == 2) {
+C51 COMPILER V9.56.0.0   UART2                                                             05/27/2017 16:53:10 PAGE 2   
+
+  55   6                  g_uart2_sta |= 0x80;
+  56   6                }
+  57   5              }
+  58   4          
+  59   4        } 
+  60   3             
+  61   3             
+  62   3             
+  63   3             
+  64   3             
+  65   3             
+  66   3             
+  67   3             
+  68   3          
+  69   3      
+  70   3           }
+  71   2        }
+  72   1      }
+  73          
+  74          
+  75          /**
+  76          * \brief 串口发送单字节
+  77          *
+  78          * \param[in] _data : 要发送的数据
+  79          *
+  80          * \return 无
+  81          */
+  82          void uart2_send_byte (uint8_t _data)
+  83          {
+  84   1        S2BUF = _data;  /* 发送数据送缓冲 */
+  85   1        while (!(S2CON & 0x02));    /* 等待发送完成 */
+  86   1        S2CON &= ~0x02;
+  87   1      }
+  88          
+  89          /**
+  90          * \brief 串口接收单字节
+  91          *
+  92          * \param 无
+  93          *
+  94          * \return 返回接收的数据
+  95          */
+  96          //uint8_t uart2_get_byte (void)
+  97          //{
+  98          //  uint8_t c = 0;
+  99          
+ 100          //  while (RI == 0);
+ 101          //  c = SBUF;
+ 102          //  RI = 0; 
+ 103          
+ 104          //  return c;
+ 105          //}
+ 106          
+ 107          /**
+ 108          * \brief 串口发送一串字节数据
+ 109          *
+ 110          * \param[in] p_buf : 待发送的数据缓存区
+ 111          * \param[in] len   : 缓存区的大小
+ 112          *
+ 113          * \return 无
+ 114          */
+ 115          void uart2_send_buf (uint8_t *p_buf, uint8_t _len)
+ 116          {
+C51 COMPILER V9.56.0.0   UART2                                                             05/27/2017 16:53:10 PAGE 3   
+
+ 117   1        while (_len--) {
+ 118   2        
+ 119   2          uart2_send_byte (*p_buf++);
+ 120   2        }
+ 121   1      }
+ 122          
+ 123          /**
+ 124          * \brief 串口接收数据缓存
+ 125          *
+ 126          * \param[in] p_buf : 接收数据缓存区
+ 127          * \param[in] len   : 缓存区的大小
+ 128          *
+ 129          * \retval 1 : 正确
+ 130          *         0 : 错误
+ 131          */
+ 132          uint8_t uart2_recieve_buf (uint8_t *p_buf, uint8_t _len)
+ 133          {
+ 134   1        uint8_t i = 0;
+ 135   1        if (__g_uart2_recieve_counter >= _len) {
+ 136   2          
+ 137   2          for( i = 0; i< _len; i++) {
+ 138   3           p_buf[i] = __g_uart2_buf[i];
+ 139   3          }
+ 140   2          __g_uart2_recieve_counter = 0;
+ 141   2          
+ 142   2          return 1;
+ 143   2        } else {
+ 144   2          return 0;
+ 145   2        }
+ 146   1      }
+ 147          
+ 148          /**
+ 149          * \brief 串口初始化
+ 150          *
+ 151          * \param 无
+ 152          *
+ 153          * \return 无
+ 154          */
+ 155          void uart2_init (void)
+ 156          {
+ 157   1          S2CON = 0x50;           //8-bit variable UART
+ 158   1          BRT = -(FOSC / 32 / BAUDS2);  //Set auto-reload vaule of baudrate generator
+ 159   1          AUXR |= 0x14;            //Baudrate generator work in 1T mode
+ 160   1          IE2 = 0x01;             //Enable UART2 interrupt
+ 161   1          EA = 1;    
+ 162   1        
+ 163   1      }
+ 164          
+ 165          /**
+ 166          * \brief 发送数据帧信息
+ 167          *
+ 168          * \note  发送的帧信息： D[0](帧头) + D1(温度的整数) +D2(温度小数) + 
+ 169          *                       D[3](控制和状态量) + D[4](校验和)
+ 170          *
+ 171          * \param[in] temp        : 温度量
+ 172          * \param[in] control_sta : 控制和状态量
+ 173          *
+ 174          * \return 无
+ 175          */
+ 176          void uart2_send_frame ( float temp, uint8_t control_sta)
+ 177          {
+ 178   1        uint8_t send_frame[5] = {0};
+C51 COMPILER V9.56.0.0   UART2                                                             05/27/2017 16:53:10 PAGE 4   
+
+ 179   1        
+ 180   1        /* 帧头 */
+ 181   1        send_frame[0] = 0xAA;
+ 182   1        
+ 183   1        /* 温度的整数 */
+ 184   1        send_frame[1] = (uint8_t)temp;
+ 185   1        
+ 186   1        /* 温度的小数 */
+ 187   1        send_frame[2] = ((uint16_t)(temp * 10)) % 10;
+ 188   1        
+ 189   1        /* 控制或状态信息量 */
+ 190   1        send_frame[3] = control_sta;
+ 191   1        
+ 192   1        /* 校验和 */
+ 193   1        send_frame[4] = send_frame[0] + send_frame[1] + send_frame[2] + send_frame[3];
+ 194   1        
+ 195   1        uart2_send_buf(send_frame, 5);
+ 196   1      }
+ 197          
+ 198          void uart2_send_string(char *s)
+ 199          {
+ 200   1          while (*s)              //Check the end of the string
+ 201   1          {
+ 202   2              uart2_send_byte(*s++);     //Send current char and increment string ptr
+ 203   2          }
+ 204   1      }
+ 205          
+ 206          
+ 207          /**
+ 208          * \brief 接收数据帧信息
+ 209          *
+ 210          * \note  发送的帧信息： D[0](帧头) + D1(温度的整数) +D2(温度小数) + 
+ 211          *                       D[3](控制和状态量) + D[4](校验和)
+ 212          *
+ 213          * \param[in] temp        : 温度量
+ 214          * \param[in] control_sta : 控制和状态量
+ 215          *
+ 216          * \retval 0 : 错误
+ 217          *         1 : 正确
+ 218          */
+ 219          uint8_t uart2f_reciev_frame(float *temp, uint8_t *control_sta)
+ 220          {
+ 221   1        uint8_t r_frame[5] = {0};
+ 222   1        
+ 223   1        if (uart2_recieve_buf (r_frame, 5)) { /* 接收串口帧信息 */
+ 224   2        
+ 225   2          if (r_frame[0] == 0xAA) {
+ 226   3            if (r_frame[4] == (uint8_t)(r_frame[0] + r_frame[1] + r_frame[2] + r_frame[3])) {
+ 227   4              uart2_send_string("abc\r\n");
+ 228   4              *temp = r_frame[1] + r_frame[2]/10.0;
+ 229   4              
+ 230   4              *control_sta = r_frame[3];
+ 231   4              
+ 232   4              return 1;
+ 233   4            } else {
+ 234   4              return 0; /* 校验错误 */
+ 235   4            }
+ 236   3            
+ 237   3          } else {
+ 238   3            return 0;
+ 239   3          }
+ 240   2       }
+C51 COMPILER V9.56.0.0   UART2                                                             05/27/2017 16:53:10 PAGE 5   
+
+ 241   1        return 0;
+ 242   1      }
+ 243          
+ 244          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    505    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =     50    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2      30
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

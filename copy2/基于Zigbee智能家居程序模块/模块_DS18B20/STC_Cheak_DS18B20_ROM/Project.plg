@@ -1,0 +1,147 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Administrator.USER-20150414KB\Desktop\STCÊ¾Àý³ÌÐò\STC_Cheak_DS18B20_ROM\Project.uvproj
+Project File Date:  04/24/2016
+
+<h2>Output:</h2>
+compiling DS18B20.C...
+App\DS18B20.C(1): warning C318: can't open file './Head/stc12c5a60s2.h'
+App\DS18B20.C(2): warning C318: can't open file './Head/intrins.h'
+App\DS18B20.C(4): warning C318: can't open file './Head/Beep.h'
+App\DS18B20.C(5): warning C318: can't open file './Head/ultrasonic.h'
+App\DS18B20.C(6): warning C318: can't open file './Head/key.h'
+App\DS18B20.C(8): warning C318: can't open file './Head/globle.h'
+APP\DS18B20.C(31): error C202: 'P14': undefined identifier
+APP\DS18B20.C(32): error C202: 'P14': undefined identifier
+APP\DS18B20.C(34): error C202: 'P14': undefined identifier
+APP\DS18B20.C(48): error C202: 'P14': undefined identifier
+APP\DS18B20.C(50): error C202: 'P14': undefined identifier
+APP\DS18B20.C(51): error C202: 'P14': undefined identifier
+APP\DS18B20.C(65): error C202: 'P14': undefined identifier
+APP\DS18B20.C(67): error C202: 'P14': undefined identifier
+APP\DS18B20.C(69): error C202: 'P14': undefined identifier
+APP\DS18B20.C(71): error C202: 'P14': undefined identifier
+APP\DS18B20.C(140): error C202: 'g_DS18B20_Process': undefined identifier
+APP\DS18B20.C(142): error C202: 'g_DS18B20_Process': undefined identifier
+App\DS18B20.C - 12 Error(s), 6 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C(2): warning C318: can't open file './Head/intrins.h'
+APP\DS18B20.C(136): error C202: 'g_DS18B20_Process': undefined identifier
+APP\DS18B20.C(138): error C202: 'g_DS18B20_Process': undefined identifier
+App\DS18B20.C - 2 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(136): error C202: 'g_DS18B20_Process': undefined identifier
+APP\DS18B20.C(138): error C202: 'g_DS18B20_Process': undefined identifier
+App\DS18B20.C - 2 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(154): error C202: 'uchar': undefined identifier
+APP\DS18B20.C(154): error C141: syntax error near 'i'
+App\DS18B20.C - 2 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(158): warning C206: 'write_ds18b20': missing function-prototype
+APP\DS18B20.C(158): error C267: 'write_ds18b20': requires ANSI-style prototype
+APP\DS18B20.C(161): error C202: 'save_number': undefined identifier
+App\DS18B20.C - 2 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(163): error C202: 'save_number': undefined identifier
+App\DS18B20.C - 1 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(166): warning C206: 'write_com': missing function-prototype
+APP\DS18B20.C(166): error C267: 'write_com': requires ANSI-style prototype
+APP\DS18B20.C(169): error C202: 'save_number': undefined identifier
+App\DS18B20.C - 2 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(155): warning C280: 'temp': unreferenced local variable
+App\DS18B20.C - 0 Error(s), 1 Warning(s).
+compiling LCD1602.c...
+App\LCD1602.c - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(178): error C202: 'save_number': undefined identifier
+App\DS18B20.C - 1 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling main.c...
+App\main.c - 0 Error(s), 0 Warning(s).
+compiling main.c...
+App\main.c - 0 Error(s), 0 Warning(s).
+compiling main.c...
+App\main.c - 0 Error(s), 0 Warning(s).
+compiling main.c...
+App\main.c - 0 Error(s), 0 Warning(s).
+Build target 'DS18B20'
+assembling STARTUP.A51...
+compiling DS18B20.C...
+compiling LCD1602.c...
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RD_TEMPERATURE_F?DS18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_STRING_LCD?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LOCATPOS?LCD1602
+Program Size: data=23.1 xdata=0 code=1120
+creating hex file from "Project"...
+"Project" - 0 Error(s), 3 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(155): warning C280: 'temp': unreferenced local variable
+APP\DS18B20.C(167): error C202: 'i': undefined identifier
+APP\DS18B20.C(169): error C202: 'temp': undefined identifier
+APP\DS18B20.C(170): error C202: 'temp': undefined identifier
+APP\DS18B20.C(172): error C202: 'temp': undefined identifier
+APP\DS18B20.C(176): error C202: 'temp': undefined identifier
+APP\DS18B20.C(178): error C202: 'temp': undefined identifier
+APP\DS18B20.C(179): error C202: 'temp': undefined identifier
+APP\DS18B20.C(181): error C202: 'temp': undefined identifier
+APP\DS18B20.C(185): error C202: 'temp': undefined identifier
+App\DS18B20.C - 9 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(155): warning C280: 'temp': unreferenced local variable
+App\DS18B20.C - 0 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(155): warning C280: 'temp': unreferenced local variable
+App\DS18B20.C - 0 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+APP\DS18B20.C(155): warning C280: 'temp': unreferenced local variable
+App\DS18B20.C - 0 Error(s), 1 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling DS18B20.C...
+App\DS18B20.C - 0 Error(s), 0 Warning(s).
+compiling main.c...
+APP\MAIN.C(30): warning C206: 'Read_DS18B20_ROM': missing function-prototype
+App\main.c - 0 Error(s), 1 Warning(s).
+compiling main.c...
+App\main.c - 0 Error(s), 0 Warning(s).
+Build target 'DS18B20'
+assembling STARTUP.A51...
+compiling DS18B20.C...
+compiling LCD1602.c...
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RD_TEMPERATURE_F?DS18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_STRING_LCD?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LOCATPOS?LCD1602
+Program Size: data=23.1 xdata=0 code=1122
+creating hex file from "Project"...
+"Project" - 0 Error(s), 3 Warning(s).

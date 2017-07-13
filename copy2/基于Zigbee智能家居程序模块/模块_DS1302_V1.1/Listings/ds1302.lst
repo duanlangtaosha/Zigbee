@@ -1,0 +1,176 @@
+C51 COMPILER V9.56.0.0   DS1302                                                            05/26/2017 23:03:37 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE App\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Head) DEBUG OBJECTEXTEND 
+                    -PRINT(.\Listings\ds1302.lst) TABS(2) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          *  ±êÌâ:  ÊÔÑéÊýÂë¹ÜÏÔÊ¾Ê±ÖÓ                                                   *
+   3          *                                        *
+   4          * Í¨¹ý±¾Àý³ÌÁË½â DS1302Ê±ÖÓÐ¾Æ¬µÄ»ù±¾Ô­ÀíºÍÊ¹ÓÃ ,Àí½â²¢ÕÆÎÕDS1302Ê±ÖÓÐ¾Æ¬    *
+   5          * Çý¶¯³ÌÐòµÄ±àÐ´ÒÔ¼°ÊµÏÖÊý×Ö×Ö·ûÔÚÊýÂë¹ÜÖÐµÄÏÔÊ¾¡£                 *
+   6          * ×¢Òâ£ºJP1302ÌøÏßÃ°Òª¶Ì½Ó¡£                                                   *
+   7          * ÇëÑ§Ô±ÈÏÕæÏû»¯±¾Àý³Ì£¬¶®DS1302ÔÚCÓïÑÔÖÐµÄ²Ù×÷                                *
+   8          ********************************************************************************/
+   9          #include<reg52.h> //°üº¬Í·ÎÄ¼þ£¬Ò»°ãÇé¿ö²»ÐèÒª¸Ä¶¯£¬Í·ÎÄ¼þ°üº¬ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷µÄ¶¨Òå
+  10          #include <intrins.h>
+  11          
+  12          sbit SCK=P2^3;  //Ê±ÖÓ  
+  13          sbit SDA=P2^4;  //Êý¾Ý  
+  14          sbit RST = P2^5;// DS1302¸´Î»
+  15          
+  16          
+  17          
+  18          bit ReadRTC_Flag;//¶¨Òå¶ÁDS1302±êÖ¾
+  19          
+  20          unsigned char l_tmpdate[7]={0,0,12,15,5,3,8};//Ãë·ÖÊ±ÈÕÔÂÖÜÄê08-05-15 12:00:00
+  21          unsigned char l_tmpdisplay[8];
+  22          
+  23          code unsigned char write_rtc_address[7]={0x80,0x82,0x84,0x86,0x88,0x8a,0x8c}; //Ãë·ÖÊ±ÈÕÔÂÖÜÄê ×îµÍÎ»¶ÁÐ´Î
+             -»
+  24          code unsigned char read_rtc_address[7]={0x81,0x83,0x85,0x87,0x89,0x8b,0x8d};  
+  25          
+  26          
+  27          /******************************************************************/
+  28          /*                    º¯ÊýÉùÃ÷                                    */
+  29          /******************************************************************/                        
+  30          void Write_Ds1302_byte(unsigned char temp); 
+  31          void Write_Ds1302( unsigned char address,unsigned char dat );
+  32          unsigned char Read_Ds1302 ( unsigned char address );
+  33          void Read_RTC(void);//read RTC 
+  34          void Set_RTC(void); //set RTC 
+  35          
+  36          /******************************************************************/
+  37          /*                   Ð´Ò»¸ö×Ö½Ú                                   */
+  38          /******************************************************************/
+  39          void Write_Ds1302_Byte(unsigned  char temp) 
+  40          {
+  41   1       unsigned char i;
+  42   1       for (i=0;i<8;i++)      //Ñ­»·8´Î Ð´ÈëÊý¾Ý
+  43   1        { 
+  44   2         SCK=0;
+  45   2           SDA=temp&0x01;     //Ã¿´Î´«ÊäµÍ×Ö½Ú 
+  46   2           temp>>=1;      //ÓÒÒÆÒ»Î»
+  47   2           SCK=1;
+  48   2         }
+  49   1      }   
+  50          /******************************************************************/
+  51          /*                  Ð´ÈëDS1302                                    */
+  52          /******************************************************************/
+  53          void Write_Ds1302( unsigned char address,unsigned char dat )     
+C51 COMPILER V9.56.0.0   DS1302                                                            05/26/2017 23:03:37 PAGE 2   
+
+  54          {
+  55   1        RST=0;
+  56   1        _nop_();
+  57   1        SCK=0;
+  58   1        _nop_();
+  59   1        RST=1;  
+  60   1          _nop_();                    //Æô¶¯
+  61   1        Write_Ds1302_Byte(address); //·¢ËÍµØÖ·
+  62   1        Write_Ds1302_Byte(dat);   //·¢ËÍÊý¾Ý
+  63   1        RST=0;                  //»Ö¸´
+  64   1      }
+  65          /******************************************************************/
+  66          /*                   ¶Á³öDS1302Êý¾Ý                               */
+  67          /******************************************************************/
+  68          unsigned char Read_Ds1302 ( unsigned char address )
+  69          {
+  70   1        unsigned char i,temp=0x00;
+  71   1        RST=0;
+  72   1        _nop_();
+  73   1        _nop_();
+  74   1        SCK=0;
+  75   1        _nop_();
+  76   1        _nop_();
+  77   1        RST=1;
+  78   1        _nop_();
+  79   1        _nop_();
+  80   1        Write_Ds1302_Byte(address);
+  81   1        for (i=0;i<8;i++)     //Ñ­»·8´Î ¶ÁÈ¡Êý¾Ý
+  82   1        {   
+  83   2          if(SDA)
+  84   2          temp|=0x80;     //Ã¿´Î´«ÊäµÍ×Ö½Ú
+  85   2          SCK=0;
+  86   2          temp>>=1;     //ÓÒÒÆÒ»Î»
+  87   2          _nop_();
+  88   2           _nop_();
+  89   2           _nop_();
+  90   2          SCK=1;
+  91   2        } 
+  92   1        RST=0;
+  93   1        _nop_();              //ÒÔÏÂÎªDS1302¸´Î»µÄÎÈ¶¨Ê±¼ä
+  94   1        _nop_();
+  95   1        RST=0;
+  96   1        SCK=0;
+  97   1        _nop_();
+  98   1        _nop_();
+  99   1        _nop_();
+ 100   1        _nop_();
+ 101   1        SCK=1;
+ 102   1        _nop_();
+ 103   1        _nop_();
+ 104   1        SDA=0;
+ 105   1        _nop_();
+ 106   1        _nop_();
+ 107   1        SDA=1;
+ 108   1        _nop_();
+ 109   1        _nop_();
+ 110   1        return (temp);      //·µ»Ø
+ 111   1      }
+ 112          /******************************************************************/
+ 113          /*                   ¶ÁÊ±ÖÓÊý¾Ý                                   */
+ 114          /******************************************************************/
+ 115          void Read_RTC(void)         //¶ÁÈ¡ ÈÕÀú
+C51 COMPILER V9.56.0.0   DS1302                                                            05/26/2017 23:03:37 PAGE 3   
+
+ 116          {
+ 117   1       unsigned char i,*p;
+ 118   1       p=read_rtc_address;      //µØÖ·´«µÝ
+ 119   1       for(i=0;i<7;i++)       //·Ö7´Î¶ÁÈ¡ Ãë·ÖÊ±ÈÕÔÂÖÜÄê
+ 120   1       {
+ 121   2        l_tmpdate[i]=Read_Ds1302(*p);
+ 122   2        p++;
+ 123   2       }
+ 124   1      }
+ 125          /******************************************************************/
+ 126          /*                  Éè¶¨Ê±ÖÓÊý¾Ý                                  */
+ 127          /******************************************************************/
+ 128          void Set_RTC(void)        //Éè¶¨ ÈÕÀú
+ 129          {
+ 130   1        unsigned char i,*p,tmp;
+ 131   1        for(i=0;i<7;i++){       //BCD´¦Àí
+ 132   2          tmp=l_tmpdate[i]/10;
+ 133   2          l_tmpdate[i]=l_tmpdate[i]%10;
+ 134   2          l_tmpdate[i]=l_tmpdate[i]+tmp*16;
+ 135   2        }  
+ 136   1        Write_Ds1302(0x8E,0X00);
+ 137   1        
+ 138   1        p=write_rtc_address;  //´«µØÖ·  
+ 139   1        for(i=0;i<7;i++)    //7´ÎÐ´Èë Ãë·ÖÊ±ÈÕÔÂÖÜÄê
+ 140   1        {
+ 141   2            Write_Ds1302(*p,l_tmpdate[i]);
+ 142   2           p++;  
+ 143   2         }
+ 144   1         Write_Ds1302(0x8E,0x80);
+ 145   1      }
+ 146          
+ 147          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    221    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
